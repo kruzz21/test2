@@ -232,19 +232,23 @@ export const faqSubmissionsApi = {
   },
 
   async approveAndCreateFAQ(submissionId: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
-    // Get the submission
-    const { data: submission, error: fetchError } = await supabase
-      .from('faq_submissions')
-      .select('*')
-      .eq('id', submissionId)
-      .single();
-    
-    if (fetchError) throw fetchError;
+    try {
+      // Get the submission
+      const { data: submission, error: fetchError } = await supabase
+        .from('faq_submissions')
+        .select('*')
+        .eq('id', submissionId)
+        .single();
+      
+      if (fetchError) {
+        console.error('Error fetching submission:', fetchError);
+        throw fetchError;
+      }
 
-    // Create the FAQ entry
-    const { data: faq, error: faqError } = await supabase
-      .from('faqs')
-      .insert({
+      console.log('Creating FAQ from submission:', submission);
+
+      // Create the FAQ entry with explicit values
+      const faqData = {
         question_tr: submission.question_tr,
         question_az: submission.question_az,
         question_en: submission.question_en,
@@ -253,16 +257,31 @@ export const faqSubmissionsApi = {
         answer_en: answers.answer_en,
         approved: true,
         is_preset: false
-      })
-      .select()
-      .single();
-    
-    if (faqError) throw faqError;
+      };
 
-    // Mark submission as processed
-    await this.updateStatus(submissionId, 'processed');
+      console.log('FAQ data to insert:', faqData);
 
-    return faq;
+      const { data: faq, error: faqError } = await supabase
+        .from('faqs')
+        .insert(faqData)
+        .select()
+        .single();
+      
+      if (faqError) {
+        console.error('Error creating FAQ:', faqError);
+        throw faqError;
+      }
+
+      console.log('FAQ created successfully:', faq);
+
+      // Mark submission as processed
+      await this.updateStatus(submissionId, 'processed');
+
+      return faq;
+    } catch (error) {
+      console.error('Error in approveAndCreateFAQ:', error);
+      throw error;
+    }
   }
 };
 
