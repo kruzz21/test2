@@ -21,7 +21,18 @@ export const useFAQ = () => {
   const createQuestion = async (questionData: FAQInsert) => {
     try {
       setLoading(true);
-      await faqApi.create(questionData);
+      
+      // Create the question with minimal required data
+      const faqData = {
+        question_tr: questionData.question_tr,
+        question_az: questionData.question_az,
+        question_en: questionData.question_en,
+        // Don't include answer fields - they will be null by default
+        approved: false,
+        is_preset: false
+      };
+
+      await faqApi.create(faqData);
       toast({
         title: "Success",
         description: "Your question has been submitted successfully. Dr. Eryanılmaz will answer it soon.",

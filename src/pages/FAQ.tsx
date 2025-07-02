@@ -31,13 +31,11 @@ const FAQ = () => {
     }
 
     try {
-      // Create multilingual question entry - only include required fields
+      // Create multilingual question entry with only required fields
       const questionData = {
         question_tr: formData.question,
         question_az: formData.question,
-        question_en: formData.question,
-        approved: false,
-        is_preset: false
+        question_en: formData.question
       };
 
       await createQuestion(questionData);
