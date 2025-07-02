@@ -8,9 +8,67 @@ type BlogPost = Database['public']['Tables']['blog_posts']['Row'];
 type BlogComment = Database['public']['Tables']['blog_comments']['Row'];
 type FAQ = Database['public']['Tables']['faqs']['Row'];
 
+interface Stats {
+  pendingAppointments: number;
+  totalPatients: number;
+  pendingReviews: number;
+  unansweredQuestions: number;
+  publishedBlogs: number;
+  totalViews: number;
+}
+
 export const useAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<Stats>({
+    pendingAppointments: 0,
+    totalPatients: 0,
+    pendingReviews: 0,
+    unansweredQuestions: 0,
+    publishedBlogs: 0,
+    totalViews: 0,
+  });
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch all stats in parallel
+      const [
+        pendingAppointmentsResult,
+        totalPatientsResult,
+        pendingReviewsResult,
+        unansweredQuestionsResult,
+        publishedBlogsResult,
+      ] = await Promise.all([
+        supabase.from('appointments').select('id', { count: 'exact' }).eq('status', 'pending'),
+        supabase.from('appointments').select('id', { count: 'exact' }),
+        supabase.from('reviews').select('id', { count: 'exact' }).eq('approved', false),
+        supabase.from('faqs').select('id', { count: 'exact' }).eq('approved', false),
+        supabase.from('blog_posts').select('id', { count: 'exact' }).eq('published', true),
+      ]);
+
+      setStats({
+        pendingAppointments: pendingAppointmentsResult.count || 0,
+        totalPatients: totalPatientsResult.count || 0,
+        pendingReviews: pendingReviewsResult.count || 0,
+        unansweredQuestions: unansweredQuestionsResult.count || 0,
+        publishedBlogs: publishedBlogsResult.count || 0,
+        totalViews: 0, // This would need to be implemented with analytics
+      });
+    } catch (err) {
+      console.error('Error fetching stats:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to fetch stats: ${errorMessage}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   const fetchPendingAppointments = async (): Promise<Appointment[]> => {
     try {
@@ -115,6 +173,27 @@ export const useAdmin = () => {
     }
   };
 
+  const fetchPendingFAQs = async (): Promise<FAQ[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('faqs')
+        .select('*')
+        .eq('approved', false)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching pending FAQs:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      throw new Error(`Failed to fetch pending FAQs: ${errorMessage}`);
+    }
+  };
+
   const updateAppointmentStatus = async (id: string, status: Appointment['status']) => {
     try {
       setLoading(true);
@@ -129,6 +208,9 @@ export const useAdmin = () => {
         console.error('Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
+
+      // Refresh stats after updating
+      await fetchStats();
     } catch (err) {
       console.error('Error updating appointment status:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -139,7 +221,7 @@ export const useAdmin = () => {
     }
   };
 
-  const approveReview = async (id: string, approved: boolean) => {
+  const approveReview = async (id: string, approved: boolean = true) => {
     try {
       setLoading(true);
       setError(null);
@@ -153,6 +235,9 @@ export const useAdmin = () => {
         console.error('Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
+
+      // Refresh stats after updating
+      await fetchStats();
     } catch (err) {
       console.error('Error approving review:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -203,6 +288,8 @@ export const useAdmin = () => {
         throw new Error(`Database error: ${error.message}`);
       }
 
+      // Refresh stats after creating
+      await fetchStats();
       return data;
     } catch (err) {
       console.error('Error creating blog post:', err);
@@ -228,6 +315,9 @@ export const useAdmin = () => {
         console.error('Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
+
+      // Refresh stats after updating
+      await fetchStats();
     } catch (err) {
       console.error('Error updating blog post:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -252,6 +342,9 @@ export const useAdmin = () => {
         console.error('Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
+
+      // Refresh stats after deleting
+      await fetchStats();
     } catch (err) {
       console.error('Error deleting blog post:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -304,6 +397,9 @@ export const useAdmin = () => {
         console.error('Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
+
+      // Refresh stats after answering
+      await fetchStats();
     } catch (err) {
       console.error('Error answering FAQ:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -330,6 +426,8 @@ export const useAdmin = () => {
         throw new Error(`Database error: ${error.message}`);
       }
 
+      // Refresh stats after creating
+      await fetchStats();
       return data;
     } catch (err) {
       console.error('Error creating FAQ:', err);
@@ -344,11 +442,14 @@ export const useAdmin = () => {
   return {
     loading,
     error,
+    stats,
+    fetchStats,
     fetchPendingAppointments,
     fetchPendingReviews,
     fetchBlogPosts,
     fetchBlogComments,
     fetchFAQs,
+    fetchPendingFAQs,
     updateAppointmentStatus,
     approveReview,
     replyToReview,

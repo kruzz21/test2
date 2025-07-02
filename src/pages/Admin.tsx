@@ -15,13 +15,19 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
-import { useAppointments } from '@/hooks/useAppointments';
 import { Toaster } from '@/components/ui/toaster';
 
 const Admin = () => {
   const { t } = useTranslation();
-  const { stats, fetchPendingAppointments, fetchPendingReviews, approveReview, fetchPendingFAQs } = useAdmin();
-  const { updateAppointmentStatus } = useAppointments();
+  const { 
+    stats, 
+    fetchPendingAppointments, 
+    fetchPendingReviews, 
+    fetchPendingFAQs,
+    updateAppointmentStatus,
+    approveReview,
+    fetchStats
+  } = useAdmin();
   
   const [pendingAppointments, setPendingAppointments] = useState<any[]>([]);
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);
@@ -29,32 +35,44 @@ const Admin = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const [appointments, reviews, faqs] = await Promise.all([
-        fetchPendingAppointments(),
-        fetchPendingReviews(),
-        fetchPendingFAQs()
-      ]);
-      
-      setPendingAppointments(appointments);
-      setPendingReviews(reviews);
-      setPendingFAQs(faqs);
+      try {
+        const [appointments, reviews, faqs] = await Promise.all([
+          fetchPendingAppointments(),
+          fetchPendingReviews(),
+          fetchPendingFAQs()
+        ]);
+        
+        setPendingAppointments(appointments);
+        setPendingReviews(reviews);
+        setPendingFAQs(faqs);
+      } catch (error) {
+        console.error('Error loading admin data:', error);
+      }
     };
 
     loadData();
   }, [fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQs]);
 
   const handleAppointmentAction = async (id: string, status: string) => {
-    await updateAppointmentStatus(id, status);
-    // Refresh pending appointments
-    const appointments = await fetchPendingAppointments();
-    setPendingAppointments(appointments);
+    try {
+      await updateAppointmentStatus(id, status);
+      // Refresh pending appointments
+      const appointments = await fetchPendingAppointments();
+      setPendingAppointments(appointments);
+    } catch (error) {
+      console.error('Error updating appointment:', error);
+    }
   };
 
   const handleApproveReview = async (id: string) => {
-    await approveReview(id);
-    // Refresh pending reviews
-    const reviews = await fetchPendingReviews();
-    setPendingReviews(reviews);
+    try {
+      await approveReview(id);
+      // Refresh pending reviews
+      const reviews = await fetchPendingReviews();
+      setPendingReviews(reviews);
+    } catch (error) {
+      console.error('Error approving review:', error);
+    }
   };
 
   return (
