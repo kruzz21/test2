@@ -1,4 +1,4 @@
-import { supabase, setAdminSession, clearAdminSession } from './supabase';
+import { supabase } from './supabase';
 
 export interface AdminUser {
   id: string;
@@ -37,7 +37,7 @@ class AdminAuthService {
         if (new Date(session.expiresAt) > new Date()) {
           this.currentSession = session;
           // Set the session in Supabase client
-          setAdminSession(session.sessionToken);
+          this.setSupabaseSession(session);
         } else {
           localStorage.removeItem('admin_session');
         }
@@ -56,6 +56,36 @@ class AdminAuthService {
     localStorage.removeItem('admin_session');
   }
 
+  private async setSupabaseSession(session: AdminSession): Promise<void> {
+    try {
+      // Create a proper Supabase auth session
+      const authSession = {
+        access_token: session.sessionToken,
+        refresh_token: session.sessionToken,
+        expires_in: Math.floor((new Date(session.expiresAt).getTime() - Date.now()) / 1000),
+        expires_at: Math.floor(new Date(session.expiresAt).getTime() / 1000),
+        token_type: 'bearer',
+        user: {
+          id: session.admin.id,
+          email: session.admin.email,
+          role: 'authenticated',
+          aud: 'authenticated',
+          app_metadata: { role: 'admin' },
+          user_metadata: { name: session.admin.name },
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          email_confirmed_at: new Date().toISOString(),
+          last_sign_in_at: new Date().toISOString()
+        }
+      };
+
+      // Set the session in Supabase
+      await supabase.auth.setSession(authSession as any);
+    } catch (error) {
+      console.error('Error setting Supabase session:', error);
+    }
+  }
+
   public async login(email: string, password: string): Promise<AdminSession> {
     try {
       // For demo purposes, we'll use a simple check
@@ -66,11 +96,13 @@ class AdminAuthService {
         const expiresAt = new Date();
         expiresAt.setHours(expiresAt.getHours() + 8); // 8 hours expiry
 
-        // Create session in database
+        const adminId = '00000000-0000-0000-0000-000000000001';
+
+        // Create session in database using service role
         const { data, error } = await supabase
           .from('admin_sessions')
           .insert({
-            admin_id: '00000000-0000-0000-0000-000000000001', // Default admin ID
+            admin_id: adminId,
             session_token: sessionToken,
             expires_at: expiresAt.toISOString()
           })
@@ -84,7 +116,7 @@ class AdminAuthService {
 
         const session: AdminSession = {
           admin: {
-            id: '00000000-0000-0000-0000-000000000001',
+            id: adminId,
             email: 'admin@drgeryanilmaz.com',
             name: 'Dr. Gürkan Eryanılmaz'
           },
@@ -96,7 +128,7 @@ class AdminAuthService {
         this.saveSessionToStorage(session);
         
         // Set the session in Supabase client for authenticated requests
-        setAdminSession(sessionToken);
+        await this.setSupabaseSession(session);
 
         return session;
       } else {
@@ -123,7 +155,7 @@ class AdminAuthService {
       this.currentSession = null;
       this.clearSessionFromStorage();
       // Clear the session from Supabase client
-      clearAdminSession();
+      await supabase.auth.signOut();
     }
   }
 
@@ -144,7 +176,7 @@ class AdminAuthService {
         .from('admin_sessions')
         .select('*')
         .eq('session_token', this.currentSession.sessionToken)
-        .eq('admin_id', '00000000-0000-0000-0000-000000000001')
+        .eq('admin_id', this.currentSession.admin.id)
         .gt('expires_at', new Date().toISOString())
         .single();
 
@@ -154,7 +186,7 @@ class AdminAuthService {
       }
 
       // Ensure Supabase client has the session
-      setAdminSession(this.currentSession.sessionToken);
+      await this.setSupabaseSession(this.currentSession);
       return true;
     } catch (error) {
       console.error('Session validation error:', error);
