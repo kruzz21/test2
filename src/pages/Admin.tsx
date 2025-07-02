@@ -18,13 +18,17 @@ import {
   BarChart3,
   CheckCircle,
   XCircle,
-  LogOut
+  LogOut,
+  History,
+  CalendarDays
 } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
 import AdminLogin from '@/components/AdminLogin';
+import AppointmentHistory from '@/components/AppointmentHistory';
+import AppointmentCalendar from '@/components/AppointmentCalendar';
 
 const Admin = () => {
   const { t } = useTranslation();
@@ -326,20 +330,22 @@ const Admin = () => {
 
           {/* Main Content */}
           <Tabs defaultValue="appointments" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="appointments">Appointments</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="appointments">Pending</TabsTrigger>
+              <TabsTrigger value="history">History</TabsTrigger>
+              <TabsTrigger value="calendar">Calendar</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              <TabsTrigger value="faq">FAQ Submissions</TabsTrigger>
+              <TabsTrigger value="faq">FAQ</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
-            {/* Appointments Tab */}
+            {/* Pending Appointments Tab */}
             <TabsContent value="appointments">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Calendar className="h-5 w-5 mr-2" />
-                    {t('admin.appointmentManagement')}
+                    Pending Appointments
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -380,6 +386,16 @@ const Admin = () => {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* Appointment History Tab */}
+            <TabsContent value="history">
+              <AppointmentHistory />
+            </TabsContent>
+
+            {/* Appointment Calendar Tab */}
+            <TabsContent value="calendar">
+              <AppointmentCalendar />
             </TabsContent>
 
             {/* Reviews Tab */}

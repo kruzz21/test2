@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { MapPin, Phone, Mail, Clock, Instagram } from 'lucide-react';
 import { useAppointments } from '@/hooks/useAppointments';
 import { Toaster } from '@/components/ui/toaster';
+import AppointmentStatusCheck from '@/components/AppointmentStatusCheck';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -180,6 +181,11 @@ const Contact = () => {
                   </p>
                 </div>
               </form>
+
+              {/* Appointment Status Check Button */}
+              <div className="mt-6 pt-6 border-t">
+                <AppointmentStatusCheck />
+              </div>
             </CardContent>
           </Card>
 
