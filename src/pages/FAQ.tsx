@@ -18,6 +18,7 @@ const FAQ = () => {
     email: '',
     question: ''
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -31,6 +32,8 @@ const FAQ = () => {
     }
 
     try {
+      setSubmitting(true);
+      
       // Create submission for admin review
       const submissionData = {
         name: formData.name,
@@ -45,6 +48,8 @@ const FAQ = () => {
       setFormData({ name: '', email: '', question: '' });
     } catch (error) {
       // Error is handled in the hook
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -144,9 +149,9 @@ const FAQ = () => {
                   <Button 
                     type="submit" 
                     className="w-full"
-                    disabled={loading}
+                    disabled={submitting || !formData.name || !formData.question}
                   >
-                    {loading ? 'Submitting...' : t('faq.submitQuestion')}
+                    {submitting ? 'Submitting...' : t('faq.submitQuestion')}
                   </Button>
                   
                   <p className="text-xs text-muted-foreground">
