@@ -52,22 +52,6 @@ const Admin = () => {
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Show login screen if not authenticated
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <AdminLogin onLoginSuccess={() => window.location.reload()} />;
-  }
-
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -89,6 +73,23 @@ const Admin = () => {
       loadData();
     }
   }, [isAuthenticated, fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQSubmissions]);
+
+  // Show loading screen if authentication is loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <AdminLogin onLoginSuccess={() => window.location.reload()} />;
+  }
 
   const handleLogout = async () => {
     try {
