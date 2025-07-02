@@ -1,108 +1,362 @@
 import { useState, useEffect } from 'react';
-import { adminApi } from '@/lib/api';
-import { toast } from '@/hooks/use-toast';
+import { supabase } from '../lib/supabase';
+import type { Database } from '../lib/supabase';
+
+type Appointment = Database['public']['Tables']['appointments']['Row'];
+type Review = Database['public']['Tables']['reviews']['Row'];
+type BlogPost = Database['public']['Tables']['blog_posts']['Row'];
+type BlogComment = Database['public']['Tables']['blog_comments']['Row'];
+type FAQ = Database['public']['Tables']['faqs']['Row'];
 
 export const useAdmin = () => {
-  const [stats, setStats] = useState({
-    pendingAppointments: 0,
-    totalPatients: 0,
-    pendingReviews: 0,
-    unansweredQuestions: 0,
-    publishedBlogs: 0,
-    totalViews: 0
-  });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchStats = async () => {
+  const fetchPendingAppointments = async (): Promise<Appointment[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching pending appointments:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      throw new Error(`Failed to fetch pending appointments: ${errorMessage}`);
+    }
+  };
+
+  const fetchPendingReviews = async (): Promise<Review[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .eq('approved', false)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching pending reviews:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      throw new Error(`Failed to fetch pending reviews: ${errorMessage}`);
+    }
+  };
+
+  const fetchBlogPosts = async (): Promise<BlogPost[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching blog posts:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      throw new Error(`Failed to fetch blog posts: ${errorMessage}`);
+    }
+  };
+
+  const fetchBlogComments = async (): Promise<BlogComment[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_comments')
+        .select('*')
+        .eq('approved', false)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching blog comments:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      throw new Error(`Failed to fetch blog comments: ${errorMessage}`);
+    }
+  };
+
+  const fetchFAQs = async (): Promise<FAQ[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('faqs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching FAQs:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      throw new Error(`Failed to fetch FAQs: ${errorMessage}`);
+    }
+  };
+
+  const updateAppointmentStatus = async (id: string, status: Appointment['status']) => {
     try {
       setLoading(true);
-      const data = await adminApi.getStats();
-      setStats(data);
-    } catch (error) {
-      console.error('Error fetching admin stats:', error);
+      setError(null);
+
+      const { error } = await supabase
+        .from('appointments')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error updating appointment status:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to update appointment: ${errorMessage}`);
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchPendingAppointments = async () => {
+  const approveReview = async (id: string, approved: boolean) => {
     try {
-      const data = await adminApi.getPendingAppointments();
-      return data;
-    } catch (error) {
-      console.error('Error fetching pending appointments:', error);
-      return [];
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('reviews')
+        .update({ approved, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error approving review:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to approve review: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchPendingReviews = async () => {
+  const replyToReview = async (id: string, reply: string) => {
     try {
-      const data = await adminApi.getPendingReviews();
-      return data;
-    } catch (error) {
-      console.error('Error fetching pending reviews:', error);
-      return [];
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('reviews')
+        .update({ doctor_reply: reply, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error replying to review:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to reply to review: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const approveReview = async (id: string) => {
+  const createBlogPost = async (post: Database['public']['Tables']['blog_posts']['Insert']) => {
     try {
-      await adminApi.approveReview(id);
-      await fetchStats(); // Refresh stats
-      toast({
-        title: "Success",
-        description: "Review approved successfully.",
-      });
-    } catch (error) {
-      console.error('Error approving review:', error);
-      toast({
-        title: "Error",
-        description: "Failed to approve review.",
-        variant: "destructive",
-      });
+      setLoading(true);
+      setError(null);
+
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .insert(post)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data;
+    } catch (err) {
+      console.error('Error creating blog post:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to create blog post: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchPendingFAQs = async () => {
+  const updateBlogPost = async (id: string, updates: Database['public']['Tables']['blog_posts']['Update']) => {
     try {
-      const data = await adminApi.getPendingFAQs();
-      return data;
-    } catch (error) {
-      console.error('Error fetching pending FAQs:', error);
-      return [];
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('blog_posts')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error updating blog post:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to update blog post: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteBlogPost = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('blog_posts')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error deleting blog post:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to delete blog post: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const approveBlogComment = async (id: string, approved: boolean) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('blog_comments')
+        .update({ approved })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error approving blog comment:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to approve blog comment: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const answerFAQ = async (id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) => {
     try {
-      await adminApi.answerFAQ(id, answers);
-      await fetchStats(); // Refresh stats
-      toast({
-        title: "Success",
-        description: "FAQ answered and approved successfully.",
-      });
-    } catch (error) {
-      console.error('Error answering FAQ:', error);
-      toast({
-        title: "Error",
-        description: "Failed to answer FAQ.",
-        variant: "destructive",
-      });
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('faqs')
+        .update({ 
+          ...answers, 
+          approved: true, 
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error answering FAQ:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to answer FAQ: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
+  const createFAQ = async (faq: Database['public']['Tables']['faqs']['Insert']) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data, error } = await supabase
+        .from('faqs')
+        .insert({ ...faq, is_preset: true, approved: true })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      return data;
+    } catch (err) {
+      console.error('Error creating FAQ:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to create FAQ: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
-    stats,
     loading,
-    fetchStats,
+    error,
     fetchPendingAppointments,
     fetchPendingReviews,
+    fetchBlogPosts,
+    fetchBlogComments,
+    fetchFAQs,
+    updateAppointmentStatus,
     approveReview,
-    fetchPendingFAQs,
-    answerFAQ
+    replyToReview,
+    createBlogPost,
+    updateBlogPost,
+    deleteBlogPost,
+    approveBlogComment,
+    answerFAQ,
+    createFAQ,
   };
 };
