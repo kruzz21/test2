@@ -39,7 +39,7 @@ const Admin = () => {
     answerFAQSubmission,
     rejectFAQSubmission,
     fetchStats
-  } = useAdmin();
+  } = useAdmin(isAuthenticated);
   
   const [pendingAppointments, setPendingAppointments] = useState<any[]>([]);
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);

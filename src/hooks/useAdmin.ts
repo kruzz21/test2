@@ -19,7 +19,7 @@ interface Stats {
   totalViews: number;
 }
 
-export const useAdmin = () => {
+export const useAdmin = (isAuthenticated: boolean = false) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<Stats>({
@@ -32,6 +32,10 @@ export const useAdmin = () => {
   });
 
   const fetchStats = async () => {
+    if (!isAuthenticated) {
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -47,8 +51,10 @@ export const useAdmin = () => {
   };
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (isAuthenticated) {
+      fetchStats();
+    }
+  }, [isAuthenticated]);
 
   const fetchPendingAppointments = async (): Promise<Appointment[]> => {
     try {
