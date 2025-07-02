@@ -14,6 +14,14 @@ export type FAQSubmission = Database['public']['Tables']['faq_submissions']['Row
 export type FAQSubmissionInsert = Database['public']['Tables']['faq_submissions']['Insert'];
 export type Symptom = Database['public']['Tables']['symptoms']['Row'];
 
+// Helper function to check authentication
+const checkAuth = async () => {
+  const { data: { session }, error } = await supabase.auth.getSession();
+  console.log('Current session:', session);
+  console.log('Auth error:', error);
+  return { session, error };
+};
+
 // Appointments API
 export const appointmentsApi = {
   async create(appointment: AppointmentInsert) {
@@ -147,24 +155,44 @@ export const reviewsApi = {
 // FAQ API
 export const faqApi = {
   async getApproved() {
+    console.log('Fetching approved FAQs...');
+    const { session } = await checkAuth();
+    
     const { data, error } = await supabase
       .from('faqs')
       .select('*')
       .eq('approved', true)
       .order('created_at', { ascending: false });
     
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching FAQs:', error);
+      throw error;
+    }
+    
+    console.log('FAQs fetched successfully:', data);
     return data;
   },
 
   async create(faq: FAQInsert) {
+    console.log('Creating FAQ with data:', faq);
+    const { session } = await checkAuth();
+    
+    if (!session) {
+      throw new Error('Authentication required to create FAQ');
+    }
+    
     const { data, error } = await supabase
       .from('faqs')
       .insert(faq)
       .select()
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('Error creating FAQ:', error);
+      throw error;
+    }
+    
+    console.log('FAQ created successfully:', data);
     return data;
   }
 };
@@ -233,6 +261,13 @@ export const faqSubmissionsApi = {
 
   async approveAndCreateFAQ(submissionId: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
     try {
+      console.log('Starting approveAndCreateFAQ for submission:', submissionId);
+      const { session } = await checkAuth();
+      
+      if (!session) {
+        throw new Error('Authentication required to approve FAQ submissions');
+      }
+      
       // Get the submission
       const { data: submission, error: fetchError } = await supabase
         .from('faq_submissions')
@@ -261,16 +296,8 @@ export const faqSubmissionsApi = {
 
       console.log('FAQ data to insert:', faqData);
 
-      const { data: faq, error: faqError } = await supabase
-        .from('faqs')
-        .insert(faqData)
-        .select()
-        .single();
-      
-      if (faqError) {
-        console.error('Error creating FAQ:', faqError);
-        throw faqError;
-      }
+      // Use the faqApi.create method which has better error handling
+      const faq = await faqApi.create(faqData);
 
       console.log('FAQ created successfully:', faq);
 
@@ -374,6 +401,7 @@ export const adminApi = {
   },
 
   async answerFAQSubmission(id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
+    console.log('Admin API: Answering FAQ submission', id, answers);
     return faqSubmissionsApi.approveAndCreateFAQ(id, answers);
   }
 };
