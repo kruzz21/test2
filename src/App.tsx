@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import './lib/i18n';
+import { adminAuth } from './lib/adminAuth';
 
 import Layout from './layout/Layout';
 import Home from './pages/Home';
@@ -25,6 +26,23 @@ function App() {
     // Set document language
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
+
+  useEffect(() => {
+    // Initialize admin authentication on app load
+    const initializeAuth = async () => {
+      try {
+        // Check if there's an existing admin session and validate it
+        const currentSession = adminAuth.getCurrentSession();
+        if (currentSession) {
+          await adminAuth.validateSession();
+        }
+      } catch (error) {
+        console.error('Error initializing admin auth:', error);
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   return (
     <Router>

@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase, setAdminSession, clearAdminSession } from './supabase';
 
 export interface AdminUser {
   id: string;
@@ -36,6 +36,8 @@ class AdminAuthService {
         // Check if session is not expired
         if (new Date(session.expiresAt) > new Date()) {
           this.currentSession = session;
+          // Set the session in Supabase client
+          setAdminSession(session.sessionToken);
         } else {
           localStorage.removeItem('admin_session');
         }
@@ -92,6 +94,9 @@ class AdminAuthService {
 
         this.currentSession = session;
         this.saveSessionToStorage(session);
+        
+        // Set the session in Supabase client for authenticated requests
+        setAdminSession(sessionToken);
 
         return session;
       } else {
@@ -117,6 +122,8 @@ class AdminAuthService {
     } finally {
       this.currentSession = null;
       this.clearSessionFromStorage();
+      // Clear the session from Supabase client
+      clearAdminSession();
     }
   }
 
@@ -134,15 +141,20 @@ class AdminAuthService {
     try {
       // Validate session with database
       const { data, error } = await supabase
-        .rpc('validate_admin_session', { 
-          session_token: this.currentSession.sessionToken 
-        });
+        .from('admin_sessions')
+        .select('*')
+        .eq('session_token', this.currentSession.sessionToken)
+        .eq('admin_id', '00000000-0000-0000-0000-000000000001')
+        .gt('expires_at', new Date().toISOString())
+        .single();
 
-      if (error || !data || data.length === 0) {
+      if (error || !data) {
         await this.logout();
         return false;
       }
 
+      // Ensure Supabase client has the session
+      setAdminSession(this.currentSession.sessionToken);
       return true;
     } catch (error) {
       console.error('Session validation error:', error);

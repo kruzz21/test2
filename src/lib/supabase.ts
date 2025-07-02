@@ -9,6 +9,42 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Function to set admin session in Supabase client
+export const setAdminSession = (sessionToken: string) => {
+  // Create a custom session object that Supabase can use
+  const session = {
+    access_token: sessionToken,
+    refresh_token: sessionToken,
+    expires_in: 28800, // 8 hours
+    expires_at: Math.floor(Date.now() / 1000) + 28800,
+    token_type: 'bearer',
+    user: {
+      id: '00000000-0000-0000-0000-000000000001',
+      email: 'admin@drgeryanilmaz.com',
+      role: 'authenticated',
+      aud: 'authenticated',
+      app_metadata: {},
+      user_metadata: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  };
+
+  // Set the session in the Supabase client
+  supabase.auth.setSession(session as any);
+};
+
+// Function to clear admin session from Supabase client
+export const clearAdminSession = () => {
+  supabase.auth.signOut();
+};
+
+// Function to check if admin is authenticated in Supabase
+export const isAdminAuthenticated = () => {
+  const session = supabase.auth.getSession();
+  return session !== null;
+};
+
 export type Database = {
   public: {
     Tables: {
