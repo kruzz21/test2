@@ -44,9 +44,11 @@ const FAQ = () => {
         status: 'pending' as const
       };
 
+      console.log('Submitting FAQ with data:', submissionData);
       await createQuestion(submissionData);
       setFormData({ name: '', email: '', question: '' });
     } catch (error) {
+      console.error('Error submitting FAQ:', error);
       // Error is handled in the hook
     } finally {
       setSubmitting(false);

@@ -46,6 +46,7 @@ const Admin = () => {
     answer_az: '',
     answer_en: ''
   });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -124,6 +125,7 @@ const Admin = () => {
       setPendingFAQSubmissions(submissions);
       setSelectedSubmission(null);
       setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
+      setIsDialogOpen(false);
       toast({
         title: "Success",
         description: "FAQ answered and published successfully.",
@@ -156,6 +158,12 @@ const Admin = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const openAnswerDialog = (submission: any) => {
+    setSelectedSubmission(submission);
+    setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
+    setIsDialogOpen(true);
   };
 
   return (
@@ -379,71 +387,13 @@ const Admin = () => {
                           </div>
                           <div className="flex items-center space-x-2">
                             <Badge variant="secondary">{submission.status}</Badge>
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button 
-                                  size="sm"
-                                  onClick={() => setSelectedSubmission(submission)}
-                                >
-                                  <CheckCircle className="h-4 w-4 mr-1" />
-                                  Answer
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="max-w-2xl">
-                                <DialogHeader>
-                                  <DialogTitle>Answer FAQ Question</DialogTitle>
-                                </DialogHeader>
-                                <div className="space-y-4">
-                                  <div>
-                                    <p className="font-medium mb-2">Question:</p>
-                                    <p className="text-sm text-gray-700 p-3 bg-gray-50 rounded">
-                                      {selectedSubmission?.question_en}
-                                    </p>
-                                  </div>
-                                  
-                                  <div className="space-y-3">
-                                    <div>
-                                      <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
-                                      <Textarea
-                                        value={answers.answer_tr}
-                                        onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
-                                        rows={3}
-                                        placeholder="Turkish answer..."
-                                      />
-                                    </div>
-                                    
-                                    <div>
-                                      <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
-                                      <Textarea
-                                        value={answers.answer_az}
-                                        onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
-                                        rows={3}
-                                        placeholder="Azerbaijani answer..."
-                                      />
-                                    </div>
-                                    
-                                    <div>
-                                      <label className="block text-sm font-medium mb-1">Answer (English)</label>
-                                      <Textarea
-                                        value={answers.answer_en}
-                                        onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
-                                        rows={3}
-                                        placeholder="English answer..."
-                                      />
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="flex justify-end space-x-2">
-                                    <Button variant="outline" onClick={() => setSelectedSubmission(null)}>
-                                      Cancel
-                                    </Button>
-                                    <Button onClick={handleAnswerFAQ}>
-                                      Approve & Publish
-                                    </Button>
-                                  </div>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
+                            <Button 
+                              size="sm"
+                              onClick={() => openAnswerDialog(submission)}
+                            >
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                              Answer
+                            </Button>
                             <Button 
                               size="sm" 
                               variant="outline"
@@ -498,6 +448,65 @@ const Admin = () => {
           </Tabs>
         </div>
       </div>
+
+      {/* Answer FAQ Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Answer FAQ Question</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <p className="font-medium mb-2">Question:</p>
+              <p className="text-sm text-gray-700 p-3 bg-gray-50 rounded">
+                {selectedSubmission?.question_en}
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
+                <Textarea
+                  value={answers.answer_tr}
+                  onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
+                  rows={3}
+                  placeholder="Turkish answer..."
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
+                <Textarea
+                  value={answers.answer_az}
+                  onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
+                  rows={3}
+                  placeholder="Azerbaijani answer..."
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Answer (English)</label>
+                <Textarea
+                  value={answers.answer_en}
+                  onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
+                  rows={3}
+                  placeholder="English answer..."
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAnswerFAQ}>
+                Approve & Publish
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Toaster />
     </div>
   );
