@@ -339,7 +339,7 @@ export const useAdmin = (isAuthenticated: boolean = false) => {
 
       await adminApi.answerFAQSubmission(id, answers);
 
-      // Refresh stats after answering
+      // Refresh stats after answering (submission will be deleted)
       await fetchStats();
     } catch (err) {
       console.error('Error answering FAQ submission:', err);
@@ -385,21 +385,9 @@ export const useAdmin = (isAuthenticated: boolean = false) => {
       setLoading(true);
       setError(null);
 
-      const { error } = await supabase
-        .from('faq_submissions')
-        .update({ 
-          status: 'rejected',
-          processed_at: new Date().toISOString(),
-          processed_by: 'admin'
-        })
-        .eq('id', id);
+      await adminApi.rejectFAQSubmission(id);
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
-      }
-
-      // Refresh stats after rejecting
+      // Refresh stats after rejecting (submission will be deleted)
       await fetchStats();
     } catch (err) {
       console.error('Error rejecting FAQ submission:', err);

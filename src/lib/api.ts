@@ -268,6 +268,17 @@ export const faqSubmissionsApi = {
     return data;
   },
 
+  async delete(id: string) {
+    checkAdminAuth(); // Require admin auth for deletions
+    
+    const { error } = await supabase
+      .from('faq_submissions')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+  },
+
   async approveAndCreateFAQ(submissionId: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
     try {
       console.log('Starting approveAndCreateFAQ for submission:', submissionId);
@@ -306,8 +317,9 @@ export const faqSubmissionsApi = {
 
       console.log('FAQ created successfully:', faq);
 
-      // Mark submission as processed
-      await this.updateStatus(submissionId, 'processed');
+      // Delete the submission after successfully creating the FAQ
+      await this.delete(submissionId);
+      console.log('FAQ submission deleted successfully');
 
       return faq;
     } catch (error) {
@@ -416,5 +428,14 @@ export const adminApi = {
   async answerFAQSubmission(id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
     console.log('Admin API: Answering FAQ submission', id, answers);
     return faqSubmissionsApi.approveAndCreateFAQ(id, answers);
+  },
+
+  async rejectFAQSubmission(id: string) {
+    console.log('Admin API: Rejecting FAQ submission', id);
+    checkAdminAuth(); // Require admin auth
+    
+    // Simply delete the submission since it's being rejected
+    await faqSubmissionsApi.delete(id);
+    console.log('FAQ submission rejected and deleted successfully');
   }
 };
