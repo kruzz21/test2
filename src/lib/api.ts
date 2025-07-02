@@ -10,6 +10,8 @@ export type Review = Database['public']['Tables']['reviews']['Row'];
 export type ReviewInsert = Database['public']['Tables']['reviews']['Insert'];
 export type FAQ = Database['public']['Tables']['faqs']['Row'];
 export type FAQInsert = Database['public']['Tables']['faqs']['Insert'];
+export type FAQSubmission = Database['public']['Tables']['faq_submissions']['Row'];
+export type FAQSubmissionInsert = Database['public']['Tables']['faq_submissions']['Insert'];
 export type Symptom = Database['public']['Tables']['symptoms']['Row'];
 
 // Appointments API
@@ -167,6 +169,91 @@ export const faqApi = {
   }
 };
 
+// FAQ Submissions API
+export const faqSubmissionsApi = {
+  async create(submission: FAQSubmissionInsert) {
+    const { data, error } = await supabase
+      .from('faq_submissions')
+      .insert(submission)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async getAll() {
+    const { data, error } = await supabase
+      .from('faq_submissions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async getPending() {
+    const { data, error } = await supabase
+      .from('faq_submissions')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async updateStatus(id: string, status: string) {
+    const { data, error } = await supabase
+      .from('faq_submissions')
+      .update({ 
+        status, 
+        processed_at: new Date().toISOString(),
+        processed_by: 'admin' 
+      })
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async approveAndCreateFAQ(submissionId: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
+    // Get the submission
+    const { data: submission, error: fetchError } = await supabase
+      .from('faq_submissions')
+      .select('*')
+      .eq('id', submissionId)
+      .single();
+    
+    if (fetchError) throw fetchError;
+
+    // Create the FAQ entry
+    const { data: faq, error: faqError } = await supabase
+      .from('faqs')
+      .insert({
+        question_tr: submission.question_tr,
+        question_az: submission.question_az,
+        question_en: submission.question_en,
+        answer_tr: answers.answer_tr,
+        answer_az: answers.answer_az,
+        answer_en: answers.answer_en,
+        approved: true,
+        is_preset: false
+      })
+      .select()
+      .single();
+    
+    if (faqError) throw faqError;
+
+    // Mark submission as processed
+    await this.updateStatus(submissionId, 'processed');
+
+    return faq;
+  }
+};
+
 // Symptoms API
 export const symptomsApi = {
   async getAll() {
@@ -194,17 +281,17 @@ export const symptomsApi = {
 // Admin API
 export const adminApi = {
   async getStats() {
-    const [appointments, reviews, faqs, blogs] = await Promise.all([
+    const [appointments, reviews, faqSubmissions, blogs] = await Promise.all([
       supabase.from('appointments').select('status'),
       supabase.from('reviews').select('approved'),
-      supabase.from('faqs').select('approved'),
+      supabase.from('faq_submissions').select('status'),
       supabase.from('blog_posts').select('published')
     ]);
 
     const pendingAppointments = appointments.data?.filter(a => a.status === 'pending').length || 0;
     const totalPatients = appointments.data?.length || 0;
     const pendingReviews = reviews.data?.filter(r => !r.approved).length || 0;
-    const unansweredQuestions = faqs.data?.filter(f => !f.approved).length || 0;
+    const unansweredQuestions = faqSubmissions.data?.filter(f => f.status === 'pending').length || 0;
     const publishedBlogs = blogs.data?.filter(b => b.published).length || 0;
 
     return {
@@ -251,30 +338,11 @@ export const adminApi = {
     return data;
   },
 
-  async getPendingFAQs() {
-    const { data, error } = await supabase
-      .from('faqs')
-      .select('*')
-      .eq('approved', false)
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
+  async getPendingFAQSubmissions() {
+    return faqSubmissionsApi.getPending();
   },
 
-  async answerFAQ(id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
-    const { data, error } = await supabase
-      .from('faqs')
-      .update({ 
-        ...answers, 
-        approved: true, 
-        updated_at: new Date().toISOString() 
-      })
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+  async answerFAQSubmission(id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
+    return faqSubmissionsApi.approveAndCreateFAQ(id, answers);
   }
 };

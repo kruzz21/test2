@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { adminApi, faqSubmissionsApi } from '../lib/api';
 import type { Database } from '../lib/supabase';
 
 type Appointment = Database['public']['Tables']['appointments']['Row'];
@@ -7,6 +8,7 @@ type Review = Database['public']['Tables']['reviews']['Row'];
 type BlogPost = Database['public']['Tables']['blog_posts']['Row'];
 type BlogComment = Database['public']['Tables']['blog_comments']['Row'];
 type FAQ = Database['public']['Tables']['faqs']['Row'];
+type FAQSubmission = Database['public']['Tables']['faq_submissions']['Row'];
 
 interface Stats {
   pendingAppointments: number;
@@ -33,30 +35,8 @@ export const useAdmin = () => {
     try {
       setLoading(true);
       setError(null);
-
-      // Fetch all stats in parallel
-      const [
-        pendingAppointmentsResult,
-        totalPatientsResult,
-        pendingReviewsResult,
-        unansweredQuestionsResult,
-        publishedBlogsResult,
-      ] = await Promise.all([
-        supabase.from('appointments').select('id', { count: 'exact' }).eq('status', 'pending'),
-        supabase.from('appointments').select('id', { count: 'exact' }),
-        supabase.from('reviews').select('id', { count: 'exact' }).eq('approved', false),
-        supabase.from('faqs').select('id', { count: 'exact' }).eq('approved', false),
-        supabase.from('blog_posts').select('id', { count: 'exact' }).eq('published', true),
-      ]);
-
-      setStats({
-        pendingAppointments: pendingAppointmentsResult.count || 0,
-        totalPatients: totalPatientsResult.count || 0,
-        pendingReviews: pendingReviewsResult.count || 0,
-        unansweredQuestions: unansweredQuestionsResult.count || 0,
-        publishedBlogs: publishedBlogsResult.count || 0,
-        totalViews: 0, // This would need to be implemented with analytics
-      });
+      const statsData = await adminApi.getStats();
+      setStats(statsData);
     } catch (err) {
       console.error('Error fetching stats:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -72,18 +52,7 @@ export const useAdmin = () => {
 
   const fetchPendingAppointments = async (): Promise<Appointment[]> => {
     try {
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('*')
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
-      }
-
-      return data || [];
+      return await adminApi.getPendingAppointments();
     } catch (err) {
       console.error('Error fetching pending appointments:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -93,18 +62,7 @@ export const useAdmin = () => {
 
   const fetchPendingReviews = async (): Promise<Review[]> => {
     try {
-      const { data, error } = await supabase
-        .from('reviews')
-        .select('*')
-        .eq('approved', false)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
-      }
-
-      return data || [];
+      return await adminApi.getPendingReviews();
     } catch (err) {
       console.error('Error fetching pending reviews:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -173,24 +131,13 @@ export const useAdmin = () => {
     }
   };
 
-  const fetchPendingFAQs = async (): Promise<FAQ[]> => {
+  const fetchPendingFAQSubmissions = async (): Promise<FAQSubmission[]> => {
     try {
-      const { data, error } = await supabase
-        .from('faqs')
-        .select('*')
-        .eq('approved', false)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
-      }
-
-      return data || [];
+      return await adminApi.getPendingFAQSubmissions();
     } catch (err) {
-      console.error('Error fetching pending FAQs:', err);
+      console.error('Error fetching pending FAQ submissions:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      throw new Error(`Failed to fetch pending FAQs: ${errorMessage}`);
+      throw new Error(`Failed to fetch pending FAQ submissions: ${errorMessage}`);
     }
   };
 
@@ -379,31 +326,19 @@ export const useAdmin = () => {
     }
   };
 
-  const answerFAQ = async (id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) => {
+  const answerFAQSubmission = async (id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) => {
     try {
       setLoading(true);
       setError(null);
 
-      const { error } = await supabase
-        .from('faqs')
-        .update({ 
-          ...answers, 
-          approved: true, 
-          updated_at: new Date().toISOString() 
-        })
-        .eq('id', id);
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
-      }
+      await adminApi.answerFAQSubmission(id, answers);
 
       // Refresh stats after answering
       await fetchStats();
     } catch (err) {
-      console.error('Error answering FAQ:', err);
+      console.error('Error answering FAQ submission:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(`Failed to answer FAQ: ${errorMessage}`);
+      setError(`Failed to answer FAQ submission: ${errorMessage}`);
       throw err;
     } finally {
       setLoading(false);
@@ -449,7 +384,7 @@ export const useAdmin = () => {
     fetchBlogPosts,
     fetchBlogComments,
     fetchFAQs,
-    fetchPendingFAQs,
+    fetchPendingFAQSubmissions,
     updateAppointmentStatus,
     approveReview,
     replyToReview,
@@ -457,7 +392,7 @@ export const useAdmin = () => {
     updateBlogPost,
     deleteBlogPost,
     approveBlogComment,
-    answerFAQ,
+    answerFAQSubmission,
     createFAQ,
   };
 };

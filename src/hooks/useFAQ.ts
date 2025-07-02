@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { faqApi, type FAQInsert } from '@/lib/api';
+import { faqApi, faqSubmissionsApi, type FAQSubmissionInsert } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 
 export const useFAQ = () => {
@@ -18,21 +18,10 @@ export const useFAQ = () => {
     }
   };
 
-  const createQuestion = async (questionData: FAQInsert) => {
+  const createQuestion = async (questionData: FAQSubmissionInsert) => {
     try {
       setLoading(true);
-      
-      // Create the question with minimal required data
-      const faqData = {
-        question_tr: questionData.question_tr,
-        question_az: questionData.question_az,
-        question_en: questionData.question_en,
-        // Don't include answer fields - they will be null by default
-        approved: false,
-        is_preset: false
-      };
-
-      await faqApi.create(faqData);
+      await faqSubmissionsApi.create(questionData);
       toast({
         title: "Success",
         description: "Your question has been submitted successfully. Dr. Eryanılmaz will answer it soon.",

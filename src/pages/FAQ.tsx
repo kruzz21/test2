@@ -26,19 +26,22 @@ const FAQ = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.question) {
+    if (!formData.name || !formData.question) {
       return;
     }
 
     try {
-      // Create multilingual question entry with only required fields
-      const questionData = {
+      // Create submission for admin review
+      const submissionData = {
+        name: formData.name,
+        email: formData.email,
         question_tr: formData.question,
         question_az: formData.question,
-        question_en: formData.question
+        question_en: formData.question,
+        status: 'pending' as const
       };
 
-      await createQuestion(questionData);
+      await createQuestion(submissionData);
       setFormData({ name: '', email: '', question: '' });
     } catch (error) {
       // Error is handled in the hook
@@ -127,7 +130,6 @@ const FAQ = () => {
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="bg-background border-border text-foreground"
-                    required
                   />
                   
                   <Textarea 

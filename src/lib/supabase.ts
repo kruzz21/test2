@@ -175,6 +175,38 @@ export type Database = {
           approved?: boolean;
         };
       };
+      faq_submissions: {
+        Row: {
+          id: string;
+          name: string;
+          email?: string;
+          question_tr: string;
+          question_az: string;
+          question_en: string;
+          status: 'pending' | 'approved' | 'rejected' | 'processed';
+          created_at: string;
+          processed_at?: string;
+          processed_by?: string;
+        };
+        Insert: {
+          name: string;
+          email?: string;
+          question_tr: string;
+          question_az: string;
+          question_en: string;
+          status?: 'pending' | 'approved' | 'rejected' | 'processed';
+        };
+        Update: {
+          name?: string;
+          email?: string;
+          question_tr?: string;
+          question_az?: string;
+          question_en?: string;
+          status?: 'pending' | 'approved' | 'rejected' | 'processed';
+          processed_at?: string;
+          processed_by?: string;
+        };
+      };
       symptoms: {
         Row: {
           id: string;
