@@ -31,14 +31,11 @@ const FAQ = () => {
     }
 
     try {
-      // Create multilingual question entry
+      // Create multilingual question entry - only include required fields
       const questionData = {
         question_tr: formData.question,
         question_az: formData.question,
         question_en: formData.question,
-        answer_tr: null,
-        answer_az: null,
-        answer_en: null,
         approved: false,
         is_preset: false
       };
