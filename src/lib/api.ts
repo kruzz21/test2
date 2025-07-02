@@ -172,14 +172,26 @@ export const faqApi = {
 // FAQ Submissions API
 export const faqSubmissionsApi = {
   async create(submission: FAQSubmissionInsert) {
-    const { data, error } = await supabase
-      .from('faq_submissions')
-      .insert(submission)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      console.log('Attempting to create FAQ submission:', submission);
+      
+      const { data, error } = await supabase
+        .from('faq_submissions')
+        .insert(submission)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Supabase error creating FAQ submission:', error);
+        throw new Error(`Failed to submit question: ${error.message}`);
+      }
+      
+      console.log('FAQ submission created successfully:', data);
+      return data;
+    } catch (error) {
+      console.error('Error in faqSubmissionsApi.create:', error);
+      throw error;
+    }
   },
 
   async getAll() {

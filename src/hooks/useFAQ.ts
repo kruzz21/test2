@@ -13,6 +13,11 @@ export const useFAQ = () => {
       setFaqs(data);
     } catch (error) {
       console.error('Error fetching FAQs:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load FAQs. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -21,16 +26,21 @@ export const useFAQ = () => {
   const createQuestion = async (questionData: FAQSubmissionInsert) => {
     try {
       setLoading(true);
+      console.log('Creating FAQ submission with data:', questionData);
+      
       await faqSubmissionsApi.create(questionData);
+      
       toast({
         title: "Success",
         description: "Your question has been submitted successfully. Dr. Eryanılmaz will answer it soon.",
       });
     } catch (error) {
       console.error('Error creating question:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit question. Please try again.';
+      
       toast({
         title: "Error",
-        description: "Failed to submit question. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       throw error;
