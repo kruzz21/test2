@@ -1,0 +1,221 @@
+{
+  "nav": {
+    "home": "Ana Səhifə",
+    "about": "Haqqında",
+    "services": "Xidmətlər",
+    "symptoms": "Simptomlar və Müalicələr",
+    "gallery": "Qalereya",
+    "blog": "Blog",
+    "reviews": "Xəstə Rəyləri",
+    "contact": "Əlaqə",
+    "faq": "TSS",
+    "appointment": "Görüş Təyin Et"
+  },
+  "hero": {
+    "title": "Op. Dr. Gürkan Eryanılmaz",
+    "subtitle": "Ortopediya və Travmatologiya Mütəxəssisi",
+    "description": "25 ildən çox təcrübə ilə ortopedik cərrahi sahəsində mütəxəssis xidmət",
+    "cta": "Görüş Təyin Et"
+  },
+  "about": {
+    "title": "Dr. Gürkan Eryanılmaz Haqqında",
+    "subtitle": "Təcrübəli Ortopediya və Travmatologiya Mütəxəssisi",
+    "mission": "Missiya və Vizyon",
+    "missionText": "Xəstələrin həyat keyfiyyətini artırmaq və ən yaxşı ortopedik qayğını təmin etmək",
+    "experience": "25+ İl Təcrübə",
+    "surgeries": "10,000+ Əməliyyat",
+    "locations": "Afyon və Azərbaycan",
+    "learnMore": "Ətraflı Məlumat",
+    "biography": "Bioqrafiya",
+    "careerTimeline": "Karyera Zaman Cədvəli",
+    "areasOfExpertise": "İxtisas Sahələri",
+    "regionsServed": "Xidmət Göstərilən Bölgələr"
+  },
+  "stats": {
+    "kneeReplacements": "Diz Protezi Əməliyyatı",
+    "arthroscopies": "Artroskopik Əməliyyat",
+    "fracturesSurgeries": "Sınıq Əməliyyatı",
+    "pediatricHip": "Uşaq Kalça Dislokasiyası"
+  },
+  "services": {
+    "title": "İxtisas Sahələri",
+    "arthroscopy": {
+      "title": "Artroskopik Cərrahi",
+      "description": "Diz, çiyin, dirsək artroskopiyası, ACL, menisk, Bankart, sıxılma sindromu"
+    },
+    "replacement": {
+      "title": "Oynaq Protezi Cərrahiyyəsi",
+      "description": "Diz, kalça, çiyin protez əməliyyatları"
+    },
+    "trauma": {
+      "title": "Travma və Sınıq Cərrahiyyəsi",
+      "description": "Ayaq biləyi, kalça, dirsək, femur sınıq müalicələri"
+    },
+    "pediatric": {
+      "title": "Uşaq Ortopediyası",
+      "description": "DDH, klubfoot, çiyin çıxması və uşaq ortopedik problemləri"
+    },
+    "sports": {
+      "title": "İdman Zədələri",
+      "description": "Axil vətəri, bağ zədələri, həddindən artıq istifadə zədələri"
+    },
+    "nerve": {
+      "title": "Oynaq və Sinir Cərrahiyyəsi",
+      "description": "Karpal tunel, dekompressiya, oynaq daxili inyeksiyalar"
+    },
+    "needConsultation": "Konsultasiyaya Ehtiyacınız Var?",
+    "consultationDescription": "Dr. Gürkan Eryanılmaz hər xəstə üçün fərdiləşdirilmiş müalicə planları təqdim edir. Xüsusi ehtiyaclarınızı müzakirə etmək üçün konsultasiyanızı planlayın.",
+    "scheduleAppointment": "Görüş Planlaşdır",
+    "callNow": "İndi Zəng Et"
+  },
+  "contact": {
+    "title": "Əlaqə və Görüş",
+    "appointmentForm": "Görüş Formu",
+    "contactInfo": "Əlaqə Məlumatları",
+    "name": "Ad Soyad",
+    "phone": "Telefon",
+    "email": "E-poçt",
+    "nationalId": "Şəxsiyyət / Pasport Nömrəsi",
+    "service": "Xidmət",
+    "preferredDate": "Tercih Edilən Tarix",
+    "preferredTime": "Tercih Edilən Saat",
+    "message": "Mesaj",
+    "submit": "Görüş Tələbi Göndər",
+    "note": "Bu ilkin tələbdir. 24 saat ərzində sizinlə əlaqə saxlanılacaq.",
+    "address": "Ünvan",
+    "officeHours": "İş Saatları",
+    "followUs": "Bizi İzləyin",
+    "location": "Yer",
+    "quickActions": "Sürətli Əməliyyatlar"
+  },
+  "footer": {
+    "address": "Ünvan",
+    "phone": "Telefon",
+    "email": "E-poçt",
+    "social": "Sosial Media",
+    "privacy": "Məxfilik Siyasəti",
+    "kvkk": "KVKK",
+    "quickLinks": "Sürətli Bağlantılar"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Ortopedik sağlamlıq, cərrahi və sağalma mövzularında mütəxəssis rəyləri",
+    "readMore": "Davamını Oxu",
+    "comments": "Şərhlər",
+    "leaveComment": "Şərh Yaz",
+    "commentName": "Adınız",
+    "commentMessage": "Şərhiniz",
+    "submitComment": "Şərh Göndər",
+    "featured": "Seçilmiş",
+    "loadMoreArticles": "Daha Çox Məqalə Yüklə",
+    "backToBlog": "Bloqa Qayıt",
+    "commentsReviewed": "Şərhlər dərc edilməzdən əvvəl nəzərdən keçirilir."
+  },
+  "reviews": {
+    "title": "Xəstə Rəyləri",
+    "subtitle": "Xəstələrimizin Dr. Eryanılmaz ilə yaşadıqları təcrübə haqqında dediklərini oxuyun",
+    "rating": "Qiymətləndirmə",
+    "writeReview": "Rəy Yaz",
+    "reviewName": "Adınız",
+    "reviewMessage": "Rəyiniz",
+    "submitReview": "Rəy Göndər",
+    "doctorReply": "Həkim Cavabı",
+    "loadMoreReviews": "Daha Çox Rəy Yüklə",
+    "reviewsReviewed": "Rəylər həqiqiliyini təmin etmək üçün dərc edilməzdən əvvəl nəzərdən keçirilir.",
+    "haveQuestions": "Suallarınız Var?",
+    "checkFaq": "Tez-tez verilən suallarımızı yoxlayın və ya öz sualınızı göndərin.",
+    "viewFaq": "TSS-ni Görüntülə"
+  },
+  "faq": {
+    "title": "Tez-tez Soruşulan Suallar",
+    "subtitle": "Ortopedik qayğı və prosedurlar haqqında ümumi sualların cavablarını tapın",
+    "askQuestion": "Sual Ver",
+    "questionText": "Sualınız",
+    "submitQuestion": "Sual Göndər",
+    "frequentlyAsked": "Tez-tez Soruşulan Suallar",
+    "askQuestionDescription": "Sualınızı görmürsünüz? Dr. Eryanılmaz'a birbaşa soruşun və fərdiləşdirilmiş cavab alın.",
+    "yourName": "Adınız",
+    "yourEmail": "E-poçt Ünvanınız",
+    "responseTime": "Suallar Dr. Eryanılmaz tərəfindən nəzərdən keçirilir və cavablanır. Cavablar adətən 24-48 saat ərzində verilir.",
+    "needImmediateHelp": "Təcili Köməyə Ehtiyacınız Var?",
+    "urgentContact": "Təcili tibbi suallar və ya görüş təyin etmək üçün:",
+    "call": "Zəng Et",
+    "whatsappMessage": "WhatsApp Mesajı",
+    "questions": {
+      "kneeReplacementTime": "Diz protezi əməliyyatı nə qədər çəkir?",
+      "arthroscopicRecovery": "Artroskopik cərrahi üçün sağalma müddəti nədir?",
+      "pediatricTreatment": "Uşaq ortopedik vəziyyətlərini müalicə edirsiniz?",
+      "firstConsultation": "İlk konsultasiyada nə gözləməliyəm?",
+      "surgeryPreparation": "Ortopedik cərrahiyə necə hazırlaşım?",
+      "surgeryRisks": "Oynaq protezi cərrahiyyəsinin riskləri nələrdir?",
+      "implantDuration": "Oynaq protezləri nə qədər davam edir?",
+      "internationalPatients": "Beynəlxalq xəstələri qəbul edirsiniz?"
+    },
+    "answers": {
+      "kneeReplacementTime": "Diz protezi əməliyyatı adətən işin mürəkkəbliyindən asılı olaraq 1-2 saat çəkir. Prosedur zədələnmiş qığırdaq və sümüyün çıxarılması, sonra yeni metal və plastik oynaq səthlərin yerləşdirilməsini əhatə edir.",
+      "arthroscopicRecovery": "Artroskopik cərrahi üçün sağalma müddəti prosedurdan asılı olaraq dəyişir, lakin əksər xəstələr 1-2 həftə ərzində yüngül fəaliyyətlərə, 4-6 həftə ərzində tam fəaliyyətlərə qayıda bilərlər. Optimal sağalma üçün fiziki terapiya çox vacibdir.",
+      "pediatricTreatment": "Bəli, Dr. Eryanılmaz inkişaf kalça displaziyası (DDH), klubfoot və müxtəlif uşaqlıq ortopedik vəziyyətləri daxil olmaqla uşaq ortopediyasında ixtisaslaşıb. Erkən müdaxilə adətən uğurlu müalicənin açarıdır.",
+      "firstConsultation": "İlk konsultasiyanız zamanı Dr. Eryanılmaz tibbi tarixçənizi nəzərdən keçirəcək, fiziki müayinə aparacaq və simptomlarınızı müzakirə edəcək. Diaqnoz və müalicə planlaşdırmasına kömək etmək üçün rentgen və ya digər görüntüləmə tədqiqatlarına ehtiyacınız ola bilər.",
+      "surgeryPreparation": "Hazırlıq əməliyyat öncəsi təlimatları izləməyi, nəqliyyat təşkil etməyi, evdə kömək təşkil etməyi və tələb olunan tibbi icazələri tamamlamağı əhatə edir. Dr. Eryanılmaz'ın komandası ətraflı əməliyyat öncəsi təlimatlar təqdim edəcək.",
+      "surgeryRisks": "Oynaq protezi ümumiyyətlə çox təhlükəsiz olsa da, potensial risklər infeksiya, qan laxtalanması, implant boşalması və sinir zədələnməsini əhatə edir. Dr. Eryanılmaz əməliyyatdan əvvəl bütün riskləri və faydaları sizinlə müzakirə edəcək.",
+      "implantDuration": "Müasir oynaq protezləri adətən 15-20 il və ya daha çox davam edir. Uzunömürlülük yaşınız, fəaliyyət səviyyəniz, çəkiniz və istifadə olunan implant növü kimi amillərdən asılıdır.",
+      "internationalPatients": "Bəli, Dr. Eryanılmaz həm Türkiyədən, həm də Azərbaycandan xəstələri müalicə edir. Təcrübə əməliyyat öncəsi konsultasiyalar və əməliyyat sonrası izləmə daxil olmaqla beynəlxalq xəstələr üçün qayğı koordinasiyasında kömək edə bilər."
+    }
+  },
+  "gallery": {
+    "title": "Qalereya",
+    "subtitle": "Tibbi müəssisələrimizi, cərrahi prosedurlarımızı və xəstə qayğımızı kəşf edin",
+    "photos": "Şəkillər",
+    "videos": "Videolar",
+    "doctorIntro": "Dr. Gürkan Eryanılmaz Tanıtım Videosu",
+    "welcomeMessage": "Xoş Gəlmisiniz Mesajı",
+    "welcomeText": "Ortopedik cərrahi təcrübəmizə xoş gəlmisiniz. 25 ildən çox təcrübə ilə bütün ortopedik ehtiyaclarınız üçün ən yüksək keyfiyyətli qayğı təmin etməyə özümü həsr etmişəm. Müəssisələrimiz və prosedurlarımız haqqında daha çox öyrənmək üçün qalereyamıza baxın.",
+    "watchIntroVideo": "Tanıtım Videosunu İzlə"
+  },
+  "symptoms": {
+    "title": "Simptomlar və Müalicələr",
+    "subtitle": "Ümumi ortopedik vəziyyətlər və onların müalicə seçimləri haqqında öyrənin",
+    "readMore": "Təfərrüatları Oxu",
+    "dontSeeCondition": "Vəziyyətinizi Görmürsünüz?",
+    "conditionDescription": "Dr. Eryanılmaz geniş çeşidli ortopedik vəziyyətləri müalicə edir. Xüsusi simptomlarınızı və müalicə seçimlərinizi müzakirə etmək üçün bizimlə əlaqə saxlayın.",
+    "scheduleConsultation": "Konsultasiya Planlaşdır"
+  },
+  "home": {
+    "viewAllServices": "Bütün Xidmətləri Görüntülə",
+    "ctaTitle": "Görüşünüzü Təyin Etməyə Hazırsınız?",
+    "ctaDescription": "Dr. Gürkan Eryanılmaz'dan mütəxəssis ortopedik qayğı alın. Konsultasiyanızı planlaşdırmaq üçün bu gün bizimlə əlaqə saxlayın.",
+    "bookAppointment": "Görüş Təyin Et",
+    "callNow": "İndi Zəng Et"
+  },
+  "admin": {
+    "title": "İdarəçi Paneli",
+    "subtitle": "Görüşləri, məzmunu və xəstə qarşılıqlı əlaqələrini idarə edin",
+    "pendingAppointments": "Gözləyən Görüşlər",
+    "totalPatients": "Ümumi Xəstələr",
+    "pendingReviews": "Gözləyən Rəylər",
+    "unansweredQuestions": "Cavablanmamış Suallar",
+    "publishedBlogs": "Dərc Edilmiş Bloglar",
+    "websiteViews": "Veb Sayt Baxışları",
+    "appointmentManagement": "Görüş İdarəetməsi",
+    "blogManagement": "Blog İdarəetməsi",
+    "patientReviews": "Xəstə Rəyləri",
+    "faqManagement": "TSS İdarəetməsi",
+    "contentManagement": "Məzmun İdarəetməsi",
+    "systemSettings": "Sistem Parametrləri"
+  },
+  "common": {
+    "loading": "Yüklənir...",
+    "error": "Xəta",
+    "success": "Uğurlu",
+    "cancel": "Ləğv Et",
+    "save": "Saxla",
+    "edit": "Redaktə Et",
+    "delete": "Sil",
+    "view": "Görüntülə",
+    "back": "Geri",
+    "next": "İrəli",
+    "previous": "Əvvəlki",
+    "close": "Bağla",
+    "open": "Aç"
+  }
+}
