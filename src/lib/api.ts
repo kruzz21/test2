@@ -40,8 +40,7 @@ export const appointmentsApi = {
       .from('appointments')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', id)
-      .select()
-      .single();
+      .select();
     
     if (error) throw error;
     return data;
