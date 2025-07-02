@@ -427,15 +427,29 @@ export const adminApi = {
 
   async answerFAQSubmission(id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
     console.log('Admin API: Answering FAQ submission', id, answers);
-    return faqSubmissionsApi.approveAndCreateFAQ(id, answers);
+    
+    try {
+      // Use the approveAndCreateFAQ method which handles both creating the FAQ and deleting the submission
+      const result = await faqSubmissionsApi.approveAndCreateFAQ(id, answers);
+      console.log('FAQ submission answered and processed successfully');
+      return result;
+    } catch (error) {
+      console.error('Error in answerFAQSubmission:', error);
+      throw error;
+    }
   },
 
   async rejectFAQSubmission(id: string) {
     console.log('Admin API: Rejecting FAQ submission', id);
     checkAdminAuth(); // Require admin auth
     
-    // Simply delete the submission since it's being rejected
-    await faqSubmissionsApi.delete(id);
-    console.log('FAQ submission rejected and deleted successfully');
+    try {
+      // Simply delete the submission since it's being rejected
+      await faqSubmissionsApi.delete(id);
+      console.log('FAQ submission rejected and deleted successfully');
+    } catch (error) {
+      console.error('Error in rejectFAQSubmission:', error);
+      throw error;
+    }
   }
 };
