@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { adminAuth } from './adminAuth';
 import type { Database } from './supabase';
 
 // Types
@@ -14,12 +15,13 @@ export type FAQSubmission = Database['public']['Tables']['faq_submissions']['Row
 export type FAQSubmissionInsert = Database['public']['Tables']['faq_submissions']['Insert'];
 export type Symptom = Database['public']['Tables']['symptoms']['Row'];
 
-// Helper function to check authentication
-const checkAuth = async () => {
-  const { data: { session }, error } = await supabase.auth.getSession();
-  console.log('Current session:', session);
-  console.log('Auth error:', error);
-  return { session, error };
+// Helper function to check admin authentication
+const checkAdminAuth = () => {
+  const session = adminAuth.getCurrentSession();
+  if (!session || !adminAuth.isAuthenticated()) {
+    throw new Error('Admin authentication required');
+  }
+  return session;
 };
 
 // Appointments API
@@ -46,6 +48,8 @@ export const appointmentsApi = {
   },
 
   async updateStatus(id: string, status: string) {
+    checkAdminAuth(); // Require admin auth for status updates
+    
     const { data, error } = await supabase
       .from('appointments')
       .update({ status, updated_at: new Date().toISOString() })
@@ -57,6 +61,8 @@ export const appointmentsApi = {
   },
 
   async delete(id: string) {
+    checkAdminAuth(); // Require admin auth for deletions
+    
     const { error } = await supabase
       .from('appointments')
       .delete()
@@ -140,6 +146,8 @@ export const reviewsApi = {
   },
 
   async addDoctorReply(id: string, reply: string) {
+    checkAdminAuth(); // Require admin auth for doctor replies
+    
     const { data, error } = await supabase
       .from('reviews')
       .update({ doctor_reply: reply, updated_at: new Date().toISOString() })
@@ -156,7 +164,6 @@ export const reviewsApi = {
 export const faqApi = {
   async getApproved() {
     console.log('Fetching approved FAQs...');
-    const { session } = await checkAuth();
     
     const { data, error } = await supabase
       .from('faqs')
@@ -175,11 +182,7 @@ export const faqApi = {
 
   async create(faq: FAQInsert) {
     console.log('Creating FAQ with data:', faq);
-    const { session } = await checkAuth();
-    
-    if (!session) {
-      throw new Error('Authentication required to create FAQ');
-    }
+    checkAdminAuth(); // Require admin auth for creating FAQs
     
     const { data, error } = await supabase
       .from('faqs')
@@ -223,6 +226,8 @@ export const faqSubmissionsApi = {
   },
 
   async getAll() {
+    checkAdminAuth(); // Require admin auth to view all submissions
+    
     const { data, error } = await supabase
       .from('faq_submissions')
       .select('*')
@@ -233,6 +238,8 @@ export const faqSubmissionsApi = {
   },
 
   async getPending() {
+    checkAdminAuth(); // Require admin auth to view pending submissions
+    
     const { data, error } = await supabase
       .from('faq_submissions')
       .select('*')
@@ -244,6 +251,8 @@ export const faqSubmissionsApi = {
   },
 
   async updateStatus(id: string, status: string) {
+    checkAdminAuth(); // Require admin auth for status updates
+    
     const { data, error } = await supabase
       .from('faq_submissions')
       .update({ 
@@ -262,11 +271,7 @@ export const faqSubmissionsApi = {
   async approveAndCreateFAQ(submissionId: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
     try {
       console.log('Starting approveAndCreateFAQ for submission:', submissionId);
-      const { session } = await checkAuth();
-      
-      if (!session) {
-        throw new Error('Authentication required to approve FAQ submissions');
-      }
+      checkAdminAuth(); // Require admin auth
       
       // Get the submission
       const { data: submission, error: fetchError } = await supabase
@@ -339,6 +344,8 @@ export const symptomsApi = {
 // Admin API
 export const adminApi = {
   async getStats() {
+    checkAdminAuth(); // Require admin auth for stats
+    
     const [appointments, reviews, faqSubmissions, blogs] = await Promise.all([
       supabase.from('appointments').select('status'),
       supabase.from('reviews').select('approved'),
@@ -363,6 +370,8 @@ export const adminApi = {
   },
 
   async getPendingAppointments() {
+    checkAdminAuth(); // Require admin auth
+    
     const { data, error } = await supabase
       .from('appointments')
       .select('*')
@@ -374,6 +383,8 @@ export const adminApi = {
   },
 
   async getPendingReviews() {
+    checkAdminAuth(); // Require admin auth
+    
     const { data, error } = await supabase
       .from('reviews')
       .select('*')
@@ -385,6 +396,8 @@ export const adminApi = {
   },
 
   async approveReview(id: string) {
+    checkAdminAuth(); // Require admin auth
+    
     const { data, error } = await supabase
       .from('reviews')
       .update({ approved: true, updated_at: new Date().toISOString() })

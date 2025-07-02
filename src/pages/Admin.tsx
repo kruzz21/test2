@@ -17,14 +17,18 @@ import {
   Settings,
   BarChart3,
   CheckCircle,
-  XCircle
+  XCircle,
+  LogOut
 } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
+import AdminLogin from '@/components/AdminLogin';
 
 const Admin = () => {
   const { t } = useTranslation();
+  const { session, loading: authLoading, isAuthenticated, logout } = useAdminAuth();
   const { 
     stats, 
     fetchPendingAppointments, 
@@ -48,6 +52,22 @@ const Admin = () => {
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // Show login screen if not authenticated
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLoginSuccess={() => window.location.reload()} />;
+  }
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -65,8 +85,19 @@ const Admin = () => {
       }
     };
 
-    loadData();
-  }, [fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQSubmissions]);
+    if (isAuthenticated) {
+      loadData();
+    }
+  }, [isAuthenticated, fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQSubmissions]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   const handleAppointmentAction = async (id: string, status: string) => {
     try {
@@ -170,10 +201,21 @@ const Admin = () => {
     <div className="min-h-screen py-8 w-full">
       <div className="w-full px-4 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">{t('admin.title')}</h1>
-            <p className="text-gray-600">{t('admin.subtitle')}</p>
+          {/* Header with Logout */}
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-4xl font-bold mb-2">{t('admin.title')}</h1>
+              <p className="text-gray-600">{t('admin.subtitle')}</p>
+              {session && (
+                <p className="text-sm text-gray-500 mt-1">
+                  Welcome back, {session.admin.name}
+                </p>
+              )}
+            </div>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
           </div>
 
           {/* Stats Overview */}
