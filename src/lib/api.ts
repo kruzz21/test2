@@ -279,12 +279,19 @@ export const faqSubmissionsApi = {
     if (error) throw error;
   },
 
-  async approveAndCreateFAQ(submissionId: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
+  async approveAndCreateFAQ(submissionId: string, faqData: { 
+    question_tr: string; 
+    question_az: string; 
+    question_en: string;
+    answer_tr: string; 
+    answer_az: string; 
+    answer_en: string;
+  }) {
     try {
       console.log('Starting approveAndCreateFAQ for submission:', submissionId);
       checkAdminAuth(); // Require admin auth
       
-      // Get the submission
+      // Get the submission to verify it exists
       const { data: submission, error: fetchError } = await supabase
         .from('faq_submissions')
         .select('*')
@@ -298,22 +305,22 @@ export const faqSubmissionsApi = {
 
       console.log('Creating FAQ from submission:', submission);
 
-      // Create the FAQ entry with explicit values
-      const faqData = {
-        question_tr: submission.question_tr,
-        question_az: submission.question_az,
-        question_en: submission.question_en,
-        answer_tr: answers.answer_tr,
-        answer_az: answers.answer_az,
-        answer_en: answers.answer_en,
+      // Create the FAQ entry with the provided data
+      const newFaqData = {
+        question_tr: faqData.question_tr,
+        question_az: faqData.question_az,
+        question_en: faqData.question_en,
+        answer_tr: faqData.answer_tr,
+        answer_az: faqData.answer_az,
+        answer_en: faqData.answer_en,
         approved: true,
         is_preset: false
       };
 
-      console.log('FAQ data to insert:', faqData);
+      console.log('FAQ data to insert:', newFaqData);
 
       // Use the faqApi.create method which has better error handling
-      const faq = await faqApi.create(faqData);
+      const faq = await faqApi.create(newFaqData);
 
       console.log('FAQ created successfully:', faq);
 
@@ -425,12 +432,19 @@ export const adminApi = {
     return faqSubmissionsApi.getPending();
   },
 
-  async answerFAQSubmission(id: string, answers: { answer_tr: string; answer_az: string; answer_en: string }) {
-    console.log('Admin API: Answering FAQ submission', id, answers);
+  async answerFAQSubmission(id: string, faqData: { 
+    question_tr: string; 
+    question_az: string; 
+    question_en: string;
+    answer_tr: string; 
+    answer_az: string; 
+    answer_en: string;
+  }) {
+    console.log('Admin API: Answering FAQ submission', id, faqData);
     
     try {
       // Use the approveAndCreateFAQ method which handles both creating the FAQ and deleting the submission
-      const result = await faqSubmissionsApi.approveAndCreateFAQ(id, answers);
+      const result = await faqSubmissionsApi.approveAndCreateFAQ(id, faqData);
       console.log('FAQ submission answered and processed successfully');
       return result;
     } catch (error) {

@@ -45,6 +45,11 @@ const Admin = () => {
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);
   const [pendingFAQSubmissions, setPendingFAQSubmissions] = useState<any[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
+  const [questions, setQuestions] = useState({
+    question_tr: '',
+    question_az: '',
+    question_en: ''
+  });
   const [answers, setAnswers] = useState({
     answer_tr: '',
     answer_az: '',
@@ -150,12 +155,31 @@ const Admin = () => {
       return;
     }
 
+    if (!questions.question_tr || !questions.question_az || !questions.question_en) {
+      toast({
+        title: "Error",
+        description: "Please provide questions in all languages.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      await answerFAQSubmission(selectedSubmission.id, answers);
+      // Create the FAQ with edited questions and answers
+      await answerFAQSubmission(selectedSubmission.id, {
+        question_tr: questions.question_tr,
+        question_az: questions.question_az,
+        question_en: questions.question_en,
+        answer_tr: answers.answer_tr,
+        answer_az: answers.answer_az,
+        answer_en: answers.answer_en
+      });
+      
       // Refresh pending FAQ submissions
       const submissions = await fetchPendingFAQSubmissions();
       setPendingFAQSubmissions(submissions);
       setSelectedSubmission(null);
+      setQuestions({ question_tr: '', question_az: '', question_en: '' });
       setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
       setIsDialogOpen(false);
       toast({
@@ -194,6 +218,12 @@ const Admin = () => {
 
   const openAnswerDialog = (submission: any) => {
     setSelectedSubmission(submission);
+    // Pre-populate questions with the original submission
+    setQuestions({
+      question_tr: submission.question_tr || '',
+      question_az: submission.question_az || '',
+      question_en: submission.question_en || ''
+    });
     setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
     setIsDialogOpen(true);
   };
@@ -492,58 +522,113 @@ const Admin = () => {
         </div>
       </div>
 
-      {/* Answer FAQ Dialog */}
+      {/* Enhanced Answer FAQ Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Answer FAQ Question</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Original Question Display */}
             <div>
-              <p className="font-medium mb-2">Question:</p>
-              <p className="text-sm text-gray-700 p-3 bg-gray-50 rounded">
-                {selectedSubmission?.question_en}
-              </p>
-            </div>
-            
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
-                <Textarea
-                  value={answers.answer_tr}
-                  onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
-                  rows={3}
-                  placeholder="Turkish answer..."
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
-                <Textarea
-                  value={answers.answer_az}
-                  onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
-                  rows={3}
-                  placeholder="Azerbaijani answer..."
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-1">Answer (English)</label>
-                <Textarea
-                  value={answers.answer_en}
-                  onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
-                  rows={3}
-                  placeholder="English answer..."
-                />
+              <p className="font-medium mb-2">Original Question:</p>
+              <div className="p-3 bg-gray-50 rounded border">
+                <p className="text-sm text-gray-700">
+                  <strong>From:</strong> {selectedSubmission?.name} {selectedSubmission?.email && `(${selectedSubmission.email})`}
+                </p>
+                <p className="text-sm text-gray-700 mt-2">
+                  {selectedSubmission?.question_en}
+                </p>
               </div>
             </div>
             
-            <div className="flex justify-end space-x-2">
+            <Tabs defaultValue="questions" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="questions">Edit Questions</TabsTrigger>
+                <TabsTrigger value="answers">Add Answers</TabsTrigger>
+              </TabsList>
+
+              {/* Questions Tab */}
+              <TabsContent value="questions" className="space-y-4">
+                <p className="text-sm text-gray-600">
+                  Edit and translate the question for all languages before publishing:
+                </p>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Question (Turkish)</label>
+                  <Textarea
+                    value={questions.question_tr}
+                    onChange={(e) => setQuestions(prev => ({ ...prev, question_tr: e.target.value }))}
+                    rows={3}
+                    placeholder="Turkish question..."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Question (Azerbaijani)</label>
+                  <Textarea
+                    value={questions.question_az}
+                    onChange={(e) => setQuestions(prev => ({ ...prev, question_az: e.target.value }))}
+                    rows={3}
+                    placeholder="Azerbaijani question..."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Question (English)</label>
+                  <Textarea
+                    value={questions.question_en}
+                    onChange={(e) => setQuestions(prev => ({ ...prev, question_en: e.target.value }))}
+                    rows={3}
+                    placeholder="English question..."
+                  />
+                </div>
+              </TabsContent>
+
+              {/* Answers Tab */}
+              <TabsContent value="answers" className="space-y-4">
+                <p className="text-sm text-gray-600">
+                  Provide answers in all languages:
+                </p>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
+                  <Textarea
+                    value={answers.answer_tr}
+                    onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
+                    rows={4}
+                    placeholder="Turkish answer..."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
+                  <Textarea
+                    value={answers.answer_az}
+                    onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
+                    rows={4}
+                    placeholder="Azerbaijani answer..."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Answer (English)</label>
+                  <Textarea
+                    value={answers.answer_en}
+                    onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
+                    rows={4}
+                    placeholder="English answer..."
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+            
+            <div className="flex justify-end space-x-2 pt-4 border-t">
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
               <Button onClick={handleAnswerFAQ}>
-                Approve & Publish
+                Approve & Publish FAQ
               </Button>
             </div>
           </div>
