@@ -374,6 +374,37 @@ export const useAdmin = () => {
     }
   };
 
+  const rejectFAQSubmission = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase
+        .from('faq_submissions')
+        .update({ 
+          status: 'rejected',
+          processed_at: new Date().toISOString(),
+          processed_by: 'admin'
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      // Refresh stats after rejecting
+      await fetchStats();
+    } catch (err) {
+      console.error('Error rejecting FAQ submission:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to reject FAQ submission: ${errorMessage}`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     error,
@@ -394,5 +425,6 @@ export const useAdmin = () => {
     approveBlogComment,
     answerFAQSubmission,
     createFAQ,
+    rejectFAQSubmission,
   };
 };

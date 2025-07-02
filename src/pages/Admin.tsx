@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useTranslation } from 'react-i18next';
 import { 
   Calendar, 
@@ -12,10 +15,13 @@ import {
   HelpCircle, 
   FileText,
   Settings,
-  BarChart3
+  BarChart3,
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Toaster } from '@/components/ui/toaster';
+import { toast } from '@/hooks/use-toast';
 
 const Admin = () => {
   const { t } = useTranslation();
@@ -23,35 +29,43 @@ const Admin = () => {
     stats, 
     fetchPendingAppointments, 
     fetchPendingReviews, 
-    fetchPendingFAQs,
+    fetchPendingFAQSubmissions,
     updateAppointmentStatus,
     approveReview,
+    answerFAQSubmission,
+    rejectFAQSubmission,
     fetchStats
   } = useAdmin();
   
   const [pendingAppointments, setPendingAppointments] = useState<any[]>([]);
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);
-  const [pendingFAQs, setPendingFAQs] = useState<any[]>([]);
+  const [pendingFAQSubmissions, setPendingFAQSubmissions] = useState<any[]>([]);
+  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
+  const [answers, setAnswers] = useState({
+    answer_tr: '',
+    answer_az: '',
+    answer_en: ''
+  });
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [appointments, reviews, faqs] = await Promise.all([
+        const [appointments, reviews, faqSubmissions] = await Promise.all([
           fetchPendingAppointments(),
           fetchPendingReviews(),
-          fetchPendingFAQs()
+          fetchPendingFAQSubmissions()
         ]);
         
         setPendingAppointments(appointments);
         setPendingReviews(reviews);
-        setPendingFAQs(faqs);
+        setPendingFAQSubmissions(faqSubmissions);
       } catch (error) {
         console.error('Error loading admin data:', error);
       }
     };
 
     loadData();
-  }, [fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQs]);
+  }, [fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQSubmissions]);
 
   const handleAppointmentAction = async (id: string, status: string) => {
     try {
@@ -59,8 +73,17 @@ const Admin = () => {
       // Refresh pending appointments
       const appointments = await fetchPendingAppointments();
       setPendingAppointments(appointments);
+      toast({
+        title: "Success",
+        description: `Appointment ${status} successfully.`,
+      });
     } catch (error) {
       console.error('Error updating appointment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update appointment status.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -70,8 +93,68 @@ const Admin = () => {
       // Refresh pending reviews
       const reviews = await fetchPendingReviews();
       setPendingReviews(reviews);
+      toast({
+        title: "Success",
+        description: "Review approved successfully.",
+      });
     } catch (error) {
       console.error('Error approving review:', error);
+      toast({
+        title: "Error",
+        description: "Failed to approve review.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAnswerFAQ = async () => {
+    if (!selectedSubmission || !answers.answer_tr || !answers.answer_az || !answers.answer_en) {
+      toast({
+        title: "Error",
+        description: "Please provide answers in all languages.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await answerFAQSubmission(selectedSubmission.id, answers);
+      // Refresh pending FAQ submissions
+      const submissions = await fetchPendingFAQSubmissions();
+      setPendingFAQSubmissions(submissions);
+      setSelectedSubmission(null);
+      setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
+      toast({
+        title: "Success",
+        description: "FAQ answered and published successfully.",
+      });
+    } catch (error) {
+      console.error('Error answering FAQ:', error);
+      toast({
+        title: "Error",
+        description: "Failed to answer FAQ submission.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRejectFAQ = async (id: string) => {
+    try {
+      await rejectFAQSubmission(id);
+      // Refresh pending FAQ submissions
+      const submissions = await fetchPendingFAQSubmissions();
+      setPendingFAQSubmissions(submissions);
+      toast({
+        title: "Success",
+        description: "FAQ submission rejected.",
+      });
+    } catch (error) {
+      console.error('Error rejecting FAQ:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reject FAQ submission.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -165,7 +248,7 @@ const Admin = () => {
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="appointments">Appointments</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              <TabsTrigger value="faq">FAQ</TabsTrigger>
+              <TabsTrigger value="faq">FAQ Submissions</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
@@ -266,31 +349,109 @@ const Admin = () => {
               </Card>
             </TabsContent>
 
-            {/* FAQ Tab */}
+            {/* FAQ Submissions Tab */}
             <TabsContent value="faq">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <HelpCircle className="h-5 w-5 mr-2" />
-                    {t('admin.faqManagement')}
+                    FAQ Submissions
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {pendingFAQs.length === 0 ? (
-                      <p className="text-gray-600 text-center py-4">No pending questions</p>
+                    {pendingFAQSubmissions.length === 0 ? (
+                      <p className="text-gray-600 text-center py-4">No pending FAQ submissions</p>
                     ) : (
-                      pendingFAQs.map((faq) => (
-                        <div key={faq.id} className="flex items-start justify-between p-4 border rounded-lg">
+                      pendingFAQSubmissions.map((submission) => (
+                        <div key={submission.id} className="flex items-start justify-between p-4 border rounded-lg">
                           <div className="flex-1">
-                            <p className="font-medium mb-2">{faq.question_en}</p>
-                            <p className="text-sm text-gray-600">
-                              Asked on: {new Date(faq.created_at).toLocaleDateString()}
+                            <div className="flex items-center mb-2">
+                              <p className="font-medium mr-2">{submission.name}</p>
+                              {submission.email && (
+                                <p className="text-sm text-gray-500">({submission.email})</p>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-700 mb-2">{submission.question_en}</p>
+                            <p className="text-xs text-gray-500">
+                              Submitted on: {new Date(submission.created_at).toLocaleDateString()}
                             </p>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <Badge variant="secondary">Unanswered</Badge>
-                            <Button size="sm">Answer</Button>
+                            <Badge variant="secondary">{submission.status}</Badge>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button 
+                                  size="sm"
+                                  onClick={() => setSelectedSubmission(submission)}
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Answer
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-2xl">
+                                <DialogHeader>
+                                  <DialogTitle>Answer FAQ Question</DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-4">
+                                  <div>
+                                    <p className="font-medium mb-2">Question:</p>
+                                    <p className="text-sm text-gray-700 p-3 bg-gray-50 rounded">
+                                      {selectedSubmission?.question_en}
+                                    </p>
+                                  </div>
+                                  
+                                  <div className="space-y-3">
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
+                                      <Textarea
+                                        value={answers.answer_tr}
+                                        onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
+                                        rows={3}
+                                        placeholder="Turkish answer..."
+                                      />
+                                    </div>
+                                    
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
+                                      <Textarea
+                                        value={answers.answer_az}
+                                        onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
+                                        rows={3}
+                                        placeholder="Azerbaijani answer..."
+                                      />
+                                    </div>
+                                    
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Answer (English)</label>
+                                      <Textarea
+                                        value={answers.answer_en}
+                                        onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
+                                        rows={3}
+                                        placeholder="English answer..."
+                                      />
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="flex justify-end space-x-2">
+                                    <Button variant="outline" onClick={() => setSelectedSubmission(null)}>
+                                      Cancel
+                                    </Button>
+                                    <Button onClick={handleAnswerFAQ}>
+                                      Approve & Publish
+                                    </Button>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleRejectFAQ(submission.id)}
+                            >
+                              <XCircle className="h-4 w-4 mr-1" />
+                              Reject
+                            </Button>
                           </div>
                         </div>
                       ))

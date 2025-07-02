@@ -34,7 +34,7 @@ const FAQ = () => {
       // Create submission for admin review
       const submissionData = {
         name: formData.name,
-        email: formData.email,
+        email: formData.email || undefined,
         question_tr: formData.question,
         question_az: formData.question,
         question_en: formData.question,
