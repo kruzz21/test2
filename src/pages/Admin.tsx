@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,18 +14,47 @@ import {
   Settings,
   BarChart3
 } from 'lucide-react';
+import { useAdmin } from '@/hooks/useAdmin';
+import { useAppointments } from '@/hooks/useAppointments';
+import { Toaster } from '@/components/ui/toaster';
 
 const Admin = () => {
   const { t } = useTranslation();
+  const { stats, fetchPendingAppointments, fetchPendingReviews, approveReview, fetchPendingFAQs } = useAdmin();
+  const { updateAppointmentStatus } = useAppointments();
+  
+  const [pendingAppointments, setPendingAppointments] = useState<any[]>([]);
+  const [pendingReviews, setPendingReviews] = useState<any[]>([]);
+  const [pendingFAQs, setPendingFAQs] = useState<any[]>([]);
 
-  // Placeholder data
-  const stats = {
-    pendingAppointments: 12,
-    totalPatients: 1543,
-    pendingReviews: 8,
-    unansweredQuestions: 4,
-    publishedBlogs: 24,
-    totalViews: 8932
+  useEffect(() => {
+    const loadData = async () => {
+      const [appointments, reviews, faqs] = await Promise.all([
+        fetchPendingAppointments(),
+        fetchPendingReviews(),
+        fetchPendingFAQs()
+      ]);
+      
+      setPendingAppointments(appointments);
+      setPendingReviews(reviews);
+      setPendingFAQs(faqs);
+    };
+
+    loadData();
+  }, [fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQs]);
+
+  const handleAppointmentAction = async (id: string, status: string) => {
+    await updateAppointmentStatus(id, status);
+    // Refresh pending appointments
+    const appointments = await fetchPendingAppointments();
+    setPendingAppointments(appointments);
+  };
+
+  const handleApproveReview = async (id: string) => {
+    await approveReview(id);
+    // Refresh pending reviews
+    const reviews = await fetchPendingReviews();
+    setPendingReviews(reviews);
   };
 
   return (
@@ -114,12 +144,10 @@ const Admin = () => {
 
           {/* Main Content */}
           <Tabs defaultValue="appointments" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="appointments">Appointments</TabsTrigger>
-              <TabsTrigger value="blog">Blog</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
               <TabsTrigger value="faq">FAQ</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
@@ -127,72 +155,46 @@ const Admin = () => {
             <TabsContent value="appointments">
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span className="flex items-center">
-                      <Calendar className="h-5 w-5 mr-2" />
-                      {t('admin.appointmentManagement')}
-                    </span>
-                    <Button>Add Appointment</Button>
+                  <CardTitle className="flex items-center">
+                    <Calendar className="h-5 w-5 mr-2" />
+                    {t('admin.appointmentManagement')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <p className="font-medium">John Smith - Knee Consultation</p>
-                        <p className="text-sm text-gray-600">January 20, 2025 at 10:00 AM</p>
-                        <p className="text-sm text-gray-600">+994 55 123 45 67</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="secondary">Pending</Badge>
-                        <Button size="sm" variant="outline">View</Button>
-                        <Button size="sm">Confirm</Button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <p className="font-medium">Sarah Johnson - Hip Surgery Follow-up</p>
-                        <p className="text-sm text-gray-600">January 22, 2025 at 2:30 PM</p>
-                        <p className="text-sm text-gray-600">+994 55 987 65 43</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge>Confirmed</Badge>
-                        <Button size="sm" variant="outline">View</Button>
-                        <Button size="sm" variant="outline">Reschedule</Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Blog Tab */}
-            <TabsContent value="blog">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span className="flex items-center">
-                      <FileText className="h-5 w-5 mr-2" />
-                      {t('admin.blogManagement')}
-                    </span>
-                    <Button>Create New Post</Button>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <p className="font-medium">Understanding Knee Replacement Surgery</p>
-                        <p className="text-sm text-gray-600">Published on January 15, 2025</p>
-                        <p className="text-sm text-gray-600">234 views, 5 comments</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge>Published</Badge>
-                        <Button size="sm" variant="outline">Edit</Button>
-                        <Button size="sm" variant="outline">View Comments</Button>
-                      </div>
-                    </div>
+                    {pendingAppointments.length === 0 ? (
+                      <p className="text-gray-600 text-center py-4">No pending appointments</p>
+                    ) : (
+                      pendingAppointments.map((appointment) => (
+                        <div key={appointment.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div>
+                            <p className="font-medium">{appointment.name} - {appointment.service}</p>
+                            <p className="text-sm text-gray-600">{appointment.preferred_date} at {appointment.preferred_time}</p>
+                            <p className="text-sm text-gray-600">{appointment.phone}</p>
+                            <p className="text-sm text-gray-600">{appointment.email}</p>
+                            {appointment.message && (
+                              <p className="text-sm text-gray-600 mt-1">Message: {appointment.message}</p>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="secondary">{appointment.status}</Badge>
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleAppointmentAction(appointment.id, 'confirmed')}
+                            >
+                              Confirm
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleAppointmentAction(appointment.id, 'rejected')}
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -209,27 +211,38 @@ const Admin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-start justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center mb-2">
-                          <p className="font-medium mr-2">Maria Garcia</p>
-                          <div className="flex">
-                            {[1,2,3,4,5].map(i => (
-                              <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                            ))}
+                    {pendingReviews.length === 0 ? (
+                      <p className="text-gray-600 text-center py-4">No pending reviews</p>
+                    ) : (
+                      pendingReviews.map((review) => (
+                        <div key={review.id} className="flex items-start justify-between p-4 border rounded-lg">
+                          <div className="flex-1">
+                            <div className="flex items-center mb-2">
+                              <p className="font-medium mr-2">{review.name}</p>
+                              <div className="flex">
+                                {[1,2,3,4,5].map(i => (
+                                  <Star 
+                                    key={i} 
+                                    className={`h-4 w-4 ${i <= review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-700 mb-2">{review.message}</p>
+                            <p className="text-xs text-gray-500">{new Date(review.created_at).toLocaleDateString()}</p>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="secondary">Pending</Badge>
+                            <Button 
+                              size="sm"
+                              onClick={() => handleApproveReview(review.id)}
+                            >
+                              Approve
+                            </Button>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-700 mb-2">
-                          "Excellent care and surgery. Dr. Eryanılmaz was very professional..."
-                        </p>
-                        <p className="text-xs text-gray-500">January 18, 2025</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="secondary">Pending</Badge>
-                        <Button size="sm">Approve</Button>
-                        <Button size="sm" variant="outline">Reply</Button>
-                      </div>
-                    </div>
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -246,64 +259,24 @@ const Admin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-start justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium mb-2">
-                          "How long does recovery take after knee replacement?"
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Asked by: Anonymous Patient on January 19, 2025
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="secondary">Unanswered</Badge>
-                        <Button size="sm">Answer</Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Content Tab */}
-            <TabsContent value="content">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Settings className="h-5 w-5 mr-2" />
-                    {t('admin.contentManagement')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h3 className="font-semibold">Website Content</h3>
-                      <Button variant="outline" className="w-full justify-start">
-                        Edit Homepage Content
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start">
-                        Edit About Page
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start">
-                        Edit Services
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start">
-                        Manage Symptoms & Treatments
-                      </Button>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <h3 className="font-semibold">Multilingual Content</h3>
-                      <Button variant="outline" className="w-full justify-start">
-                        Turkish Content
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start">
-                        Azerbaijani Content
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start">
-                        English Content
-                      </Button>
-                    </div>
+                    {pendingFAQs.length === 0 ? (
+                      <p className="text-gray-600 text-center py-4">No pending questions</p>
+                    ) : (
+                      pendingFAQs.map((faq) => (
+                        <div key={faq.id} className="flex items-start justify-between p-4 border rounded-lg">
+                          <div className="flex-1">
+                            <p className="font-medium mb-2">{faq.question_en}</p>
+                            <p className="text-sm text-gray-600">
+                              Asked on: {new Date(faq.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="secondary">Unanswered</Badge>
+                            <Button size="sm">Answer</Button>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -346,6 +319,7 @@ const Admin = () => {
           </Tabs>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

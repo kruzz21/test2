@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,66 +7,53 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Star, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useReviews } from '@/hooks/useReviews';
+import { Toaster } from '@/components/ui/toaster';
 
 const Reviews = () => {
   const { t } = useTranslation();
+  const { reviews, loading, createReview } = useReviews();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    message: '',
+    rating: 0
+  });
 
-  // Placeholder reviews
-  const reviews = [
-    {
-      id: 1,
-      name: 'Ayşe Yılmaz',
-      rating: 5,
-      message: 'Dr. Eryanılmaz performed my knee replacement surgery and the results have been amazing. I can walk without pain for the first time in years!',
-      date: '2025-01-10',
-      doctorReply: 'Thank you for your kind words, Ayşe. I\'m delighted to hear about your excellent progress!'
-    },
-    {
-      id: 2,
-      name: 'Mehmet Aslan',
-      rating: 5,
-      message: 'Excellent surgeon and very caring doctor. My shoulder surgery was successful and recovery was smooth.',
-      date: '2025-01-05',
-      doctorReply: null
-    },
-    {
-      id: 3,
-      name: 'Fatma Özkan',
-      rating: 5,
-      message: 'Dr. Eryanılmaz treated my daughter\'s hip dysplasia. Professional, experienced, and great with children.',
-      date: '2024-12-28',
-      doctorReply: 'It was my pleasure to help your daughter. Children\'s health is always our top priority.'
-    },
-    {
-      id: 4,
-      name: 'Ali Demir',
-      rating: 5,
-      message: 'Had arthroscopic knee surgery. Minimal pain, quick recovery. Highly recommend Dr. Eryanılmaz.',
-      date: '2024-12-20',
-      doctorReply: null
-    },
-    {
-      id: 5,
-      name: 'Zeynep Kaya',
-      rating: 5,
-      message: 'Professional care from consultation to post-op follow-up. Excellent bedside manner.',
-      date: '2024-12-15',
-      doctorReply: 'Thank you Zeynep. Your positive attitude made the treatment process much smoother.'
+  const handleInputChange = (field: string, value: string | number) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.message || formData.rating === 0) {
+      return;
     }
-  ];
 
-  const renderStars = (rating: number) => {
+    try {
+      await createReview(formData);
+      setFormData({ name: '', message: '', rating: 0 });
+    } catch (error) {
+      // Error is handled in the hook
+    }
+  };
+
+  const renderStars = (rating: number, interactive = false, onRatingChange?: (rating: number) => void) => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
         className={`h-4 w-4 ${
           index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
+        } ${interactive ? 'cursor-pointer hover:text-yellow-400' : ''}`}
+        onClick={interactive && onRatingChange ? () => onRatingChange(index + 1) : undefined}
       />
     ));
   };
 
-  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / reviews.length 
+    : 0;
 
   return (
     <div className="min-h-screen py-8 w-full">
@@ -89,46 +77,49 @@ const Reviews = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {/* Reviews List */}
           <div className="lg:col-span-2 space-y-6">
-            {reviews.map((review) => (
-              <Card key={review.id}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{review.name}</CardTitle>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <div className="flex">{renderStars(review.rating)}</div>
-                        <span className="text-sm text-gray-500">
-                          {new Date(review.date).toLocaleDateString()}
-                        </span>
+            {loading ? (
+              <div className="text-center py-8">
+                <p>Loading reviews...</p>
+              </div>
+            ) : reviews.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No reviews yet. Be the first to leave a review!</p>
+              </div>
+            ) : (
+              reviews.map((review: any) => (
+                <Card key={review.id}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg">{review.name}</CardTitle>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="flex">{renderStars(review.rating)}</div>
+                          <span className="text-sm text-gray-500">
+                            {new Date(review.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
                       </div>
+                      <Badge variant="secondary">{review.rating}/5</Badge>
                     </div>
-                    <Badge variant="secondary">{review.rating}/5</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-4">{review.message}</p>
-                  
-                  {review.doctorReply && (
-                    <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded">
-                      <div className="flex items-center mb-2">
-                        <MessageCircle className="h-4 w-4 text-blue-600 mr-2" />
-                        <span className="font-medium text-blue-900">
-                          {t('reviews.doctorReply')}
-                        </span>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 mb-4">{review.message}</p>
+                    
+                    {review.doctor_reply && (
+                      <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded">
+                        <div className="flex items-center mb-2">
+                          <MessageCircle className="h-4 w-4 text-blue-600 mr-2" />
+                          <span className="font-medium text-blue-900">
+                            {t('reviews.doctorReply')}
+                          </span>
+                        </div>
+                        <p className="text-blue-800">{review.doctor_reply}</p>
                       </div>
-                      <p className="text-blue-800">{review.doctorReply}</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-
-            {/* Load More */}
-            <div className="text-center">
-              <Button variant="outline">
-                {t('reviews.loadMoreReviews')}
-              </Button>
-            </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
 
           {/* Review Form Sidebar */}
@@ -137,55 +128,63 @@ const Reviews = () => {
               <CardHeader>
                 <CardTitle>{t('reviews.writeReview')}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    {t('reviews.rating')}
-                  </label>
-                  <div className="flex space-x-1">
-                    {Array.from({ length: 5 }, (_, index) => (
-                      <Star
-                        key={index}
-                        className="h-6 w-6 text-gray-300 hover:text-yellow-400 cursor-pointer transition-colors"
-                      />
-                    ))}
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      {t('reviews.rating')}
+                    </label>
+                    <div className="flex space-x-1">
+                      {renderStars(formData.rating, true, (rating) => handleInputChange('rating', rating))}
+                    </div>
                   </div>
-                </div>
-                
-                <Input 
-                  placeholder={t('reviews.reviewName')}
-                />
-                
-                <Textarea 
-                  placeholder={t('reviews.reviewMessage')}
-                  rows={6}
-                />
-                
-                <Button className="w-full">
-                  {t('reviews.submitReview')}
-                </Button>
-                
-                <p className="text-sm text-gray-500">
-                  {t('reviews.reviewsReviewed')}
-                </p>
-
-                {/* FAQ Link */}
-                <div className="border-t pt-4 mt-6">
-                  <h4 className="font-medium mb-2">{t('reviews.haveQuestions')}</h4>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {t('reviews.checkFaq')}
-                  </p>
-                  <Button variant="outline" size="sm" asChild className="w-full">
-                    <Link to="/faq">
-                      {t('reviews.viewFaq')}
-                    </Link>
+                  
+                  <Input 
+                    placeholder={t('reviews.reviewName')}
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    required
+                  />
+                  
+                  <Textarea 
+                    placeholder={t('reviews.reviewMessage')}
+                    rows={6}
+                    value={formData.message}
+                    onChange={(e) => handleInputChange('message', e.target.value)}
+                    required
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={loading || formData.rating === 0}
+                  >
+                    {loading ? 'Submitting...' : t('reviews.submitReview')}
                   </Button>
-                </div>
+                  
+                  <p className="text-sm text-gray-500">
+                    {t('reviews.reviewsReviewed')}
+                  </p>
+
+                  {/* FAQ Link */}
+                  <div className="border-t pt-4 mt-6">
+                    <h4 className="font-medium mb-2">{t('reviews.haveQuestions')}</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {t('reviews.checkFaq')}
+                    </p>
+                    <Button variant="outline" size="sm" asChild className="w-full">
+                      <Link to="/faq">
+                        {t('reviews.viewFaq')}
+                      </Link>
+                    </Button>
+                  </div>
+                </form>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

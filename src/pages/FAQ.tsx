@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,53 +6,52 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { HelpCircle, MessageCircle } from 'lucide-react';
+import { useFAQ } from '@/hooks/useFAQ';
+import { Toaster } from '@/components/ui/toaster';
 
 const FAQ = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { faqs, loading, createQuestion } = useFAQ();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    question: ''
+  });
 
-  // Placeholder FAQ data
-  const faqs = [
-    {
-      id: 1,
-      question: t('faq.questions.kneeReplacementTime'),
-      answer: t('faq.answers.kneeReplacementTime')
-    },
-    {
-      id: 2,
-      question: t('faq.questions.arthroscopicRecovery'),
-      answer: t('faq.answers.arthroscopicRecovery')
-    },
-    {
-      id: 3,
-      question: t('faq.questions.pediatricTreatment'),
-      answer: t('faq.answers.pediatricTreatment')
-    },
-    {
-      id: 4,
-      question: t('faq.questions.firstConsultation'),
-      answer: t('faq.answers.firstConsultation')
-    },
-    {
-      id: 5,
-      question: t('faq.questions.surgeryPreparation'),
-      answer: t('faq.answers.surgeryPreparation')
-    },
-    {
-      id: 6,
-      question: t('faq.questions.surgeryRisks'),
-      answer: t('faq.answers.surgeryRisks')
-    },
-    {
-      id: 7,
-      question: t('faq.questions.implantDuration'),
-      answer: t('faq.answers.implantDuration')
-    },
-    {
-      id: 8,
-      question: t('faq.questions.internationalPatients'),
-      answer: t('faq.answers.internationalPatients')
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.question) {
+      return;
     }
-  ];
+
+    try {
+      // Create multilingual question entry
+      const questionData = {
+        question_tr: formData.question,
+        question_az: formData.question,
+        question_en: formData.question,
+        answer_tr: null,
+        answer_az: null,
+        answer_en: null,
+        approved: false,
+        is_preset: false
+      };
+
+      await createQuestion(questionData);
+      setFormData({ name: '', email: '', question: '' });
+    } catch (error) {
+      // Error is handled in the hook
+    }
+  };
+
+  // Get current language suffix
+  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   return (
     <div className="min-h-screen py-8 w-full">
@@ -77,18 +77,28 @@ const FAQ = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Accordion type="single" collapsible className="w-full">
-                  {faqs.map((faq) => (
-                    <AccordionItem key={faq.id} value={`item-${faq.id}`} className="border-border">
-                      <AccordionTrigger className="text-left text-foreground hover:text-foreground">
-                        {faq.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground">
-                        {faq.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+                {loading ? (
+                  <div className="text-center py-8">
+                    <p>Loading FAQs...</p>
+                  </div>
+                ) : faqs.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">No FAQs available yet.</p>
+                  </div>
+                ) : (
+                  <Accordion type="single" collapsible className="w-full">
+                    {faqs.map((faq: any) => (
+                      <AccordionItem key={faq.id} value={`item-${faq.id}`} className="border-border">
+                        <AccordionTrigger className="text-left text-foreground hover:text-foreground">
+                          {faq[`question${langSuffix}`]}
+                        </AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">
+                          {faq[`answer${langSuffix}`] || 'Answer pending...'}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -102,35 +112,50 @@ const FAQ = () => {
                   {t('faq.askQuestion')}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  {t('faq.askQuestionDescription')}
-                </p>
-                
-                <Input 
-                  placeholder={t('faq.yourName')}
-                  className="bg-background border-border text-foreground"
-                />
-                
-                <Input 
-                  placeholder={t('faq.yourEmail')}
-                  type="email"
-                  className="bg-background border-border text-foreground"
-                />
-                
-                <Textarea 
-                  placeholder={t('faq.questionText')}
-                  rows={5}
-                  className="bg-background border-border text-foreground"
-                />
-                
-                <Button className="w-full">
-                  {t('faq.submitQuestion')}
-                </Button>
-                
-                <p className="text-xs text-muted-foreground">
-                  {t('faq.responseTime')}
-                </p>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    {t('faq.askQuestionDescription')}
+                  </p>
+                  
+                  <Input 
+                    placeholder={t('faq.yourName')}
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    className="bg-background border-border text-foreground"
+                    required
+                  />
+                  
+                  <Input 
+                    placeholder={t('faq.yourEmail')}
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="bg-background border-border text-foreground"
+                    required
+                  />
+                  
+                  <Textarea 
+                    placeholder={t('faq.questionText')}
+                    rows={5}
+                    value={formData.question}
+                    onChange={(e) => handleInputChange('question', e.target.value)}
+                    className="bg-background border-border text-foreground"
+                    required
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? 'Submitting...' : t('faq.submitQuestion')}
+                  </Button>
+                  
+                  <p className="text-xs text-muted-foreground">
+                    {t('faq.responseTime')}
+                  </p>
+                </form>
               </CardContent>
             </Card>
 
@@ -166,6 +191,7 @@ const FAQ = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
