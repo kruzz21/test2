@@ -1,84 +1,126 @@
 import { useState, useEffect } from 'react';
-import { blogApi, type BlogPost, type BlogComment } from '@/lib/api';
+import { blogApi } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 
 export const useBlog = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchPosts = async () => {
+  const fetchBlogPosts = async () => {
     try {
       setLoading(true);
+      setError(null); // Clear any previous errors
+      console.log('Fetching blog posts...');
+      
       const data = await blogApi.getPublished();
-      setPosts(data);
+      console.log('Blog posts fetched successfully:', data);
+      
+      setBlogPosts(data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load blog posts';
+      setError(errorMessage);
+      
       toast({
         title: "Error",
         description: "Failed to load blog posts. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setLoading(false); // Always set loading to false, regardless of success or failure
     }
   };
 
-  const fetchPostById = async (id: string): Promise<BlogPost | null> => {
+  const fetchBlogPost = async (id: string) => {
     try {
       setLoading(true);
-      const post = await blogApi.getById(id);
-      return post;
+      setError(null);
+      console.log('Fetching blog post with ID:', id);
+      
+      const data = await blogApi.getById(id);
+      console.log('Blog post fetched successfully:', data);
+      
+      return data;
     } catch (error) {
       console.error('Error fetching blog post:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load blog post';
+      setError(errorMessage);
+      
       toast({
         title: "Error",
         description: "Failed to load blog post. Please try again.",
         variant: "destructive",
       });
-      return null;
+      throw error; // Re-throw so the component can handle it
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchComments = async (postId: string): Promise<BlogComment[]> => {
+  const fetchBlogComments = async (postId: string) => {
     try {
-      const comments = await blogApi.getComments(postId);
-      return comments;
+      console.log('Fetching comments for post ID:', postId);
+      
+      const data = await blogApi.getComments(postId);
+      console.log('Blog comments fetched successfully:', data);
+      
+      return data || [];
     } catch (error) {
-      console.error('Error fetching comments:', error);
-      return [];
+      console.error('Error fetching blog comments:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load comments';
+      
+      toast({
+        title: "Error",
+        description: "Failed to load comments.",
+        variant: "destructive",
+      });
+      return []; // Return empty array on error
     }
   };
 
-  const addComment = async (commentData: { post_id: string; name: string; message: string }) => {
+  const addBlogComment = async (comment: { post_id: string; name: string; message: string }) => {
     try {
-      await blogApi.addComment(commentData);
+      setLoading(true);
+      setError(null);
+      console.log('Adding blog comment:', comment);
+      
+      const data = await blogApi.addComment(comment);
+      console.log('Blog comment added successfully:', data);
+      
       toast({
         title: "Success",
         description: "Your comment has been submitted and is awaiting approval.",
       });
+      
+      return data;
     } catch (error) {
-      console.error('Error adding comment:', error);
+      console.error('Error adding blog comment:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add comment';
+      setError(errorMessage);
+      
       toast({
         title: "Error",
         description: "Failed to submit comment. Please try again.",
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchBlogPosts();
   }, []);
 
   return {
-    posts,
+    blogPosts,
     loading,
-    fetchPosts,
-    fetchPostById,
-    fetchComments,
-    addComment
+    error,
+    fetchBlogPosts,
+    fetchBlogPost,
+    fetchBlogComments,
+    addBlogComment
   };
 };

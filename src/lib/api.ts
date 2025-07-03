@@ -75,49 +75,97 @@ export const appointmentsApi = {
 // Blog API
 export const blogApi = {
   async getPublished() {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
+    try {
+      console.log('blogApi.getPublished: Starting fetch...');
+      
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('blogApi.getPublished: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('blogApi.getPublished: Success, fetched', data?.length || 0, 'posts');
+      return data || [];
+    } catch (error) {
+      console.error('blogApi.getPublished: Unexpected error:', error);
+      throw error; // Re-throw to ensure the error propagates to the calling hook
+    }
   },
 
   async getById(id: string) {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('id', id)
-      .eq('published', true)
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      console.log('blogApi.getById: Fetching post with ID:', id);
+      
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('id', id)
+        .eq('published', true)
+        .single();
+      
+      if (error) {
+        console.error('blogApi.getById: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('blogApi.getById: Success, fetched post:', data?.title_en || 'Unknown title');
+      return data;
+    } catch (error) {
+      console.error('blogApi.getById: Unexpected error:', error);
+      throw error;
+    }
   },
 
   async getComments(postId: string) {
-    const { data, error } = await supabase
-      .from('blog_comments')
-      .select('*')
-      .eq('post_id', postId)
-      .eq('approved', true)
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
+    try {
+      console.log('blogApi.getComments: Fetching comments for post ID:', postId);
+      
+      const { data, error } = await supabase
+        .from('blog_comments')
+        .select('*')
+        .eq('post_id', postId)
+        .eq('approved', true)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('blogApi.getComments: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('blogApi.getComments: Success, fetched', data?.length || 0, 'comments');
+      return data || [];
+    } catch (error) {
+      console.error('blogApi.getComments: Unexpected error:', error);
+      throw error;
+    }
   },
 
   async addComment(comment: { post_id: string; name: string; message: string }) {
-    const { data, error } = await supabase
-      .from('blog_comments')
-      .insert(comment)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      console.log('blogApi.addComment: Adding comment:', comment);
+      
+      const { data, error } = await supabase
+        .from('blog_comments')
+        .insert(comment)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('blogApi.addComment: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('blogApi.addComment: Success, added comment with ID:', data?.id);
+      return data;
+    } catch (error) {
+      console.error('blogApi.addComment: Unexpected error:', error);
+      throw error;
+    }
   }
 };
 
