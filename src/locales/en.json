@@ -3,219 +3,104 @@
     "home": "Home",
     "about": "About",
     "services": "Services",
-    "symptoms": "Symptoms & Treatments",
+    "symptoms": "Symptoms",
     "gallery": "Gallery",
     "blog": "Blog",
-    "reviews": "Patient Reviews",
+    "reviews": "Reviews",
     "contact": "Contact",
     "faq": "FAQ",
     "appointment": "Book Appointment"
   },
-  "hero": {
-    "title": "Op. Dr. Gürkan Eryanılmaz",
-    "subtitle": "Orthopedics & Traumatology Specialist",
-    "description": "Expert orthopedic surgical services with over 25 years of experience",
-    "cta": "Book Appointment"
+  "home": {
+    "title": "Dr. Gürkan Eryanılmaz",
+    "subtitle": "Orthopedics and Traumatology Specialist",
+    "description": "Expert orthopedic care with years of experience in joint surgery, trauma treatment, and sports medicine.",
+    "bookAppointment": "Book Appointment",
+    "learnMore": "Learn More",
+    "services": "Our Services",
+    "whyChooseUs": "Why Choose Us",
+    "experience": "Years of Experience",
+    "patients": "Happy Patients",
+    "surgeries": "Successful Surgeries"
   },
   "about": {
     "title": "About Dr. Gürkan Eryanılmaz",
-    "subtitle": "Experienced Orthopedics & Traumatology Specialist",
-    "mission": "Mission & Vision",
-    "missionText": "To improve patients' quality of life and provide the best orthopedic care",
-    "experience": "25+ Years Experience",
-    "surgeries": "10,000+ Surgeries",
-    "locations": "Afyon & Azerbaijan",
-    "learnMore": "Learn More",
-    "biography": "Biography",
-    "careerTimeline": "Career Timeline",
-    "areasOfExpertise": "Areas of Expertise",
-    "regionsServed": "Regions Served"
-  },
-  "stats": {
-    "kneeReplacements": "Knee Replacement Surgeries",
-    "arthroscopies": "Arthroscopic Procedures",
-    "fracturesSurgeries": "Fracture Surgeries",
-    "pediatricHip": "Pediatric Hip Dislocation"
+    "subtitle": "Dedicated to Excellence in Orthopedic Care"
   },
   "services": {
-    "title": "Areas of Expertise",
-    "arthroscopy": {
-      "title": "Arthroscopic Surgery",
-      "description": "Knee, shoulder, elbow arthroscopy, ACL, meniscus, Bankart, impingement syndrome"
-    },
-    "replacement": {
-      "title": "Joint Replacement Surgery",
-      "description": "Knee, hip, shoulder replacement procedures"
-    },
-    "trauma": {
-      "title": "Trauma & Fracture Surgery",
-      "description": "Ankle, hip, elbow, femur fracture treatments"
-    },
-    "pediatric": {
-      "title": "Pediatric Orthopedics",
-      "description": "DDH, clubfoot, shoulder dislocation and pediatric orthopedic problems"
-    },
-    "sports": {
-      "title": "Sports Injuries",
-      "description": "Achilles tendon, ligament injuries, overuse injuries"
-    },
-    "nerve": {
-      "title": "Joint & Nerve Surgery",
-      "description": "Carpal tunnel, decompression, intra-articular injections"
-    },
-    "needConsultation": "Need a Consultation?",
-    "consultationDescription": "Dr. Gürkan Eryanılmaz provides personalized treatment plans for each patient. Schedule your consultation to discuss your specific needs.",
-    "scheduleAppointment": "Schedule Appointment",
-    "callNow": "Call Now"
+    "title": "Our Services",
+    "subtitle": "Comprehensive orthopedic care tailored to your needs"
   },
-  "contact": {
-    "title": "Contact & Appointment",
-    "appointmentForm": "Appointment Form",
-    "contactInfo": "Contact Information",
-    "name": "Full Name",
-    "phone": "Phone",
-    "email": "Email",
-    "nationalId": "National ID / Passport Number",
-    "service": "Service",
-    "preferredDate": "Preferred Date",
-    "preferredTime": "Preferred Time",
-    "message": "Message",
-    "submit": "Send Appointment Request",
-    "note": "This is a preliminary request. You will be contacted within 24 hours.",
-    "address": "Address",
-    "officeHours": "Office Hours",
-    "followUs": "Follow Us",
-    "location": "Location",
-    "quickActions": "Quick Actions"
-  },
-  "footer": {
-    "address": "Address",
-    "phone": "Phone",
-    "email": "Email",
-    "social": "Social Media",
-    "privacy": "Privacy Policy",
-    "kvkk": "GDPR",
-    "quickLinks": "Quick Links"
-  },
-  "blog": {
-    "title": "Blog",
-    "subtitle": "Expert insights on orthopedic health, surgery, and recovery",
-    "readMore": "Read More",
-    "comments": "Comments",
-    "leaveComment": "Leave a Comment",
-    "commentName": "Your Name",
-    "commentMessage": "Your Comment",
-    "submitComment": "Submit Comment",
-    "featured": "Featured",
-    "loadMoreArticles": "Load More Articles",
-    "backToBlog": "Back to Blog",
-    "commentsReviewed": "Comments are reviewed before publication."
-  },
-  "reviews": {
-    "title": "Patient Reviews",
-    "subtitle": "Read what our patients say about their experience with Dr. Eryanılmaz",
-    "rating": "Rating",
-    "writeReview": "Write a Review",
-    "reviewName": "Your Name",
-    "reviewMessage": "Your Review",
-    "submitReview": "Submit Review",
-    "doctorReply": "Doctor's Reply",
-    "loadMoreReviews": "Load More Reviews",
-    "reviewsReviewed": "Reviews are reviewed before publication to ensure authenticity.",
-    "haveQuestions": "Have Questions?",
-    "checkFaq": "Check our frequently asked questions or submit your own.",
-    "viewFaq": "View FAQ"
-  },
-  "faq": {
-    "title": "Frequently Asked Questions",
-    "subtitle": "Find answers to common questions about orthopedic care and procedures",
-    "askQuestion": "Ask a Question",
-    "questionText": "Your Question",
-    "submitQuestion": "Submit Question",
-    "frequentlyAsked": "Frequently Asked Questions",
-    "askQuestionDescription": "Don't see your question? Ask Dr. Eryanılmaz directly and get a personalized response.",
-    "yourName": "Your Name",
-    "yourEmail": "Your Email",
-    "responseTime": "Questions are reviewed and answered by Dr. Eryanılmaz. Responses are typically provided within 24-48 hours.",
-    "needImmediateHelp": "Need Immediate Help?",
-    "urgentContact": "For urgent medical questions or to schedule an appointment:",
-    "call": "Call",
-    "whatsappMessage": "WhatsApp Message",
-    "questions": {
-      "kneeReplacementTime": "How long does knee replacement surgery take?",
-      "arthroscopicRecovery": "What is the recovery time for arthroscopic surgery?",
-      "pediatricTreatment": "Do you treat pediatric orthopedic conditions?",
-      "firstConsultation": "What should I expect during my first consultation?",
-      "surgeryPreparation": "How do I prepare for orthopedic surgery?",
-      "surgeryRisks": "What are the risks of joint replacement surgery?",
-      "implantDuration": "How long do joint replacements last?",
-      "internationalPatients": "Do you accept international patients?"
-    },
-    "answers": {
-      "kneeReplacementTime": "Knee replacement surgery typically takes 1-2 hours, depending on the complexity of the case. The procedure involves removing damaged cartilage and bone, then positioning the new metal and plastic joint surfaces.",
-      "arthroscopicRecovery": "Recovery time for arthroscopic surgery varies depending on the procedure, but most patients can return to light activities within 1-2 weeks and full activities within 4-6 weeks. Physical therapy is crucial for optimal recovery.",
-      "pediatricTreatment": "Yes, Dr. Eryanılmaz specializes in pediatric orthopedics, including developmental hip dysplasia (DDH), clubfoot, and various childhood orthopedic conditions. Early intervention is often key to successful treatment.",
-      "firstConsultation": "During your first consultation, Dr. Eryanılmaz will review your medical history, perform a physical examination, and discuss your symptoms. You may need X-rays or other imaging studies to help with diagnosis and treatment planning.",
-      "surgeryPreparation": "Preparation includes following pre-operative instructions, arranging transportation, organizing help at home, and completing any required medical clearances. Dr. Eryanılmaz's team will provide detailed pre-operative guidelines.",
-      "surgeryRisks": "While joint replacement is generally very safe, potential risks include infection, blood clots, implant loosening, and nerve damage. Dr. Eryanılmaz will discuss all risks and benefits with you before surgery.",
-      "implantDuration": "Modern joint replacements typically last 15-20 years or more. The longevity depends on factors such as your age, activity level, weight, and the type of implant used.",
-      "internationalPatients": "Yes, Dr. Eryanılmaz treats patients from both Turkey and Azerbaijan. The practice can assist with coordination of care for international patients, including pre-operative consultations and post-operative follow-up."
-    }
+  "symptoms": {
+    "title": "Symptoms & Conditions",
+    "subtitle": "Learn about common orthopedic conditions and their treatments"
   },
   "gallery": {
     "title": "Gallery",
-    "subtitle": "Explore our medical facilities, surgical procedures, and patient care",
-    "photos": "Photos",
-    "videos": "Videos",
-    "doctorIntro": "Dr. Gürkan Eryanılmaz Introduction Video",
-    "welcomeMessage": "Welcome Message",
-    "welcomeText": "Welcome to our orthopedic surgery practice. With over 25 years of experience, I am dedicated to providing the highest quality care for all your orthopedic needs. Browse our gallery to learn more about our facilities and procedures.",
-    "watchIntroVideo": "Watch Introduction Video"
+    "subtitle": "See our modern facilities and successful treatments"
   },
-  "symptoms": {
-    "title": "Symptoms & Treatments",
-    "subtitle": "Learn about common orthopedic conditions and their treatment options",
-    "readMore": "Read Details",
-    "dontSeeCondition": "Don't See Your Condition?",
-    "conditionDescription": "Dr. Eryanılmaz treats a wide range of orthopedic conditions. Contact us to discuss your specific symptoms and treatment options.",
-    "scheduleConsultation": "Schedule Consultation"
+  "blog": {
+    "title": "Medical Blog",
+    "subtitle": "Latest insights and updates from Dr. Eryanılmaz",
+    "article": "Article",
+    "readMore": "Read More",
+    "backToBlog": "Back to Blog",
+    "comments": "Comments",
+    "leaveComment": "Leave a Comment",
+    "yourName": "Your Name",
+    "yourComment": "Your Comment",
+    "submitComment": "Submit Comment",
+    "submitting": "Submitting...",
+    "commentModeration": "Comments are moderated and will appear after approval.",
+    "noComments": "No comments yet. Be the first to comment!"
   },
-  "home": {
-    "viewAllServices": "View All Services",
-    "ctaTitle": "Ready to Book Your Appointment?",
-    "ctaDescription": "Get expert orthopedic care from Dr. Gürkan Eryanılmaz. Contact us today to schedule your consultation.",
-    "bookAppointment": "Book Appointment",
-    "callNow": "Call Now"
+  "reviews": {
+    "title": "Patient Reviews",
+    "subtitle": "What our patients say about their experience",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "reviewName": "Your Name",
+    "reviewMessage": "Your Review",
+    "submitReview": "Submit Review",
+    "reviewsReviewed": "Reviews are moderated before publication.",
+    "doctorReply": "Doctor's Reply",
+    "haveQuestions": "Have Questions?",
+    "checkFaq": "Check our FAQ section for common questions and answers.",
+    "viewFaq": "View FAQ"
+  },
+  "contact": {
+    "title": "Contact & Appointments",
+    "contactInfo": "Contact Information",
+    "address": "Address",
+    "officeHours": "Office Hours",
+    "followUs": "Follow Us",
+    "location": "Location"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about treatments and procedures",
+    "frequentlyAsked": "Frequently Asked Questions",
+    "askQuestion": "Ask a Question",
+    "askQuestionDescription": "Can't find what you're looking for? Ask Dr. Eryanılmaz directly.",
+    "yourName": "Your Name",
+    "yourEmail": "Your Email (optional)",
+    "questionText": "Your Question",
+    "submitQuestion": "Submit Question",
+    "responseTime": "We typically respond within 24-48 hours.",
+    "needImmediateHelp": "Need Immediate Help?",
+    "urgentContact": "For urgent medical concerns, please contact us directly:",
+    "call": "Call",
+    "whatsappMessage": "WhatsApp Message"
   },
   "admin": {
     "title": "Admin Dashboard",
-    "subtitle": "Manage appointments, content, and patient interactions",
+    "subtitle": "Manage your medical practice",
     "pendingAppointments": "Pending Appointments",
     "totalPatients": "Total Patients",
     "pendingReviews": "Pending Reviews",
     "unansweredQuestions": "Unanswered Questions",
     "publishedBlogs": "Published Blogs",
     "websiteViews": "Website Views",
-    "appointmentManagement": "Appointment Management",
-    "blogManagement": "Blog Management",
-    "patientReviews": "Patient Reviews",
-    "faqManagement": "FAQ Management",
-    "contentManagement": "Content Management",
     "systemSettings": "System Settings"
-  },
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "edit": "Edit",
-    "delete": "Delete",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "close": "Close",
-    "open": "Open"
   }
 }

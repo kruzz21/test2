@@ -1,221 +1,106 @@
 {
   "nav": {
     "home": "Ana Sayfa",
-    "about": "Hakkında",
+    "about": "Hakkımda",
     "services": "Hizmetler",
-    "symptoms": "Semptomlar ve Tedaviler",
+    "symptoms": "Semptomlar",
     "gallery": "Galeri",
     "blog": "Blog",
-    "reviews": "Hasta Yorumları",
+    "reviews": "Yorumlar",
     "contact": "İletişim",
     "faq": "SSS",
     "appointment": "Randevu Al"
   },
-  "hero": {
-    "title": "Op. Dr. Gürkan Eryanılmaz",
+  "home": {
+    "title": "Dr. Gürkan Eryanılmaz",
     "subtitle": "Ortopedi ve Travmatoloji Uzmanı",
-    "description": "25 yılı aşkın deneyimle ortopedik cerrahi alanında uzman hizmet",
-    "cta": "Randevu Al"
+    "description": "Eklem cerrahisi, travma tedavisi ve spor hekimliğinde yılların deneyimi ile uzman ortopedik bakım.",
+    "bookAppointment": "Randevu Al",
+    "learnMore": "Daha Fazla Bilgi",
+    "services": "Hizmetlerimiz",
+    "whyChooseUs": "Neden Bizi Seçmelisiniz",
+    "experience": "Yıllık Deneyim",
+    "patients": "Mutlu Hasta",
+    "surgeries": "Başarılı Ameliyat"
   },
   "about": {
     "title": "Dr. Gürkan Eryanılmaz Hakkında",
-    "subtitle": "Deneyimli Ortopedi ve Travmatoloji Uzmanı",
-    "mission": "Misyon & Vizyon",
-    "missionText": "Hastaların yaşam kalitesini artırmak ve en iyi ortopedik bakımı sağlamak",
-    "experience": "25+ Yıl Deneyim",
-    "surgeries": "10,000+ Ameliyat",
-    "locations": "Afyon & Azerbaycan",
-    "learnMore": "Daha Fazla Bilgi",
-    "biography": "Biyografi",
-    "careerTimeline": "Kariyer Zaman Çizelgesi",
-    "areasOfExpertise": "Uzmanlık Alanları",
-    "regionsServed": "Hizmet Verilen Bölgeler"
-  },
-  "stats": {
-    "kneeReplacements": "Diz Protezi Ameliyatı",
-    "arthroscopies": "Artroskopik Ameliyat",
-    "fracturesSurgeries": "Kırık Ameliyatı",
-    "pediatricHip": "Çocuk Kalça Dislokasyonu"
+    "subtitle": "Ortopedik Bakımda Mükemmelliğe Adanmış"
   },
   "services": {
-    "title": "Uzmanlık Alanları",
-    "arthroscopy": {
-      "title": "Artroskopik Cerrahi",
-      "description": "Diz, omuz, dirsek artroskopisi, ACL, menisküs, Bankart, sıkışma sendromu"
-    },
-    "replacement": {
-      "title": "Eklem Protezi Cerrahisi",
-      "description": "Diz, kalça, omuz protez ameliyatları"
-    },
-    "trauma": {
-      "title": "Travma ve Kırık Cerrahisi",
-      "description": "Ayak bileği, kalça, dirsek, femur kırık tedavileri"
-    },
-    "pediatric": {
-      "title": "Çocuk Ortopedisi",
-      "description": "DDH, klubfoot, omuz çıkığı ve çocuk ortopedik problemleri"
-    },
-    "sports": {
-      "title": "Spor Yaralanmaları",
-      "description": "Aşil tendonu, bağ yaralanmaları, aşırı kullanım yaralanmaları"
-    },
-    "nerve": {
-      "title": "Eklem ve Sinir Cerrahisi",
-      "description": "Karpal tünel, dekompresyon, eklem içi enjeksiyonlar"
-    },
-    "needConsultation": "Konsültasyona İhtiyacınız Var mı?",
-    "consultationDescription": "Dr. Gürkan Eryanılmaz her hasta için kişiselleştirilmiş tedavi planları sağlar. Özel ihtiyaçlarınızı görüşmek için konsültasyonunuzu planlayın.",
-    "scheduleAppointment": "Randevu Planla",
-    "callNow": "Şimdi Ara"
+    "title": "Hizmetlerimiz",
+    "subtitle": "İhtiyaçlarınıza özel kapsamlı ortopedik bakım"
   },
-  "contact": {
-    "title": "İletişim ve Randevu",
-    "appointmentForm": "Randevu Formu",
-    "contactInfo": "İletişim Bilgileri",
-    "name": "Ad Soyad",
-    "phone": "Telefon",
-    "email": "E-posta",
-    "nationalId": "TC Kimlik / Pasaport No",
-    "service": "Hizmet",
-    "preferredDate": "Tercih Edilen Tarih",
-    "preferredTime": "Tercih Edilen Saat",
-    "message": "Mesaj",
-    "submit": "Randevu Talebi Gönder",
-    "note": "Bu bir ön taleptir. 24 saat içinde sizinle iletişime geçilecektir.",
-    "address": "Adres",
-    "officeHours": "Çalışma Saatleri",
-    "followUs": "Bizi Takip Edin",
-    "location": "Konum",
-    "quickActions": "Hızlı İşlemler"
-  },
-  "footer": {
-    "address": "Adres",
-    "phone": "Telefon",
-    "email": "E-posta",
-    "social": "Sosyal Medya",
-    "privacy": "Gizlilik Politikası",
-    "kvkk": "KVKK",
-    "quickLinks": "Hızlı Bağlantılar"
-  },
-  "blog": {
-    "title": "Blog",
-    "subtitle": "Ortopedik sağlık, cerrahi ve iyileşme konularında uzman görüşleri",
-    "readMore": "Devamını Oku",
-    "comments": "Yorumlar",
-    "leaveComment": "Yorum Bırak",
-    "commentName": "Adınız",
-    "commentMessage": "Yorumunuz",
-    "submitComment": "Yorum Gönder",
-    "featured": "Öne Çıkan",
-    "loadMoreArticles": "Daha Fazla Makale Yükle",
-    "backToBlog": "Blog'a Geri Dön",
-    "commentsReviewed": "Yorumlar yayınlanmadan önce incelenir."
-  },
-  "reviews": {
-    "title": "Hasta Yorumları",
-    "subtitle": "Hastalarımızın Dr. Eryanılmaz ile yaşadıkları deneyimler hakkında söylediklerini okuyun",
-    "rating": "Değerlendirme",
-    "writeReview": "Yorum Yaz",
-    "reviewName": "Adınız",
-    "reviewMessage": "Yorumunuz",
-    "submitReview": "Yorum Gönder",
-    "doctorReply": "Doktor Yanıtı",
-    "loadMoreReviews": "Daha Fazla Yorum Yükle",
-    "reviewsReviewed": "Yorumlar özgünlüğü sağlamak için yayınlanmadan önce incelenir.",
-    "haveQuestions": "Sorularınız Var mı?",
-    "checkFaq": "Sıkça sorulan sorularımızı kontrol edin veya kendinizinkini gönderin.",
-    "viewFaq": "SSS'yi Görüntüle"
-  },
-  "faq": {
-    "title": "Sıkça Sorulan Sorular",
-    "subtitle": "Ortopedik bakım ve prosedürler hakkında yaygın soruların cevaplarını bulun",
-    "askQuestion": "Soru Sor",
-    "questionText": "Sorunuz",
-    "submitQuestion": "Soru Gönder",
-    "frequentlyAsked": "Sıkça Sorulan Sorular",
-    "askQuestionDescription": "Sorunuzu görmüyor musunuz? Dr. Eryanılmaz'a doğrudan sorun ve kişiselleştirilmiş bir yanıt alın.",
-    "yourName": "Adınız",
-    "yourEmail": "E-posta Adresiniz",
-    "responseTime": "Sorular Dr. Eryanılmaz tarafından incelenir ve yanıtlanır. Yanıtlar genellikle 24-48 saat içinde verilir.",
-    "needImmediateHelp": "Acil Yardıma İhtiyacınız Var mı?",
-    "urgentContact": "Acil tıbbi sorular veya randevu almak için:",
-    "call": "Ara",
-    "whatsappMessage": "WhatsApp Mesajı",
-    "questions": {
-      "kneeReplacementTime": "Diz protezi ameliyatı ne kadar sürer?",
-      "arthroscopicRecovery": "Artroskopik cerrahi için iyileşme süresi nedir?",
-      "pediatricTreatment": "Çocuk ortopedik durumlarını tedavi ediyor musunuz?",
-      "firstConsultation": "İlk konsültasyonda ne beklemeliyim?",
-      "surgeryPreparation": "Ortopedik cerrahiye nasıl hazırlanırım?",
-      "surgeryRisks": "Eklem protezi cerrahisinin riskleri nelerdir?",
-      "implantDuration": "Eklem protezleri ne kadar sürer?",
-      "internationalPatients": "Uluslararası hastaları kabul ediyor musunuz?"
-    },
-    "answers": {
-      "kneeReplacementTime": "Diz protezi ameliyatı genellikle vakanın karmaşıklığına bağlı olarak 1-2 saat sürer. Prosedür, hasarlı kıkırdak ve kemiğin çıkarılması, ardından yeni metal ve plastik eklem yüzeylerinin yerleştirilmesini içerir.",
-      "arthroscopicRecovery": "Artroskopik cerrahi için iyileşme süresi prosedüre bağlı olarak değişir, ancak çoğu hasta 1-2 hafta içinde hafif aktivitelere, 4-6 hafta içinde tam aktivitelere dönebilir. Optimal iyileşme için fizik tedavi çok önemlidir.",
-      "pediatricTreatment": "Evet, Dr. Eryanılmaz gelişimsel kalça displazisi (DDH), klubfoot ve çeşitli çocukluk ortopedik durumları dahil olmak üzere çocuk ortopedisinde uzmanlaşmıştır. Erken müdahale genellikle başarılı tedavinin anahtarıdır.",
-      "firstConsultation": "İlk konsültasyonunuz sırasında Dr. Eryanılmaz tıbbi geçmişinizi gözden geçirecek, fizik muayene yapacak ve semptomlarınızı tartışacaktır. Tanı ve tedavi planlamasına yardımcı olmak için röntgen veya diğer görüntüleme çalışmalarına ihtiyacınız olabilir.",
-      "surgeryPreparation": "Hazırlık, ameliyat öncesi talimatları takip etmeyi, ulaşım ayarlamayı, evde yardım organize etmeyi ve gerekli tıbbi onayları tamamlamayı içerir. Dr. Eryanılmaz'ın ekibi detaylı ameliyat öncesi kılavuzlar sağlayacaktır.",
-      "surgeryRisks": "Eklem protezi genellikle çok güvenli olsa da, potansiyel riskler enfeksiyon, kan pıhtıları, implant gevşemesi ve sinir hasarını içerir. Dr. Eryanılmaz ameliyattan önce tüm riskleri ve faydaları sizinle tartışacaktır.",
-      "implantDuration": "Modern eklem protezleri genellikle 15-20 yıl veya daha fazla sürer. Uzun ömür yaşınız, aktivite seviyeniz, kilonuz ve kullanılan implant türü gibi faktörlere bağlıdır.",
-      "internationalPatients": "Evet, Dr. Eryanılmaz hem Türkiye'den hem de Azerbaycan'dan hastaları tedavi eder. Uygulama, ameliyat öncesi konsültasyonlar ve ameliyat sonrası takip dahil olmak üzere uluslararası hastalar için bakım koordinasyonunda yardımcı olabilir."
-    }
+  "symptoms": {
+    "title": "Semptomlar ve Durumlar",
+    "subtitle": "Yaygın ortopedik durumlar ve tedavileri hakkında bilgi edinin"
   },
   "gallery": {
     "title": "Galeri",
-    "subtitle": "Tıbbi tesislerimizi, cerrahi prosedürlerimizi ve hasta bakımımızı keşfedin",
-    "photos": "Fotoğraflar",
-    "videos": "Videolar",
-    "doctorIntro": "Dr. Gürkan Eryanılmaz Tanıtım Videosu",
-    "welcomeMessage": "Hoş Geldiniz Mesajı",
-    "welcomeText": "Ortopedik cerrahi pratiğimize hoş geldiniz. 25 yılı aşkın deneyimle, tüm ortopedik ihtiyaçlarınız için en yüksek kalitede bakım sağlamaya kendimi adadım. Tesislerimiz ve prosedürlerimiz hakkında daha fazla bilgi edinmek için galerimize göz atın.",
-    "watchIntroVideo": "Tanıtım Videosunu İzle"
+    "subtitle": "Modern tesislerimizi ve başarılı tedavilerimizi görün"
   },
-  "symptoms": {
-    "title": "Semptomlar ve Tedaviler",
-    "subtitle": "Yaygın ortopedik durumlar ve tedavi seçenekleri hakkında bilgi edinin",
-    "readMore": "Detayları Oku",
-    "dontSeeCondition": "Durumunuzu Görmüyor musunuz?",
-    "conditionDescription": "Dr. Eryanılmaz geniş bir ortopedik durum yelpazesini tedavi eder. Özel semptomlarınızı ve tedavi seçeneklerinizi görüşmek için bizimle iletişime geçin.",
-    "scheduleConsultation": "Konsültasyon Planla"
+  "blog": {
+    "title": "Tıbbi Blog",
+    "subtitle": "Dr. Eryanılmaz'dan son görüşler ve güncellemeler",
+    "article": "Makale",
+    "readMore": "Devamını Oku",
+    "backToBlog": "Blog'a Dön",
+    "comments": "Yorumlar",
+    "leaveComment": "Yorum Bırak",
+    "yourName": "Adınız",
+    "yourComment": "Yorumunuz",
+    "submitComment": "Yorum Gönder",
+    "submitting": "Gönderiliyor...",
+    "commentModeration": "Yorumlar moderasyona tabidir ve onaylandıktan sonra görünür.",
+    "noComments": "Henüz yorum yok. İlk yorumu siz yapın!"
   },
-  "home": {
-    "viewAllServices": "Tüm Hizmetleri Görüntüle",
-    "ctaTitle": "Randevunuzu Almaya Hazır mısınız?",
-    "ctaDescription": "Dr. Gürkan Eryanılmaz'dan uzman ortopedik bakım alın. Konsültasyonunuzu planlamak için bugün bizimle iletişime geçin.",
-    "bookAppointment": "Randevu Al",
-    "callNow": "Şimdi Ara"
+  "reviews": {
+    "title": "Hasta Yorumları",
+    "subtitle": "Hastalarımızın deneyimleri hakkında söyledikleri",
+    "writeReview": "Yorum Yaz",
+    "rating": "Değerlendirme",
+    "reviewName": "Adınız",
+    "reviewMessage": "Yorumunuz",
+    "submitReview": "Yorum Gönder",
+    "reviewsReviewed": "Yorumlar yayınlanmadan önce incelenir.",
+    "doctorReply": "Doktor Yanıtı",
+    "haveQuestions": "Sorularınız mı var?",
+    "checkFaq": "Sık sorulan sorular ve cevaplar için SSS bölümümüze bakın.",
+    "viewFaq": "SSS'yi Görüntüle"
+  },
+  "contact": {
+    "title": "İletişim ve Randevular",
+    "contactInfo": "İletişim Bilgileri",
+    "address": "Adres",
+    "officeHours": "Çalışma Saatleri",
+    "followUs": "Bizi Takip Edin",
+    "location": "Konum"
+  },
+  "faq": {
+    "title": "Sık Sorulan Sorular",
+    "subtitle": "Tedaviler ve prosedürler hakkında yaygın soruların cevaplarını bulun",
+    "frequentlyAsked": "Sık Sorulan Sorular",
+    "askQuestion": "Soru Sor",
+    "askQuestionDescription": "Aradığınızı bulamıyor musunuz? Dr. Eryanılmaz'a doğrudan sorun.",
+    "yourName": "Adınız",
+    "yourEmail": "E-postanız (isteğe bağlı)",
+    "questionText": "Sorunuz",
+    "submitQuestion": "Soru Gönder",
+    "responseTime": "Genellikle 24-48 saat içinde yanıtlıyoruz.",
+    "needImmediateHelp": "Acil Yardıma mı İhtiyacınız Var?",
+    "urgentContact": "Acil tıbbi endişeler için lütfen doğrudan bizimle iletişime geçin:",
+    "call": "Ara",
+    "whatsappMessage": "WhatsApp Mesajı"
   },
   "admin": {
     "title": "Yönetici Paneli",
-    "subtitle": "Randevuları, içeriği ve hasta etkileşimlerini yönetin",
+    "subtitle": "Tıbbi pratiğinizi yönetin",
     "pendingAppointments": "Bekleyen Randevular",
     "totalPatients": "Toplam Hasta",
     "pendingReviews": "Bekleyen Yorumlar",
-    "unansweredQuestions": "Yanıtlanmamış Sorular",
+    "unansweredQuestions": "Cevaplanmamış Sorular",
     "publishedBlogs": "Yayınlanan Bloglar",
     "websiteViews": "Web Sitesi Görüntülemeleri",
-    "appointmentManagement": "Randevu Yönetimi",
-    "blogManagement": "Blog Yönetimi",
-    "patientReviews": "Hasta Yorumları",
-    "faqManagement": "SSS Yönetimi",
-    "contentManagement": "İçerik Yönetimi",
     "systemSettings": "Sistem Ayarları"
-  },
-  "common": {
-    "loading": "Yükleniyor...",
-    "error": "Hata",
-    "success": "Başarılı",
-    "cancel": "İptal",
-    "save": "Kaydet",
-    "edit": "Düzenle",
-    "delete": "Sil",
-    "view": "Görüntüle",
-    "back": "Geri",
-    "next": "İleri",
-    "previous": "Önceki",
-    "close": "Kapat",
-    "open": "Aç"
   }
 }
