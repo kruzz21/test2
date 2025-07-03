@@ -80,7 +80,7 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder="admin@drgeryanilmaz.com"
+                    placeholder="Enter your admin email"
                     className="pl-10"
                     required
                   />
@@ -116,9 +116,10 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-800">
-                <strong>Demo Credentials:</strong><br />
-                Email: admin@drgeryanilmaz.com<br />
-                Password: admin123
+                <strong>Setup Instructions:</strong><br />
+                1. Create an admin user in Supabase Authentication<br />
+                2. Update the user's app_metadata with: {"is_admin": true}<br />
+                3. Use those credentials to log in
               </p>
             </div>
           </CardContent>
