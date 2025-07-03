@@ -8,7 +8,7 @@ import Layout from './layout/Layout';
 import Home from './pages/Home';
 import About from './pages/About';
 import Services from './pages/Services';
-import Symptoms from './pages/Symptoms';
+import SymptomsAndTreatments from './pages/SymptomsAndTreatments';
 import SymptomDetail from './pages/SymptomDetail';
 import Gallery from './pages/Gallery';
 import Blog from './pages/Blog';
@@ -51,8 +51,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/symptoms" element={<Symptoms />} />
-          <Route path="/symptoms/:id" element={<SymptomDetail />} />
+          <Route path="/symptoms-and-treatments" element={<SymptomsAndTreatments />} />
+          <Route path="/symptoms-and-treatments/:id" element={<SymptomDetail />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />

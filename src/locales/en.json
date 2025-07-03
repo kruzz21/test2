@@ -3,7 +3,7 @@
     "home": "Home",
     "about": "About",
     "services": "Services",
-    "symptoms": "Symptoms",
+    "symptoms": "Symptoms & Treatments",
     "gallery": "Gallery",
     "blog": "Blog",
     "reviews": "Reviews",
@@ -86,12 +86,21 @@
     "callNow": "Call Now"
   },
   "symptoms": {
-    "title": "Symptoms & Conditions",
-    "subtitle": "Learn about common orthopedic conditions and their treatments",
+    "title": "Symptoms & Treatments",
+    "subtitle": "Comprehensive orthopedic care for various conditions and symptoms",
+    "treatmentAreas": "Treatment Areas",
     "readMore": "Read More",
+    "learnMore": "Learn More",
     "dontSeeCondition": "Don't See Your Condition?",
     "conditionDescription": "Contact Dr. Eryanılmaz for a comprehensive evaluation of your specific orthopedic concerns.",
-    "scheduleConsultation": "Schedule Consultation"
+    "scheduleConsultation": "Schedule Consultation",
+    "commonCauses": "Common Causes",
+    "symptomsList": "Symptoms",
+    "treatmentOptions": "Treatment Options",
+    "conservativeTreatment": "Conservative Treatment",
+    "surgicalTreatment": "Surgical Treatment",
+    "doctorApproach": "Dr. Gürkan Eryanılmaz's Approach",
+    "backToSymptoms": "Back to Symptoms & Treatments"
   },
   "gallery": {
     "title": "Gallery",
