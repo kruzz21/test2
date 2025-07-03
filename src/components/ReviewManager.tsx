@@ -491,7 +491,7 @@ const ReviewManager = () => {
                     {isApproved ? 'Delete' : 'Reject & Delete'}
                   </AlertDialogAction>
                 </AlertDialogFooter>
-              </AlertDialog>
+              </AlertDialogContent>
             </AlertDialog>
           </div>
         </div>
