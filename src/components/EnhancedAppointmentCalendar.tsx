@@ -3,14 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Calendar as CalendarIcon, Clock, User, Phone, Mail, CreditCard, Edit, Trash2, Save, X } from 'lucide-react';
-import { format, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import { Calendar as CalendarIcon, Clock, User, Phone, Mail, Edit, Check, X, Trash2, CreditCard, Bell, AlertCircle } from 'lucide-react';
+import { format, addDays, isAfter, startOfDay, isSameDay, parseISO, isToday, isTomorrow, addWeeks } from 'date-fns';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 
@@ -34,8 +34,6 @@ const EnhancedAppointmentCalendar = () => {
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
   const [editDate, setEditDate] = useState<Date | undefined>(undefined);
   const [editTime, setEditTime] = useState('');
@@ -47,6 +45,8 @@ const EnhancedAppointmentCalendar = () => {
     service: '',
     message: ''
   });
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
 
   const services = [
     'Arthroscopic Surgery',
@@ -90,6 +90,25 @@ const EnhancedAppointmentCalendar = () => {
     fetchAppointments();
   }, []);
 
+  const getAppointmentsForDate = (date: Date) => {
+    return appointments.filter(appointment => 
+      isSameDay(parseISO(appointment.preferred_date), date)
+    );
+  };
+
+  const getUpcomingAppointments = () => {
+    const today = new Date();
+    const nextWeek = addWeeks(today, 1);
+    
+    return appointments
+      .filter(appointment => {
+        const appointmentDate = parseISO(appointment.preferred_date);
+        return isAfter(appointmentDate, today) && appointmentDate <= nextWeek;
+      })
+      .sort((a, b) => new Date(a.preferred_date).getTime() - new Date(b.preferred_date).getTime())
+      .slice(0, 5); // Show next 5 upcoming appointments
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
@@ -101,19 +120,20 @@ const EnhancedAppointmentCalendar = () => {
     }
   };
 
-  const getAppointmentsForDate = (date: Date) => {
-    const dateString = format(date, 'yyyy-MM-dd');
-    return appointments.filter(apt => apt.preferred_date === dateString);
+  const getAppointmentCardColor = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'border-l-4 border-l-green-500 bg-green-50';
+      case 'completed':
+        return 'border-l-4 border-l-blue-500 bg-blue-50';
+      default:
+        return 'border-l-4 border-l-gray-500 bg-gray-50';
+    }
   };
 
-  const handleAppointmentClick = (appointment: Appointment) => {
-    setSelectedAppointment(appointment);
-    setIsDetailDialogOpen(true);
-  };
-
-  const openEditDialog = (appointment: Appointment) => {
+  const handleEditAppointment = (appointment: Appointment) => {
     setEditingAppointment(appointment);
-    setEditDate(new Date(appointment.preferred_date));
+    setEditDate(parseISO(appointment.preferred_date));
     setEditTime(appointment.preferred_time);
     setEditFormData({
       name: appointment.name,
@@ -123,23 +143,11 @@ const EnhancedAppointmentCalendar = () => {
       service: appointment.service,
       message: appointment.message || ''
     });
-    setIsDetailDialogOpen(false);
     setIsEditDialogOpen(true);
   };
 
-  const handleEditFormChange = (field: string, value: string) => {
-    setEditFormData(prev => ({ ...prev, [field]: value }));
-  };
-
   const handleSaveEdit = async () => {
-    if (!editingAppointment || !editDate || !editTime) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!editingAppointment || !editDate || !editTime) return;
 
     try {
       setLoading(true);
@@ -193,8 +201,8 @@ const EnhancedAppointmentCalendar = () => {
       if (error) throw error;
 
       await fetchAppointments();
-      setIsDetailDialogOpen(false);
-      setIsEditDialogOpen(false);
+      setIsDetailsDialogOpen(false);
+      setSelectedAppointment(null);
       
       toast({
         title: "Success",
@@ -212,14 +220,14 @@ const EnhancedAppointmentCalendar = () => {
     }
   };
 
-  const handleStatusChange = async (appointmentId: string, newStatus: string) => {
+  const handleMarkCompleted = async (appointmentId: string) => {
     try {
       setLoading(true);
       
       const { error } = await supabase
         .from('appointments')
         .update({ 
-          status: newStatus,
+          status: 'completed',
           updated_at: new Date().toISOString()
         })
         .eq('id', appointmentId);
@@ -227,11 +235,12 @@ const EnhancedAppointmentCalendar = () => {
       if (error) throw error;
 
       await fetchAppointments();
-      setIsDetailDialogOpen(false);
+      setIsDetailsDialogOpen(false);
+      setSelectedAppointment(null);
       
       toast({
         title: "Success",
-        description: `Appointment marked as ${newStatus}.`,
+        description: "Appointment marked as completed.",
       });
     } catch (error) {
       console.error('Error updating appointment status:', error);
@@ -245,160 +254,176 @@ const EnhancedAppointmentCalendar = () => {
     }
   };
 
-  // Generate calendar days for the current month
-  const monthStart = startOfMonth(selectedDate);
-  const monthEnd = endOfMonth(selectedDate);
-  const calendarDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  const formatDateForDisplay = (dateString: string) => {
+    const date = parseISO(dateString);
+    if (isToday(date)) return 'Today';
+    if (isTomorrow(date)) return 'Tomorrow';
+    return format(date, 'MMM dd');
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center">
-            <CalendarIcon className="h-5 w-5 mr-2" />
-            Appointment Calendar
-          </div>
-          <div className="text-sm text-gray-600">
-            {format(selectedDate, 'MMMM yyyy')}
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          {/* Month Navigation */}
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={() => setSelectedDate(addDays(selectedDate, -30))}
-            >
-              Previous Month
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setSelectedDate(new Date())}
-            >
-              Today
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setSelectedDate(addDays(selectedDate, 30))}
-            >
-              Next Month
-            </Button>
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-2">
-            {/* Day headers */}
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="p-2 text-center font-medium text-gray-600 text-sm">
-                {day}
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* Calendar Section */}
+      <div className="lg:col-span-3">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <CalendarIcon className="h-5 w-5 mr-2" />
+              Appointment Calendar
+            </CardTitle>
+            <div className="flex items-center space-x-4 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded"></div>
+                <span>Confirmed</span>
               </div>
-            ))}
-            
-            {/* Calendar days */}
-            {calendarDays.map(day => {
-              const dayAppointments = getAppointmentsForDate(day);
-              const isCurrentDay = isToday(day);
-              
-              return (
-                <div
-                  key={day.toISOString()}
-                  className={`min-h-[100px] p-2 border rounded-lg ${
-                    isCurrentDay ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'
-                  } hover:bg-gray-50 transition-colors`}
-                >
-                  <div className={`text-sm font-medium mb-1 ${
-                    isCurrentDay ? 'text-blue-600' : 'text-gray-900'
-                  }`}>
-                    {format(day, 'd')}
-                  </div>
-                  
-                  <div className="space-y-1">
-                    {dayAppointments.map(appointment => (
-                      <div
-                        key={appointment.id}
-                        onClick={() => handleAppointmentClick(appointment)}
-                        className="text-xs p-1 rounded cursor-pointer hover:opacity-80 transition-opacity bg-blue-100 text-blue-800 border border-blue-200"
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                <span>Completed</span>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Calendar */}
+              <div>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => date && setSelectedDate(date)}
+                  className="rounded-md border"
+                  modifiers={{
+                    hasAppointments: (date) => getAppointmentsForDate(date).length > 0
+                  }}
+                  modifiersStyles={{
+                    hasAppointments: { 
+                      backgroundColor: '#dbeafe', 
+                      fontWeight: 'bold',
+                      color: '#1e40af'
+                    }
+                  }}
+                />
+              </div>
+
+              {/* Appointments for Selected Date */}
+              <div>
+                <h3 className="font-semibold mb-4">
+                  Appointments for {format(selectedDate, 'MMMM dd, yyyy')}
+                </h3>
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {loading ? (
+                    <div className="text-center py-4">
+                      <p>Loading appointments...</p>
+                    </div>
+                  ) : getAppointmentsForDate(selectedDate).length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-gray-600">No appointments for this date</p>
+                    </div>
+                  ) : (
+                    getAppointmentsForDate(selectedDate).map((appointment) => (
+                      <div 
+                        key={appointment.id} 
+                        className={`p-3 rounded-lg cursor-pointer hover:shadow-md transition-shadow ${getAppointmentCardColor(appointment.status)}`}
+                        onClick={() => {
+                          setSelectedAppointment(appointment);
+                          setIsDetailsDialogOpen(true);
+                        }}
                       >
-                        <div className="font-medium truncate">{appointment.name}</div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-3 w-3" />
-                          <span>{appointment.preferred_time}</span>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <Clock className="h-4 w-4 text-gray-600" />
+                              <span className="font-medium">{appointment.preferred_time}</span>
+                              <Badge className={`${getStatusColor(appointment.status)} text-xs`}>
+                                {appointment.status.toUpperCase()}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center space-x-2 mb-1">
+                              <User className="h-4 w-4 text-gray-600" />
+                              <span className="font-medium">{appointment.name}</span>
+                            </div>
+                            <p className="text-sm text-gray-600">{appointment.service}</p>
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    ))
+                  )}
                 </div>
-              );
-            })}
-          </div>
-
-          {loading && (
-            <div className="text-center py-4">
-              <p>Loading appointments...</p>
+              </div>
             </div>
-          )}
-        </div>
-      </CardContent>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Appointment Detail Dialog */}
-      <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
+      {/* Upcoming Appointments Sidebar */}
+      <div className="lg:col-span-1">
+        <Card className="sticky top-4">
+          <CardHeader>
+            <CardTitle className="flex items-center text-lg">
+              <Bell className="h-5 w-5 mr-2 text-orange-500" />
+              Upcoming Appointments
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {getUpcomingAppointments().length === 0 ? (
+                <div className="text-center py-4">
+                  <AlertCircle className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600">No upcoming appointments</p>
+                </div>
+              ) : (
+                getUpcomingAppointments().map((appointment) => (
+                  <div 
+                    key={appointment.id}
+                    className={`p-3 rounded-lg cursor-pointer hover:shadow-md transition-shadow ${getAppointmentCardColor(appointment.status)}`}
+                    onClick={() => {
+                      setSelectedAppointment(appointment);
+                      setIsDetailsDialogOpen(true);
+                    }}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="text-sm font-medium text-gray-900">
+                        {formatDateForDisplay(appointment.preferred_date)}
+                      </div>
+                      <Badge className={`${getStatusColor(appointment.status)} text-xs`}>
+                        {appointment.status === 'confirmed' ? 'CONF' : 'COMP'}
+                      </Badge>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-3 w-3 text-gray-500" />
+                        <span className="text-sm font-medium">{appointment.preferred_time}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <User className="h-3 w-3 text-gray-500" />
+                        <span className="text-sm text-gray-700 truncate">{appointment.name}</span>
+                      </div>
+                      <div className="text-xs text-gray-600 truncate">
+                        {appointment.service}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Appointment Details Dialog */}
+      <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Appointment Details</DialogTitle>
           </DialogHeader>
           {selectedAppointment && (
             <div className="space-y-6">
-              {/* Status and Actions */}
+              {/* Status Badge */}
               <div className="flex items-center justify-between">
-                <Badge className={getStatusColor(selectedAppointment.status)}>
+                <Badge className={`${getStatusColor(selectedAppointment.status)} font-medium`}>
                   {selectedAppointment.status.toUpperCase()}
                 </Badge>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => openEditDialog(selectedAppointment)}
-                  >
-                    <Edit className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                  {selectedAppointment.status === 'confirmed' && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleStatusChange(selectedAppointment.id, 'completed')}
-                    >
-                      Mark Complete
-                    </Button>
-                  )}
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Appointment</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete this appointment for {selectedAppointment.name}? 
-                          This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDeleteAppointment(selectedAppointment.id)}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                <div className="text-sm text-gray-500">
+                  Last updated: {format(new Date(selectedAppointment.updated_at), 'MMM dd, yyyy HH:mm')}
                 </div>
               </div>
 
@@ -440,7 +465,7 @@ const EnhancedAppointmentCalendar = () => {
                   <CalendarIcon className="h-5 w-5 text-blue-600" />
                   <div>
                     <p className="text-sm text-gray-600">Date</p>
-                    <p className="font-medium">{selectedAppointment.preferred_date}</p>
+                    <p className="font-medium">{format(parseISO(selectedAppointment.preferred_date), 'MMMM dd, yyyy')}</p>
                   </div>
                 </div>
                 
@@ -453,25 +478,72 @@ const EnhancedAppointmentCalendar = () => {
                 </div>
               </div>
 
-              {/* Service and Message */}
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Service</p>
-                  <p className="font-medium">{selectedAppointment.service}</p>
-                </div>
-                
-                {selectedAppointment.message && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Message</p>
-                    <p className="text-gray-800 bg-gray-50 p-3 rounded">{selectedAppointment.message}</p>
-                  </div>
-                )}
+              {/* Service */}
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Service</p>
+                <p className="font-medium text-lg">{selectedAppointment.service}</p>
               </div>
-
-              {/* Timestamps */}
-              <div className="text-sm text-gray-500 border-t pt-4">
-                <p><strong>Created:</strong> {new Date(selectedAppointment.created_at).toLocaleString()}</p>
-                <p><strong>Last Updated:</strong> {new Date(selectedAppointment.updated_at).toLocaleString()}</p>
+              
+              {/* Message */}
+              {selectedAppointment.message && (
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Message</p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-gray-800">{selectedAppointment.message}</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-2 pt-4 border-t">
+                <Button 
+                  onClick={() => handleEditAppointment(selectedAppointment)}
+                  className="flex-1"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Appointment
+                </Button>
+                
+                {selectedAppointment.status === 'confirmed' && (
+                  <Button 
+                    onClick={() => handleMarkCompleted(selectedAppointment.id)}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <Check className="h-4 w-4 mr-2" />
+                    Mark Completed
+                  </Button>
+                )}
+                
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Appointment</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete this appointment for {selectedAppointment.name}? 
+                        This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDeleteAppointment(selectedAppointment.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           )}
@@ -487,48 +559,52 @@ const EnhancedAppointmentCalendar = () => {
           {editingAppointment && (
             <div className="space-y-6">
               {/* Patient Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Patient Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Full Name</label>
-                    <Input
-                      value={editFormData.name}
-                      onChange={(e) => handleEditFormChange('name', e.target.value)}
-                      placeholder="Patient name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Phone Number</label>
-                    <Input
-                      value={editFormData.phone}
-                      onChange={(e) => handleEditFormChange('phone', e.target.value)}
-                      placeholder="Phone number"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Email Address</label>
-                    <Input
-                      value={editFormData.email}
-                      onChange={(e) => handleEditFormChange('email', e.target.value)}
-                      placeholder="Email address"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">National ID / Passport</label>
-                    <Input
-                      value={editFormData.national_id}
-                      onChange={(e) => handleEditFormChange('national_id', e.target.value)}
-                      placeholder="National ID or Passport number"
-                    />
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Patient Name</label>
+                  <Input
+                    value={editFormData.name}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Full name"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Phone Number</label>
+                  <Input
+                    value={editFormData.phone}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, phone: e.target.value }))}
+                    placeholder="Phone number"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <Input
+                    type="email"
+                    value={editFormData.email}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="Email address"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">National ID</label>
+                  <Input
+                    value={editFormData.national_id}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, national_id: e.target.value }))}
+                    placeholder="National ID / Passport"
+                  />
                 </div>
               </div>
 
-              {/* Service */}
+              {/* Service Selection */}
               <div>
                 <label className="block text-sm font-medium mb-2">Service</label>
-                <Select value={editFormData.service} onValueChange={(value) => handleEditFormChange('service', value)}>
+                <Select 
+                  value={editFormData.service} 
+                  onValueChange={(value) => setEditFormData(prev => ({ ...prev, service: value }))}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select service" />
                   </SelectTrigger>
@@ -543,44 +619,42 @@ const EnhancedAppointmentCalendar = () => {
               </div>
 
               {/* Date and Time */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Date & Time</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Date</label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start text-left">
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {editDate ? format(editDate, 'PPP') : 'Pick a date'}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={editDate}
-                          onSelect={setEditDate}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Time</label>
-                    <Select value={editTime} onValueChange={setEditTime}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select time" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeSlots.map((time) => (
-                          <SelectItem key={time} value={time}>
-                            {time}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left">
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {editDate ? format(editDate, 'PPP') : 'Pick a date'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={editDate}
+                        onSelect={setEditDate}
+                        disabled={(date) => date < startOfDay(new Date())}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Time</label>
+                  <Select value={editTime} onValueChange={setEditTime}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeSlots.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -589,34 +663,34 @@ const EnhancedAppointmentCalendar = () => {
                 <label className="block text-sm font-medium mb-2">Message</label>
                 <Textarea
                   value={editFormData.message}
-                  onChange={(e) => handleEditFormChange('message', e.target.value)}
+                  onChange={(e) => setEditFormData(prev => ({ ...prev, message: e.target.value }))}
                   placeholder="Additional notes or message"
                   rows={3}
                 />
               </div>
-
+              
               {/* Action Buttons */}
-              <div className="flex justify-end space-x-2 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditDialogOpen(false)}
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Cancel
-                </Button>
-                <Button
+              <div className="flex space-x-2 pt-4 border-t">
+                <Button 
                   onClick={handleSaveEdit}
-                  disabled={loading}
+                  disabled={loading || !editDate || !editTime}
+                  className="flex-1"
                 >
-                  <Save className="h-4 w-4 mr-2" />
                   {loading ? 'Saving...' : 'Save Changes'}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditDialogOpen(false)}
+                  className="flex-1"
+                >
+                  Cancel
                 </Button>
               </div>
             </div>
           )}
         </DialogContent>
       </Dialog>
-    </Card>
+    </div>
   );
 };
 
