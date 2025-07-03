@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# But keep necessary files & folders
+!index.html
+!vite.config.ts
+!tsconfig*.json
+!package.json
+!src/
+!src/**/*.{ts,tsx}
+!supabase/
+!supabase/migrations/
