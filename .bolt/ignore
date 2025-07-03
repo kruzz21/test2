@@ -2,8 +2,6 @@
 
 # Pages we're not working on
 src/pages/About.tsx
-src/pages/Blog.tsx
-src/pages/BlogDetail.tsx
 src/pages/Gallery.tsx
 src/pages/Home.tsx
 src/pages/NotFound.tsx
@@ -12,7 +10,6 @@ src/pages/Symptoms.tsx
 src/pages/SymptomDetail.tsx
 
 # Hooks we're not using
-src/hooks/useBlog.ts
 src/hooks/useSymptoms.ts
 
 # Components not needed for current scope
