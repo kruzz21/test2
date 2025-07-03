@@ -30,21 +30,19 @@ import AdminLogin from '@/components/AdminLogin';
 import AppointmentHistory from '@/components/AppointmentHistory';
 import AppointmentManager from '@/components/AppointmentManager';
 import EnhancedAppointmentCalendar from '@/components/EnhancedAppointmentCalendar';
+import ReviewManager from '@/components/ReviewManager';
 
 const Admin = () => {
   const { t } = useTranslation();
   const { session, loading: authLoading, isAuthenticated, logout } = useAdminAuth();
   const { 
     stats, 
-    fetchPendingReviews, 
     fetchPendingFAQSubmissions,
-    approveReview,
     answerFAQSubmission,
     rejectFAQSubmission,
     fetchStats
   } = useAdmin(isAuthenticated);
   
-  const [pendingReviews, setPendingReviews] = useState<any[]>([]);
   const [pendingFAQSubmissions, setPendingFAQSubmissions] = useState<any[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
   const [questions, setQuestions] = useState({
@@ -62,12 +60,7 @@ const Admin = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [reviews, faqSubmissions] = await Promise.all([
-          fetchPendingReviews(),
-          fetchPendingFAQSubmissions()
-        ]);
-        
-        setPendingReviews(reviews);
+        const faqSubmissions = await fetchPendingFAQSubmissions();
         setPendingFAQSubmissions(faqSubmissions);
       } catch (error) {
         console.error('Error loading admin data:', error);
@@ -77,7 +70,7 @@ const Admin = () => {
     if (isAuthenticated) {
       loadData();
     }
-  }, [isAuthenticated, fetchPendingReviews, fetchPendingFAQSubmissions]);
+  }, [isAuthenticated, fetchPendingFAQSubmissions]);
 
   // Show loading screen if authentication is loading
   if (authLoading) {
@@ -102,26 +95,6 @@ const Admin = () => {
       window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
-    }
-  };
-
-  const handleApproveReview = async (id: string) => {
-    try {
-      await approveReview(id);
-      // Refresh pending reviews
-      const reviews = await fetchPendingReviews();
-      setPendingReviews(reviews);
-      toast({
-        title: "Success",
-        description: "Review approved successfully.",
-      });
-    } catch (error) {
-      console.error('Error approving review:', error);
-      toast({
-        title: "Error",
-        description: "Failed to approve review.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -332,50 +305,7 @@ const Admin = () => {
 
             {/* Reviews Tab */}
             <TabsContent value="reviews">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Star className="h-5 w-5 mr-2" />
-                    {t('admin.patientReviews')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {pendingReviews.length === 0 ? (
-                      <p className="text-gray-600 text-center py-4">No pending reviews</p>
-                    ) : (
-                      pendingReviews.map((review) => (
-                        <div key={review.id} className="flex items-start justify-between p-4 border rounded-lg">
-                          <div className="flex-1">
-                            <div className="flex items-center mb-2">
-                              <p className="font-medium mr-2">{review.name}</p>
-                              <div className="flex">
-                                {[1,2,3,4,5].map(i => (
-                                  <Star 
-                                    key={i} 
-                                    className={`h-4 w-4 ${i <= review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                            <p className="text-sm text-gray-700 mb-2">{review.message}</p>
-                            <p className="text-xs text-gray-500">{new Date(review.created_at).toLocaleDateString()}</p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="secondary">Pending</Badge>
-                            <Button 
-                              size="sm"
-                              onClick={() => handleApproveReview(review.id)}
-                            >
-                              Approve
-                            </Button>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <ReviewManager />
             </TabsContent>
 
             {/* FAQ Submissions Tab */}

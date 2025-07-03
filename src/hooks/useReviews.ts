@@ -18,7 +18,14 @@ export const useReviews = () => {
     }
   };
 
-  const createReview = async (reviewData: ReviewInsert) => {
+  const createReview = async (reviewData: ReviewInsert & {
+    name_tr?: string;
+    name_az?: string;
+    name_en?: string;
+    message_tr?: string;
+    message_az?: string;
+    message_en?: string;
+  }) => {
     try {
       setLoading(true);
       await reviewsApi.create(reviewData);

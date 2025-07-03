@@ -11,7 +11,7 @@ import { useReviews } from '@/hooks/useReviews';
 import { Toaster } from '@/components/ui/toaster';
 
 const Reviews = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { reviews, loading, createReview } = useReviews();
   
   const [formData, setFormData] = useState({
@@ -32,7 +32,20 @@ const Reviews = () => {
     }
 
     try {
-      await createReview(formData);
+      // Create review with multilingual support
+      const reviewData = {
+        name: formData.name,
+        name_tr: formData.name,
+        name_az: formData.name,
+        name_en: formData.name,
+        message: formData.message,
+        message_tr: formData.message,
+        message_az: formData.message,
+        message_en: formData.message,
+        rating: formData.rating
+      };
+
+      await createReview(reviewData);
       setFormData({ name: '', message: '', rating: 0 });
     } catch (error) {
       // Error is handled in the hook
@@ -54,6 +67,9 @@ const Reviews = () => {
   const averageRating = reviews.length > 0 
     ? reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / reviews.length 
     : 0;
+
+  // Get current language suffix for multilingual content
+  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   return (
     <div className="min-h-screen py-8 w-full">
@@ -86,39 +102,46 @@ const Reviews = () => {
                 <p className="text-gray-600">No reviews yet. Be the first to leave a review!</p>
               </div>
             ) : (
-              reviews.map((review: any) => (
-                <Card key={review.id}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{review.name}</CardTitle>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <div className="flex">{renderStars(review.rating)}</div>
-                          <span className="text-sm text-gray-500">
-                            {new Date(review.created_at).toLocaleDateString()}
-                          </span>
+              reviews.map((review: any) => {
+                // Use multilingual content if available, fallback to legacy fields
+                const displayName = review[`name${langSuffix}`] || review.name;
+                const displayMessage = review[`message${langSuffix}`] || review.message;
+                const displayReply = review[`doctor_reply${langSuffix}`] || review.doctor_reply;
+
+                return (
+                  <Card key={review.id}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <CardTitle className="text-lg">{displayName}</CardTitle>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <div className="flex">{renderStars(review.rating)}</div>
+                            <span className="text-sm text-gray-500">
+                              {new Date(review.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
                         </div>
+                        <Badge variant="secondary">{review.rating}/5</Badge>
                       </div>
-                      <Badge variant="secondary">{review.rating}/5</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700 mb-4">{review.message}</p>
-                    
-                    {review.doctor_reply && (
-                      <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded">
-                        <div className="flex items-center mb-2">
-                          <MessageCircle className="h-4 w-4 text-blue-600 mr-2" />
-                          <span className="font-medium text-blue-900">
-                            {t('reviews.doctorReply')}
-                          </span>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-700 mb-4">{displayMessage}</p>
+                      
+                      {displayReply && (
+                        <div className="bg-blue-50 border-l-4 border-blue-200 p-4 rounded">
+                          <div className="flex items-center mb-2">
+                            <MessageCircle className="h-4 w-4 text-blue-600 mr-2" />
+                            <span className="font-medium text-blue-900">
+                              {t('reviews.doctorReply')}
+                            </span>
+                          </div>
+                          <p className="text-blue-800">{displayReply}</p>
                         </div>
-                        <p className="text-blue-800">{review.doctor_reply}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })
             )}
           </div>
 

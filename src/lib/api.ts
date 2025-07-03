@@ -134,7 +134,14 @@ export const reviewsApi = {
     return data;
   },
 
-  async create(review: ReviewInsert) {
+  async create(review: ReviewInsert & {
+    name_tr?: string;
+    name_az?: string;
+    name_en?: string;
+    message_tr?: string;
+    message_az?: string;
+    message_en?: string;
+  }) {
     const { data, error } = await supabase
       .from('reviews')
       .insert(review)
