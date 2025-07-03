@@ -1,0 +1,14 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+
+# Bolt internal files (if not already ignored by default)
+.bolt/config.json
+.bolt/prompt
+.bolt/ignore
+.bolt/supabase_discarded_migrations/
