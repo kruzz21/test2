@@ -1,1 +1,11 @@
-src/Admin.tsx
+src/components/AdminLogin.tsx
+src/components/AppointmentHistory.tsx
+src/components/AppointmentManager.tsx
+src/components/EnhancedAppointmentCalendar.tsx
+src/components/BlogManager.tsx
+src/components/FAQManager.tsx
+src/components/ReviewManager.tsx
+src/pages/Admin.tsx
+src/hooks/useAdmin.ts
+src/hooks/useAdminAuth.ts
+src/lib/adminAuth.ts
