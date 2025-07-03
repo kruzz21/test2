@@ -118,7 +118,7 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
               <p className="text-sm text-blue-800">
                 <strong>Setup Instructions:</strong><br />
                 1. Create an admin user in Supabase Authentication<br />
-                2. Update the user's app_metadata with: {"is_admin": true}<br />
+                2. Update the user's app_metadata with: &#123;"is_admin": true&#125;<br />
                 3. Use those credentials to log in
               </p>
             </div>
