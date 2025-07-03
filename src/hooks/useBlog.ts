@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { blogApi } from '@/lib/api';
+import { blogApi, type BlogPost, type BlogComment } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 
 export const useBlog = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchPosts = async () => {
@@ -13,40 +13,50 @@ export const useBlog = () => {
       setPosts(data);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load blog posts. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchPost = async (id: string) => {
+  const fetchPostById = async (id: string): Promise<BlogPost | null> => {
     try {
       setLoading(true);
-      const data = await blogApi.getById(id);
-      return data;
+      const post = await blogApi.getById(id);
+      return post;
     } catch (error) {
       console.error('Error fetching blog post:', error);
-      throw error;
+      toast({
+        title: "Error",
+        description: "Failed to load blog post. Please try again.",
+        variant: "destructive",
+      });
+      return null;
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchComments = async (postId: string) => {
+  const fetchComments = async (postId: string): Promise<BlogComment[]> => {
     try {
-      const data = await blogApi.getComments(postId);
-      return data;
+      const comments = await blogApi.getComments(postId);
+      return comments;
     } catch (error) {
       console.error('Error fetching comments:', error);
       return [];
     }
   };
 
-  const addComment = async (comment: { post_id: string; name: string; message: string }) => {
+  const addComment = async (commentData: { post_id: string; name: string; message: string }) => {
     try {
-      await blogApi.addComment(comment);
+      await blogApi.addComment(commentData);
       toast({
         title: "Success",
-        description: "Your comment has been submitted successfully. It will be published after approval.",
+        description: "Your comment has been submitted and is awaiting approval.",
       });
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -67,7 +77,7 @@ export const useBlog = () => {
     posts,
     loading,
     fetchPosts,
-    fetchPost,
+    fetchPostById,
     fetchComments,
     addComment
   };

@@ -6,19 +6,48 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calendar, User, MessageCircle } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, User, MessageCircle } from 'lucide-react';
 import { useBlog } from '@/hooks/useBlog';
+import { toast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 
+interface BlogPost {
+  id: string;
+  title_tr: string;
+  title_az: string;
+  title_en: string;
+  content_tr: string;
+  content_az: string;
+  content_en: string;
+  excerpt_tr: string;
+  excerpt_az: string;
+  excerpt_en: string;
+  image_url?: string;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface BlogComment {
+  id: string;
+  post_id: string;
+  name: string;
+  message: string;
+  approved: boolean;
+  created_at: string;
+}
+
 const BlogDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { t, i18n } = useTranslation();
-  const { fetchPost, fetchComments, addComment } = useBlog();
+  const { fetchPostById, fetchComments, addComment } = useBlog();
   
-  const [post, setPost] = useState<any>(null);
-  const [comments, setComments] = useState<any[]>([]);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [comments, setComments] = useState<BlogComment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
+  const [submittingComment, setSubmittingComment] = useState(false);
+  
+  const [commentForm, setCommentForm] = useState({
     name: '',
     message: ''
   });
@@ -27,55 +56,102 @@ const BlogDetail = () => {
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadPost = async () => {
       if (!id) return;
       
       try {
         setLoading(true);
-        const [postData, commentsData] = await Promise.all([
-          fetchPost(id),
-          fetchComments(id)
-        ]);
-        setPost(postData);
-        setComments(commentsData);
+        const postData = await fetchPostById(id);
+        
+        if (postData) {
+          setPost(postData);
+          const commentsData = await fetchComments(id);
+          setComments(commentsData);
+        } else {
+          toast({
+            title: "Error",
+            description: "Blog post not found.",
+            variant: "destructive",
+          });
+        }
       } catch (error) {
-        console.error('Error loading blog data:', error);
+        console.error('Error loading blog post:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load blog post.",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
     };
 
-    loadData();
-  }, [id, fetchPost, fetchComments]);
+    loadPost();
+  }, [id, fetchPostById, fetchComments]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.message || !id) {
+    if (!commentForm.name || !commentForm.message || !id) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
+      setSubmittingComment(true);
+      
       await addComment({
         post_id: id,
-        name: formData.name,
-        message: formData.message
+        name: commentForm.name,
+        message: commentForm.message
       });
-      setFormData({ name: '', message: '' });
+      
+      setCommentForm({ name: '', message: '' });
+      
+      // Refresh comments
+      const updatedComments = await fetchComments(id);
+      setComments(updatedComments);
+      
     } catch (error) {
       // Error is handled in the hook
+    } finally {
+      setSubmittingComment(false);
     }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setCommentForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString(i18n.language, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const wordCount = content.split(' ').length;
+    const readingTime = Math.ceil(wordCount / wordsPerMinute);
+    return readingTime;
   };
 
   if (loading) {
     return (
       <div className="min-h-screen py-8 w-full">
-        <div className="w-full px-4 lg:px-8 text-center">
-          <p>Loading blog post...</p>
+        <div className="w-full px-4 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading blog post...</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -84,136 +160,172 @@ const BlogDetail = () => {
   if (!post) {
     return (
       <div className="min-h-screen py-8 w-full">
-        <div className="w-full px-4 lg:px-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Blog Post Not Found</h1>
-          <Button asChild>
-            <Link to="/blog">Back to Blog</Link>
-          </Button>
+        <div className="w-full px-4 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center py-12">
+            <h1 className="text-2xl font-bold mb-4">Blog post not found</h1>
+            <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist or has been removed.</p>
+            <Link to="/blog" className="text-blue-600 hover:text-blue-700">
+              <ArrowLeft className="h-4 w-4 inline mr-2" />
+              Back to Blog
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
+  const title = post[`title${langSuffix}`] || post.title_en;
+  const content = post[`content${langSuffix}`] || post.content_en;
+
   return (
     <div className="min-h-screen py-8 w-full">
-      <div className="w-full px-4 lg:px-8 max-w-4xl mx-auto">
-        {/* Back Button */}
-        <Button variant="ghost" asChild className="mb-6">
-          <Link to="/blog">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+      <div className="w-full px-4 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Back Button */}
+          <Link 
+            to="/blog" 
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-8 group"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             {t('blog.backToBlog')}
           </Link>
-        </Button>
 
-        {/* Article Header */}
-        <div className="mb-8">
-          <img
-            src={post.image_url || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
-            alt={post[`title${langSuffix}`]}
-            className="w-full h-64 md:h-80 object-cover rounded-lg mb-6"
-          />
-          
-          <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-            <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1" />
-              {new Date(post.created_at).toLocaleDateString()}
-            </div>
-            <div className="flex items-center">
-              <User className="h-4 w-4 mr-1" />
-              Dr. Gürkan Eryanılmaz
-            </div>
-          </div>
-          
-          <h1 className="text-4xl font-bold mb-4">{post[`title${langSuffix}`]}</h1>
-        </div>
-
-        {/* Article Content */}
-        <Card className="mb-8">
-          <CardContent className="pt-6">
-            <div className="prose max-w-none prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700 prose-ul:text-gray-700">
-              <div dangerouslySetInnerHTML={{ __html: post[`content${langSuffix}`] }} />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Author Bio */}
-        <Card className="mb-8">
-          <CardContent className="pt-6">
-            <div className="flex items-start space-x-4">
-              <img
-                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
-                alt="Dr. Gürkan Eryanılmaz"
-                className="w-16 h-16 rounded-full object-cover"
-              />
-              <div>
-                <h3 className="font-bold text-lg">Dr. Gürkan Eryanılmaz</h3>
-                <p className="text-gray-600 mb-2">Orthopedics & Traumatology Specialist</p>
-                <p className="text-sm text-gray-700">
-                  Dr. Eryanılmaz has over 25 years of experience in orthopedic surgery, 
-                  specializing in joint replacement and trauma surgery.
-                </p>
+          {/* Article Header */}
+          <article className="mb-8">
+            {/* Featured Image */}
+            {post.image_url && (
+              <div className="aspect-video mb-8 rounded-lg overflow-hidden">
+                <img 
+                  src={post.image_url} 
+                  alt={title}
+                  className="w-full h-full object-cover"
+                />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            )}
 
-        {/* Comments Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <MessageCircle className="h-5 w-5 mr-2" />
-              {t('blog.comments')} ({comments.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Existing Comments */}
-            <div className="space-y-6 mb-8">
-              {comments.map((comment) => (
-                <div key={comment.id} className="border-l-4 border-blue-200 pl-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium">{comment.name}</span>
-                    <span className="text-sm text-gray-500">
-                      {new Date(comment.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-gray-700">{comment.message}</p>
+            {/* Article Meta */}
+            <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-1" />
+                  {formatDate(post.created_at)}
                 </div>
-              ))}
-              
-              {comments.length === 0 && (
-                <p className="text-gray-600 text-center py-4">
-                  No comments yet. Be the first to comment!
-                </p>
-              )}
+                <div className="flex items-center">
+                  <Clock className="h-4 w-4 mr-1" />
+                  {getReadingTime(content)} min read
+                </div>
+              </div>
+              <Badge variant="secondary">
+                {t('blog.article')}
+              </Badge>
             </div>
+
+            {/* Article Title */}
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              {title}
+            </h1>
+
+            {/* Article Content */}
+            <div 
+              className="prose prose-lg max-w-none mb-12"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </article>
+
+          {/* Comments Section */}
+          <div className="border-t pt-8">
+            <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <MessageCircle className="h-6 w-6 mr-2" />
+              {t('blog.comments')} ({comments.length})
+            </h2>
 
             {/* Comment Form */}
-            <div className="border-t pt-6">
-              <h4 className="font-semibold mb-4">{t('blog.leaveComment')}</h4>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <Input 
-                  placeholder={t('blog.commentName')}
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  required
-                />
-                <Textarea 
-                  placeholder={t('blog.commentMessage')}
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => handleInputChange('message', e.target.value)}
-                  required
-                />
-                <Button type="submit">
-                  {t('blog.submitComment')}
-                </Button>
-              </form>
-              <p className="text-sm text-gray-500 mt-2">
-                {t('blog.commentsReviewed')}
-              </p>
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle>{t('blog.leaveComment')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleCommentSubmit} className="space-y-4">
+                  <Input
+                    placeholder={t('blog.yourName')}
+                    value={commentForm.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    required
+                  />
+                  <Textarea
+                    placeholder={t('blog.yourComment')}
+                    rows={4}
+                    value={commentForm.message}
+                    onChange={(e) => handleInputChange('message', e.target.value)}
+                    required
+                  />
+                  <Button 
+                    type="submit" 
+                    disabled={submittingComment}
+                    className="w-full sm:w-auto"
+                  >
+                    {submittingComment ? t('blog.submitting') : t('blog.submitComment')}
+                  </Button>
+                  <p className="text-sm text-gray-500">
+                    {t('blog.commentModeration')}
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Comments List */}
+            <div className="space-y-6">
+              {comments.length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-600">{t('blog.noComments')}</p>
+                  <p className="text-gray-500 text-sm">{t('blog.beFirst')}</p>
+                </div>
+              ) : (
+                comments.map((comment) => (
+                  <Card key={comment.id}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start space-x-4">
+                        <div className="bg-blue-100 rounded-full p-2">
+                          <User className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">{comment.name}</h4>
+                            <span className="text-sm text-gray-500">
+                              {formatDate(comment.created_at)}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{comment.message}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Related Articles CTA */}
+          <div className="mt-16 bg-blue-50 rounded-lg p-8 text-center">
+            <h3 className="text-2xl font-bold mb-4">{t('blog.moreArticles')}</h3>
+            <p className="text-gray-600 mb-6">{t('blog.moreArticlesDescription')}</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/blog" 
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                {t('blog.viewAllArticles')}
+              </Link>
+              <Link 
+                to="/contact" 
+                className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                {t('blog.bookConsultation')}
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
       <Toaster />
     </div>

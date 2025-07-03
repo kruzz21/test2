@@ -32,6 +32,7 @@ import AppointmentManager from '@/components/AppointmentManager';
 import EnhancedAppointmentCalendar from '@/components/EnhancedAppointmentCalendar';
 import ReviewManager from '@/components/ReviewManager';
 import FAQManager from '@/components/FAQManager';
+import BlogManager from '@/components/BlogManager';
 
 const Admin = () => {
   const { t } = useTranslation();
@@ -165,11 +166,12 @@ const Admin = () => {
 
           {/* Main Content */}
           <Tabs defaultValue="appointments" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="appointments">Pending</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
               <TabsTrigger value="calendar">Calendar</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
+              <TabsTrigger value="blog">Blog</TabsTrigger>
               <TabsTrigger value="faq">FAQ</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
@@ -192,6 +194,11 @@ const Admin = () => {
             {/* Reviews Tab */}
             <TabsContent value="reviews">
               <ReviewManager />
+            </TabsContent>
+
+            {/* Blog Tab */}
+            <TabsContent value="blog">
+              <BlogManager />
             </TabsContent>
 
             {/* FAQ Tab */}
