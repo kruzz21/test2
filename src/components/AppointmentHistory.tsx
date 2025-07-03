@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Search, Filter, Trash2, Calendar, User, Phone, Mail } from 'lucide-react';
+import { History, User, Phone, Mail, Calendar, Clock, Search, Filter, Trash2, CreditCard } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 
@@ -30,15 +31,15 @@ const AppointmentHistory = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
-  const fetchAllAppointments = async () => {
+  const fetchAppointments = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
         .from('appointments')
         .select('*')
-        .in('status', ['confirmed', 'rejected', 'completed'])
+        .neq('status', 'pending')
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
@@ -57,82 +58,42 @@ const AppointmentHistory = () => {
   };
 
   useEffect(() => {
-    fetchAllAppointments();
+    fetchAppointments();
   }, []);
 
   useEffect(() => {
     let filtered = appointments;
 
-    // Search filter
+    // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(apt =>
-        apt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        apt.phone.includes(searchTerm) ||
-        apt.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        apt.service.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(appointment =>
+        appointment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.phone.includes(searchTerm) ||
+        appointment.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.national_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.service.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Status filter
+    // Filter by status
     if (statusFilter !== 'all') {
-      filtered = filtered.filter(apt => apt.status === statusFilter);
-    }
-
-    // Date filter
-    if (dateFilter !== 'all') {
-      const today = new Date();
-      const filterDate = new Date();
-      
-      switch (dateFilter) {
-        case 'today':
-          filterDate.setHours(0, 0, 0, 0);
-          filtered = filtered.filter(apt => {
-            const aptDate = new Date(apt.preferred_date);
-            return aptDate.toDateString() === filterDate.toDateString();
-          });
-          break;
-        case 'week':
-          filterDate.setDate(today.getDate() - 7);
-          filtered = filtered.filter(apt => {
-            const aptDate = new Date(apt.preferred_date);
-            return aptDate >= filterDate;
-          });
-          break;
-        case 'month':
-          filterDate.setMonth(today.getMonth() - 1);
-          filtered = filtered.filter(apt => {
-            const aptDate = new Date(apt.preferred_date);
-            return aptDate >= filterDate;
-          });
-          break;
-        case 'upcoming':
-          filtered = filtered.filter(apt => {
-            const aptDate = new Date(apt.preferred_date);
-            return aptDate >= today;
-          });
-          break;
-        case 'past':
-          filtered = filtered.filter(apt => {
-            const aptDate = new Date(apt.preferred_date);
-            return aptDate < today;
-          });
-          break;
-      }
+      filtered = filtered.filter(appointment => appointment.status === statusFilter);
     }
 
     setFilteredAppointments(filtered);
-  }, [appointments, searchTerm, statusFilter, dateFilter]);
+  }, [appointments, searchTerm, statusFilter]);
 
-  const deleteAppointment = async (id: string) => {
+  const handleDeleteAppointment = async (id: string) => {
     try {
+      setLoading(true);
       const { error } = await supabase
         .from('appointments')
-        .delete()
+        .update({ status: 'deleted' })
         .eq('id', id);
 
       if (error) throw error;
 
-      setAppointments(prev => prev.filter(apt => apt.id !== id));
+      await fetchAppointments();
       toast({
         title: "Success",
         description: "Appointment deleted successfully.",
@@ -144,6 +105,8 @@ const AppointmentHistory = () => {
         description: "Failed to delete appointment.",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,90 +118,85 @@ const AppointmentHistory = () => {
         return 'bg-red-100 text-red-800 border-red-200';
       case 'completed':
         return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'deleted':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const clearFilters = () => {
-    setSearchTerm('');
-    setStatusFilter('all');
-    setDateFilter('all');
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return '✅';
+      case 'rejected':
+        return '❌';
+      case 'completed':
+        return '✨';
+      case 'deleted':
+        return '🗑️';
+      default:
+        return '📋';
+    }
   };
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
-          <Calendar className="h-5 w-5 mr-2" />
-          Appointment History
+          <History className="h-5 w-5 mr-2" />
+          Appointment History ({filteredAppointments.length})
         </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="relative">
+        
+        {/* Search and Filter Controls */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search appointments..."
+              placeholder="Search by name, phone, email, ID, or service..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
             />
           </div>
-          
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="confirmed">Confirmed</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={dateFilter} onValueChange={setDateFilter}>
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by date" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Dates</SelectItem>
-              <SelectItem value="today">Today</SelectItem>
-              <SelectItem value="week">Last 7 Days</SelectItem>
-              <SelectItem value="month">Last 30 Days</SelectItem>
-              <SelectItem value="upcoming">Upcoming</SelectItem>
-              <SelectItem value="past">Past</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button variant="outline" onClick={clearFilters}>
-            <Filter className="h-4 w-4 mr-2" />
-            Clear Filters
-          </Button>
-        </div>
-
-        {/* Results Summary */}
-        <div className="mb-4 text-sm text-gray-600">
-          Showing {filteredAppointments.length} of {appointments.length} appointments
-        </div>
-
-        {/* Appointments List */}
-        {loading ? (
-          <div className="text-center py-8">
-            <p>Loading appointment history...</p>
+          <div className="flex items-center space-x-2">
+            <Filter className="h-4 w-4 text-gray-400" />
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="deleted">Deleted</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        ) : filteredAppointments.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-gray-500">No appointments found matching your criteria.</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredAppointments.map((appointment) => (
+        </div>
+      </CardHeader>
+      
+      <CardContent>
+        <div className="space-y-4">
+          {loading ? (
+            <div className="text-center py-8">
+              <p>Loading appointment history...</p>
+            </div>
+          ) : filteredAppointments.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">
+                {searchTerm || statusFilter !== 'all' 
+                  ? 'No appointments match your search criteria' 
+                  : 'No appointment history available'
+                }
+              </p>
+            </div>
+          ) : (
+            filteredAppointments.map((appointment) => (
               <div key={appointment.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between">
-                  <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
                     {/* Patient Info */}
                     <div>
                       <div className="flex items-center space-x-2 mb-2">
@@ -252,12 +210,16 @@ const AppointmentHistory = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           <Mail className="h-3 w-3" />
-                          <span>{appointment.email}</span>
+                          <span className="truncate">{appointment.email}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CreditCard className="h-3 w-3" />
+                          <span className="text-xs font-mono">{appointment.national_id}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Appointment Details */}
+                    {/* Service Info */}
                     <div>
                       <p className="font-medium text-sm mb-2">{appointment.service}</p>
                       <div className="text-sm text-gray-600 space-y-1">
@@ -266,7 +228,7 @@ const AppointmentHistory = () => {
                           <span>{appointment.preferred_date}</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span>🕐</span>
+                          <Clock className="h-3 w-3" />
                           <span>{appointment.preferred_time}</span>
                         </div>
                       </div>
@@ -275,55 +237,166 @@ const AppointmentHistory = () => {
                     {/* Status and Dates */}
                     <div>
                       <Badge className={`${getStatusColor(appointment.status)} mb-2`}>
-                        {appointment.status.toUpperCase()}
+                        {getStatusIcon(appointment.status)} {appointment.status.toUpperCase()}
                       </Badge>
                       <div className="text-xs text-gray-500 space-y-1">
-                        <p>Created: {new Date(appointment.created_at).toLocaleDateString()}</p>
-                        <p>Updated: {new Date(appointment.updated_at).toLocaleDateString()}</p>
+                        <div>
+                          <span className="font-medium">Created:</span>
+                          <br />
+                          {new Date(appointment.created_at).toLocaleDateString()} at{' '}
+                          {new Date(appointment.created_at).toLocaleTimeString()}
+                        </div>
+                        {appointment.updated_at !== appointment.created_at && (
+                          <div>
+                            <span className="font-medium">Updated:</span>
+                            <br />
+                            {new Date(appointment.updated_at).toLocaleDateString()} at{' '}
+                            {new Date(appointment.updated_at).toLocaleTimeString()}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
 
-                  {/* Actions */}
-                  <div className="ml-4">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Appointment</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Are you sure you want to permanently delete this appointment for {appointment.name}? 
-                            This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => deleteAppointment(appointment.id)}
-                            className="bg-red-600 hover:bg-red-700"
+                    {/* Actions */}
+                    <div className="flex flex-col space-y-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setSelectedAppointment(appointment)}
                           >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                            View Details
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <DialogHeader>
+                            <DialogTitle>Appointment Details</DialogTitle>
+                          </DialogHeader>
+                          {selectedAppointment && (
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <h4 className="font-medium mb-2">Patient Information</h4>
+                                  <div className="space-y-2 text-sm">
+                                    <div>
+                                      <span className="text-gray-600">Name:</span>
+                                      <span className="ml-2 font-medium">{selectedAppointment.name}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Phone:</span>
+                                      <span className="ml-2">{selectedAppointment.phone}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Email:</span>
+                                      <span className="ml-2">{selectedAppointment.email}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">National ID:</span>
+                                      <span className="ml-2 font-mono">{selectedAppointment.national_id}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div>
+                                  <h4 className="font-medium mb-2">Appointment Details</h4>
+                                  <div className="space-y-2 text-sm">
+                                    <div>
+                                      <span className="text-gray-600">Service:</span>
+                                      <span className="ml-2">{selectedAppointment.service}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Date:</span>
+                                      <span className="ml-2">{selectedAppointment.preferred_date}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Time:</span>
+                                      <span className="ml-2">{selectedAppointment.preferred_time}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Status:</span>
+                                      <Badge className={`ml-2 ${getStatusColor(selectedAppointment.status)}`}>
+                                        {selectedAppointment.status.toUpperCase()}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {selectedAppointment.message && (
+                                <div>
+                                  <h4 className="font-medium mb-2">Patient Message</h4>
+                                  <div className="bg-gray-50 p-3 rounded text-sm">
+                                    {selectedAppointment.message}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              <div className="bg-blue-50 p-3 rounded">
+                                <h4 className="font-medium mb-2">Timeline</h4>
+                                <div className="text-sm space-y-1">
+                                  <div>
+                                    <span className="text-blue-800 font-medium">Created:</span>
+                                    <span className="ml-2">
+                                      {new Date(selectedAppointment.created_at).toLocaleDateString()} at{' '}
+                                      {new Date(selectedAppointment.created_at).toLocaleTimeString()}
+                                    </span>
+                                  </div>
+                                  {selectedAppointment.updated_at !== selectedAppointment.created_at && (
+                                    <div>
+                                      <span className="text-blue-800 font-medium">Last Updated:</span>
+                                      <span className="ml-2">
+                                        {new Date(selectedAppointment.updated_at).toLocaleDateString()} at{' '}
+                                        {new Date(selectedAppointment.updated_at).toLocaleTimeString()}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </DialogContent>
+                      </Dialog>
+
+                      {appointment.status !== 'deleted' && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              Delete
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Appointment</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete this appointment for {appointment.name}? 
+                                This action will mark the appointment as deleted.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteAppointment(appointment.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                    </div>
                   </div>
                 </div>
-
-                {/* Message */}
-                {appointment.message && (
-                  <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
-                    <strong>Message:</strong> {appointment.message}
-                  </div>
-                )}
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </CardContent>
     </Card>
   );

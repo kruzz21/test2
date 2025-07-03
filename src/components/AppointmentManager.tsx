@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Calendar as CalendarIcon, Clock, User, Phone, Mail, Edit, Check, X, Trash2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Phone, Mail, Edit, Check, X, Trash2, CreditCard } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
@@ -176,6 +176,10 @@ const AppointmentManager = () => {
                           <Mail className="h-3 w-3" />
                           <span>{appointment.email}</span>
                         </div>
+                        <div className="flex items-center space-x-2">
+                          <CreditCard className="h-3 w-3" />
+                          <span className="text-xs">ID: {appointment.national_id}</span>
+                        </div>
                       </div>
                     </div>
 
@@ -216,6 +220,29 @@ const AppointmentManager = () => {
                               <DialogTitle>Edit Appointment</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
+                              {/* Patient Details Display */}
+                              <div className="bg-gray-50 p-3 rounded-lg">
+                                <h4 className="font-medium mb-2">Patient Information</h4>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                  <div>
+                                    <span className="text-gray-600">Name:</span>
+                                    <span className="ml-2 font-medium">{editingAppointment?.name}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-gray-600">Phone:</span>
+                                    <span className="ml-2">{editingAppointment?.phone}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-gray-600">Email:</span>
+                                    <span className="ml-2">{editingAppointment?.email}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-gray-600">National ID:</span>
+                                    <span className="ml-2 font-mono">{editingAppointment?.national_id}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              
                               <div>
                                 <label className="block text-sm font-medium mb-2">Date</label>
                                 <Popover>
