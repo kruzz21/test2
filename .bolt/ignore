@@ -1,2 +1,3 @@
 supabase/migrations/
 node_modules/
+dist/
