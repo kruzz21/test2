@@ -3,7 +3,7 @@
     "home": "Ana Sayfa",
     "about": "Hakkımda",
     "services": "Hizmetler",
-    "symptoms": "Semptomlar ve Tedaviler",
+    "symptoms": "Semptomlar",
     "gallery": "Galeri",
     "blog": "Blog",
     "reviews": "Yorumlar",
@@ -86,21 +86,12 @@
     "callNow": "Hemen Ara"
   },
   "symptoms": {
-    "title": "Semptomlar ve Tedaviler",
-    "subtitle": "Çeşitli durumlar ve semptomlar için kapsamlı ortopedik bakım",
-    "treatmentAreas": "Tedavi Alanları",
+    "title": "Semptomlar ve Durumlar",
+    "subtitle": "Yaygın ortopedik durumlar ve tedavileri hakkında bilgi edinin",
     "readMore": "Devamını Oku",
-    "learnMore": "Daha Fazla Bilgi",
     "dontSeeCondition": "Durumunuzu Görmüyor musunuz?",
     "conditionDescription": "Spesifik ortopedik endişelerinizin kapsamlı değerlendirmesi için Dr. Eryanılmaz ile iletişime geçin.",
-    "scheduleConsultation": "Konsültasyon Planla",
-    "commonCauses": "Yaygın Nedenler",
-    "symptomsList": "Semptomlar",
-    "treatmentOptions": "Tedavi Seçenekleri",
-    "conservativeTreatment": "Konservatif Tedavi",
-    "surgicalTreatment": "Cerrahi Tedavi",
-    "doctorApproach": "Dr. Gürkan Eryanılmaz'ın Yaklaşımı",
-    "backToSymptoms": "Semptomlar ve Tedavilere Dön"
+    "scheduleConsultation": "Konsültasyon Planla"
   },
   "gallery": {
     "title": "Galeri",

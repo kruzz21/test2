@@ -1,351 +1,275 @@
-import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Calendar, CheckCircle, RefreshCw } from 'lucide-react';
-import { useSymptoms } from '@/hooks/useSymptoms';
-import { Toaster } from '@/components/ui/toaster';
+import { ArrowLeft, Calendar } from 'lucide-react';
 
 const SymptomDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { t, i18n } = useTranslation();
-  const { loading, error, fetchSymptom } = useSymptoms();
-  const [symptom, setSymptom] = useState<any>(null);
+  const { id } = useParams();
+  const { t } = useTranslation();
 
-  // Get current language suffix for multilingual content
-  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
-
-  // Fallback data for demonstration
-  const fallbackSymptomData: { [key: string]: any } = {
-    'shoulder-conditions': {
-      id: 'shoulder-conditions',
-      title_tr: 'Omuz Ağrısı ve Durumları',
-      title_az: 'Çiyin Ağrısı və Vəziyyətləri',
-      title_en: 'Shoulder Pain & Conditions',
-      description_tr: 'Omuz, vücuttaki en hareketli eklemlerden biridir ve çeşitli yaralanma ve durumlara karşı hassastır. Kapsamlı yaklaşımımız hem akut yaralanmaları hem de kronik durumları ele alır.',
-      description_az: 'Çiyin bədəndəki ən hərəkətli oynaqlardan biridir və müxtəlif zədələr və vəziyyətlərə qarşı həssasdır. Hərtərəfli yanaşmamız həm kəskin zədələri, həm də xroniki vəziyyətləri əhatə edir.',
-      description_en: 'The shoulder is one of the most mobile joints in the body, making it susceptible to various injuries and conditions. Our comprehensive approach addresses both acute injuries and chronic conditions.',
-      image_url: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      common_causes_tr: [
-        'Rotator manşet yırtıkları ve sıkışma',
-        'Donuk omuz (adeziv kapsülit)',
-        'Sporla ilgili yaralanmalar',
-        'Omuz instabilitesi ve çıkıkları',
-        'Artrit ve dejeneratif değişiklikler',
-        'Omuz bıçağı, köprücük kemiği veya üst kol kırıkları'
-      ],
-      common_causes_az: [
-        'Rotator manşet cırıqları və sıxılması',
-        'Donmuş çiyin (adeziv kapsulit)',
-        'İdmanla əlaqəli zədələr',
-        'Çiyin qeyri-sabitliyi və çıxıqları',
-        'Artrit və degenerativ dəyişikliklər',
-        'Çiyin bıçağı, körpücük sümüyü və ya yuxarı qol sınıqları'
-      ],
-      common_causes_en: [
-        'Rotator cuff tears and impingement',
-        'Frozen shoulder (adhesive capsulitis)',
-        'Sports-related injuries',
-        'Shoulder instability and dislocations',
-        'Arthritis and degenerative changes',
-        'Fractures of the shoulder blade, collarbone, or upper arm'
-      ],
-      symptoms_list_tr: [
-        'Baş üstü aktivitelerle artan ağrı',
-        'Kolda güçsüzlük',
-        'Uykuyu bozan gece ağrısı',
-        'Sınırlı hareket aralığı',
-        'Çıtırdama veya patlama sesleri',
-        'Sertlik ve azalmış esneklik'
-      ],
-      symptoms_list_az: [
-        'Baş üstü fəaliyyətlərlə artan ağrı',
-        'Qolda zəiflik',
-        'Yuxunu pozan gecə ağrısı',
-        'Məhdud hərəkət diapazonu',
-        'Çıtırdama və ya partlama səsləri',
-        'Sərtlik və azalmış çeviklik'
-      ],
-      symptoms_list_en: [
-        'Pain that worsens with overhead activities',
-        'Weakness in the arm',
-        'Night pain that disrupts sleep',
-        'Limited range of motion',
-        'Clicking or popping sounds',
-        'Stiffness and reduced flexibility'
-      ],
-      conservative_treatments_tr: [
-        'Fizik tedavi ve rehabilitasyon',
-        'Anti-inflamatuar ilaçlar',
-        'Kortikosteroid enjeksiyonları',
-        'Aktivite modifikasyonu',
-        'Buz ve sıcak tedavisi'
-      ],
-      conservative_treatments_az: [
-        'Fizik terapiya və reabilitasiya',
-        'Anti-inflamatuar dərmanlar',
-        'Kortikosteroid inyeksiyaları',
-        'Fəaliyyət modifikasiyası',
-        'Buz və istilik terapiyası'
-      ],
-      conservative_treatments_en: [
-        'Physical therapy and rehabilitation',
-        'Anti-inflammatory medications',
-        'Corticosteroid injections',
-        'Activity modification',
-        'Ice and heat therapy'
-      ],
-      surgical_treatments_tr: [
-        'Artroskopik rotator manşet onarımı',
-        'Omuz stabilizasyon prosedürleri',
-        'Omuz protezi cerrahisi',
-        'İnstabilite için Bankart onarımı',
-        'Subakromial dekompresyon'
-      ],
-      surgical_treatments_az: [
-        'Artroskopik rotator manşet təmiri',
-        'Çiyin sabitləşdirmə prosedurları',
-        'Çiyin protezi cərrahiyyəsi',
-        'Qeyri-sabitlik üçün Bankart təmiri',
-        'Subakromial dekompresiya'
-      ],
-      surgical_treatments_en: [
-        'Arthroscopic rotator cuff repair',
-        'Shoulder stabilization procedures',
-        'Shoulder replacement surgery',
-        'Bankart repair for instability',
-        'Subacromial decompression'
-      ],
-      doctor_approach_tr: 'Dr. Gürkan Eryanılmaz hem artroskopik hem de açık omuz cerrahilerinde uzmanlaşmış olup, daha hızlı iyileşme ve optimal sonuçlar sağlamak için en son minimal invaziv teknikleri kullanır.',
-      doctor_approach_az: 'Dr. Gürkan Eryanılmaz həm artroskopik, həm də açıq çiyin cərrahiyyələrində ixtisaslaşmış və daha sürətli sağalma və optimal nəticələr təmin etmək üçün ən son minimal invaziv texnikaları istifadə edir.',
-      doctor_approach_en: 'Dr. Gürkan Eryanılmaz specializes in both arthroscopic and open shoulder surgeries, utilizing the latest minimally invasive techniques to ensure faster recovery and optimal outcomes.'
+  // Placeholder symptom data
+  const symptomData = {
+    'knee-pain': {
+      title: 'Knee Pain & Arthritis',
+      description: 'Comprehensive treatment options for knee pain, arthritis, and joint problems',
+      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      content: `
+        <h2>Understanding Knee Pain</h2>
+        <p>Knee pain is one of the most common orthopedic complaints affecting people of all ages. It can result from various causes including arthritis, injuries, or wear and tear.</p>
+        
+        <h3>Common Symptoms</h3>
+        <ul>
+          <li>Joint pain and stiffness</li>
+          <li>Swelling and inflammation</li>
+          <li>Reduced range of motion</li>
+          <li>Difficulty walking or climbing stairs</li>
+        </ul>
+        
+        <h3>Treatment Options</h3>
+        <p>Dr. Eryanılmaz offers both non-surgical and surgical treatment options depending on the severity of your condition:</p>
+        
+        <h4>Non-Surgical Treatments</h4>
+        <ul>
+          <li>Physical therapy</li>
+          <li>Anti-inflammatory medications</li>
+          <li>Joint injections</li>
+          <li>Activity modification</li>
+        </ul>
+        
+        <h4>Surgical Treatments</h4>
+        <ul>
+          <li>Arthroscopic surgery</li>
+          <li>Partial knee replacement</li>
+          <li>Total knee replacement</li>
+          <li>Revision surgery</li>
+        </ul>
+      `
     },
-    'elbow-conditions': {
-      id: 'elbow-conditions',
-      title_tr: 'Dirsek Durumları ve Tedavisi',
-      title_az: 'Dirsək Vəziyyətləri və Müalicəsi',
-      title_en: 'Elbow Conditions & Treatment',
-      description_tr: 'Dirsek problemleri günlük aktiviteleri ve spor performansını önemli ölçüde etkileyebilir. Hem akut hem de kronik durumlar için kapsamlı bakım sağlıyoruz.',
-      description_az: 'Dirsək problemləri gündəlik fəaliyyətləri və idman performansını əhəmiyyətli dərəcədə təsir edə bilər. Həm kəskin, həm də xroniki vəziyyətlər üçün hərtərəfli qayğı təmin edirik.',
-      description_en: 'Elbow problems can significantly impact daily activities and sports performance. We provide comprehensive care for both acute and chronic conditions.',
-      image_url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      common_causes_tr: [
-        'Tenis dirseği (lateral epikondilit)',
-        'Golfçü dirseği (medial epikondilit)',
-        'Dirsek çıkığı',
-        'Olekranon bursiti',
-        'Ulnar sinir sıkışması',
-        'Dirsek kırıkları'
-      ],
-      common_causes_az: [
-        'Tennis dirsəyi (lateral epikondlit)',
-        'Qolfçu dirsəyi (medial epikondlit)',
-        'Dirsək çıxığı',
-        'Olekranon bursiti',
-        'Ulnar sinir sıxılması',
-        'Dirsək sınıqları'
-      ],
-      common_causes_en: [
-        'Tennis elbow (lateral epicondylitis)',
-        'Golfer\'s elbow (medial epicondylitis)',
-        'Elbow dislocation',
-        'Olecranon bursitis',
-        'Ulnar nerve compression',
-        'Elbow fractures'
-      ],
-      symptoms_list_tr: [
-        'Dirsek dışında veya içinde ağrı',
-        'Kavrama gücünde zayıflık',
-        'Dirsek hareketinde sertlik',
-        'Elde uyuşma veya karıncalanma',
-        'Şişlik ve hassasiyet',
-        'Hareketle artan ağrı'
-      ],
-      symptoms_list_az: [
-        'Dirsəyin xaricində və ya içində ağrı',
-        'Tutma gücündə zəiflik',
-        'Dirsək hərəkətində sərtlik',
-        'Əldə uyuşma və ya qarışqa gəzməsi',
-        'Şişkinlik və həssaslıq',
-        'Hərəkətlə artan ağrı'
-      ],
-      symptoms_list_en: [
-        'Pain on the outside or inside of the elbow',
-        'Weakness in grip strength',
-        'Stiffness in elbow movement',
-        'Numbness or tingling in the hand',
-        'Swelling and tenderness',
-        'Pain that increases with movement'
-      ],
-      conservative_treatments_tr: [
-        'İstirahat ve aktivite modifikasyonu',
-        'Fizik tedavi egzersizleri',
-        'Anti-inflamatuar ilaçlar',
-        'Dirsek bandı veya destekleri',
-        'Kortikosteroid enjeksiyonları'
-      ],
-      conservative_treatments_az: [
-        'İstirahət və fəaliyyət modifikasiyası',
-        'Fizik terapiya məşqləri',
-        'Anti-inflamatuar dərmanlar',
-        'Dirsək bandı və ya dəstəkləri',
-        'Kortikosteroid inyeksiyaları'
-      ],
-      conservative_treatments_en: [
-        'Rest and activity modification',
-        'Physical therapy exercises',
-        'Anti-inflammatory medications',
-        'Elbow braces or supports',
-        'Corticosteroid injections'
-      ],
-      surgical_treatments_tr: [
-        'Tenis dirseği için tendon onarımı',
-        'Ulnar sinir dekompresyonu',
-        'Dirsek artroskopisi',
-        'Kırık fiksasyonu',
-        'Dirsek protezi'
-      ],
-      surgical_treatments_az: [
-        'Tennis dirsəyi üçün tendon təmiri',
-        'Ulnar sinir dekompresiyası',
-        'Dirsək artroskopiyası',
-        'Sınıq fiksasiyası',
-        'Dirsək protezi'
-      ],
-      surgical_treatments_en: [
-        'Tendon repair for tennis elbow',
-        'Ulnar nerve decompression',
-        'Elbow arthroscopy',
-        'Fracture fixation',
-        'Elbow replacement'
-      ],
-      doctor_approach_tr: 'Dr. Eryanılmaz dirsek durumları için hem konservatif hem de cerrahi tedavi seçenekleri sunar, her hastanın spesifik ihtiyaçlarına göre kişiselleştirilmiş tedavi planları geliştirir.',
-      doctor_approach_az: 'Dr. Eryanılmaz dirsək vəziyyətləri üçün həm konservativ, həm də cərrahi müalicə seçimləri təklif edir, hər xəstənin spesifik ehtiyaclarına görə fərdiləşdirilmiş müalicə planları hazırlayır.',
-      doctor_approach_en: 'Dr. Eryanılmaz offers both conservative and surgical treatment options for elbow conditions, developing personalized treatment plans based on each patient\'s specific needs.'
+    'shoulder-injuries': {
+      title: 'Shoulder Injuries',
+      description: 'Treatment for rotator cuff tears, shoulder impingement, and dislocations',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      content: `
+        <h2>Understanding Shoulder Injuries</h2>
+        <p>Shoulder injuries are common in both athletes and everyday activities. The shoulder is a complex joint that allows for a wide range of motion but can be prone to injury.</p>
+        
+        <h3>Common Shoulder Problems</h3>
+        <ul>
+          <li>Rotator cuff tears</li>
+          <li>Shoulder impingement syndrome</li>
+          <li>Shoulder dislocation</li>
+          <li>Frozen shoulder (adhesive capsulitis)</li>
+          <li>Shoulder arthritis</li>
+        </ul>
+        
+        <h3>Treatment Approaches</h3>
+        <p>Treatment depends on the specific condition and severity:</p>
+        
+        <h4>Conservative Treatment</h4>
+        <ul>
+          <li>Rest and activity modification</li>
+          <li>Physical therapy</li>
+          <li>Anti-inflammatory medications</li>
+          <li>Corticosteroid injections</li>
+        </ul>
+        
+        <h4>Surgical Options</h4>
+        <ul>
+          <li>Arthroscopic rotator cuff repair</li>
+          <li>Shoulder stabilization surgery</li>
+          <li>Shoulder replacement</li>
+          <li>Bankart repair</li>
+        </ul>
+      `
+    },
+    'hip-problems': {
+      title: 'Hip Problems',
+      description: 'Hip replacement, hip arthritis, and developmental hip dysplasia treatment',
+      image: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      content: `
+        <h2>Hip Conditions and Treatment</h2>
+        <p>Hip problems can significantly impact mobility and quality of life. Dr. Eryanılmaz specializes in both adult and pediatric hip conditions.</p>
+        
+        <h3>Common Hip Conditions</h3>
+        <ul>
+          <li>Hip arthritis</li>
+          <li>Hip fractures</li>
+          <li>Developmental hip dysplasia (DDH)</li>
+          <li>Hip impingement</li>
+          <li>Avascular necrosis</li>
+        </ul>
+        
+        <h3>Pediatric Hip Conditions</h3>
+        <p>Special attention is given to pediatric hip problems:</p>
+        <ul>
+          <li>Developmental dysplasia of the hip (DDH)</li>
+          <li>Legg-Calvé-Perthes disease</li>
+          <li>Slipped capital femoral epiphysis</li>
+        </ul>
+        
+        <h3>Treatment Options</h3>
+        <h4>Non-Surgical</h4>
+        <ul>
+          <li>Physical therapy</li>
+          <li>Medications</li>
+          <li>Activity modification</li>
+          <li>Hip injections</li>
+        </ul>
+        
+        <h4>Surgical</h4>
+        <ul>
+          <li>Hip replacement surgery</li>
+          <li>Hip arthroscopy</li>
+          <li>Hip fracture repair</li>
+          <li>Pediatric hip reconstruction</li>
+        </ul>
+      `
+    },
+    'sports-injuries': {
+      title: 'Sports Injuries',
+      description: 'ACL tears, meniscus injuries, and athletic rehabilitation programs',
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      content: `
+        <h2>Sports Injury Treatment</h2>
+        <p>Sports injuries require specialized care to ensure athletes can return to their sport safely and effectively. Dr. Eryanılmaz has extensive experience treating sports-related injuries.</p>
+        
+        <h3>Common Sports Injuries</h3>
+        <ul>
+          <li>ACL (Anterior Cruciate Ligament) tears</li>
+          <li>Meniscus tears</li>
+          <li>Achilles tendon injuries</li>
+          <li>Shoulder dislocations</li>
+          <li>Tennis elbow</li>
+          <li>Stress fractures</li>
+        </ul>
+        
+        <h3>Treatment Philosophy</h3>
+        <p>Our approach focuses on:</p>
+        <ul>
+          <li>Accurate diagnosis</li>
+          <li>Minimally invasive techniques when possible</li>
+          <li>Comprehensive rehabilitation</li>
+          <li>Safe return to sport protocols</li>
+        </ul>
+        
+        <h3>Rehabilitation Programs</h3>
+        <p>Customized rehabilitation programs include:</p>
+        <ul>
+          <li>Sport-specific exercises</li>
+          <li>Strength and conditioning</li>
+          <li>Injury prevention education</li>
+          <li>Performance optimization</li>
+        </ul>
+      `
+    },
+    'fractures': {
+      title: 'Fractures & Trauma',
+      description: 'Emergency fracture care and complex trauma surgery',
+      image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      content: `
+        <h2>Fracture and Trauma Care</h2>
+        <p>Fractures and traumatic injuries require immediate and expert care. Dr. Eryanılmaz provides comprehensive trauma surgery services.</p>
+        
+        <h3>Types of Fractures Treated</h3>
+        <ul>
+          <li>Simple and complex fractures</li>
+          <li>Open (compound) fractures</li>
+          <li>Stress fractures</li>
+          <li>Pathological fractures</li>
+          <li>Non-union fractures</li>
+        </ul>
+        
+        <h3>Common Fracture Sites</h3>
+        <ul>
+          <li>Hip fractures</li>
+          <li>Ankle fractures</li>
+          <li>Wrist fractures</li>
+          <li>Femur fractures</li>
+          <li>Elbow fractures</li>
+        </ul>
+        
+        <h3>Treatment Approach</h3>
+        <p>Treatment depends on the type and location of the fracture:</p>
+        
+        <h4>Non-Surgical Treatment</h4>
+        <ul>
+          <li>Casting</li>
+          <li>Splinting</li>
+          <li>Bracing</li>
+          <li>Traction</li>
+        </ul>
+        
+        <h4>Surgical Treatment</h4>
+        <ul>
+          <li>Internal fixation with plates and screws</li>
+          <li>Intramedullary nailing</li>
+          <li>External fixation</li>
+          <li>Joint replacement for complex fractures</li>
+        </ul>
+      `
+    },
+    'pediatric-conditions': {
+      title: 'Pediatric Conditions',
+      description: 'Specialized care for children with orthopedic conditions',
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      content: `
+        <h2>Pediatric Orthopedic Care</h2>
+        <p>Children have unique orthopedic needs that require specialized knowledge and gentle care. Dr. Eryanılmaz has extensive experience in pediatric orthopedics.</p>
+        
+        <h3>Common Pediatric Conditions</h3>
+        <ul>
+          <li>Developmental dysplasia of the hip (DDH)</li>
+          <li>Clubfoot (talipes equinovarus)</li>
+          <li>Scoliosis</li>
+          <li>Growth plate injuries</li>
+          <li>Limb length discrepancies</li>
+          <li>Cerebral palsy-related orthopedic issues</li>
+        </ul>
+        
+        <h3>Specialized Treatments</h3>
+        <h4>Hip Dysplasia Treatment</h4>
+        <ul>
+          <li>Pavlik harness</li>
+          <li>Closed reduction and casting</li>
+          <li>Open reduction surgery</li>
+          <li>Pelvic osteotomy</li>
+        </ul>
+        
+        <h4>Clubfoot Treatment</h4>
+        <ul>
+          <li>Ponseti method casting</li>
+          <li>Achilles tenotomy</li>
+          <li>Bracing protocols</li>
+          <li>Surgical correction when needed</li>
+        </ul>
+        
+        <h3>Family-Centered Care</h3>
+        <p>Our approach includes:</p>
+        <ul>
+          <li>Parent education and support</li>
+          <li>Age-appropriate communication</li>
+          <li>Minimally invasive techniques</li>
+          <li>Long-term follow-up care</li>
+        </ul>
+      `
     }
-    // Add more fallback data for other conditions as needed
   };
 
-  useEffect(() => {
-    const loadSymptom = async () => {
-      if (!id) return;
-
-      try {
-        const symptomData = await fetchSymptom(id);
-        setSymptom(symptomData);
-      } catch (error) {
-        // If database fetch fails, use fallback data
-        const fallbackData = fallbackSymptomData[id];
-        if (fallbackData) {
-          setSymptom(fallbackData);
-        }
-      }
-    };
-
-    loadSymptom();
-  }, [id, fetchSymptom]);
-
-  const handleRetry = () => {
-    if (id) {
-      const loadSymptom = async () => {
-        try {
-          const symptomData = await fetchSymptom(id);
-          setSymptom(symptomData);
-        } catch (error) {
-          const fallbackData = fallbackSymptomData[id!];
-          if (fallbackData) {
-            setSymptom(fallbackData);
-          }
-        }
-      };
-      loadSymptom();
-    }
-  };
-
-  if (loading && !symptom) {
-    return (
-      <div className="min-h-screen py-8 w-full">
-        <div className="w-full px-4 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center py-16">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">{t('common.loading')}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error && !symptom) {
-    return (
-      <div className="min-h-screen py-8 w-full">
-        <div className="w-full px-4 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center py-16">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-                <h3 className="text-lg font-semibold text-red-800 mb-2">
-                  Failed to Load Symptom Details
-                </h3>
-                <p className="text-red-600 mb-4">{error}</p>
-                <div className="space-y-2">
-                  <Button onClick={handleRetry} variant="outline" className="text-red-600 border-red-300 hover:bg-red-50">
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    {t('gallery.tryAgain')}
-                  </Button>
-                  <div>
-                    <Link to="/symptoms-and-treatments">
-                      <Button variant="ghost" className="text-gray-600">
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        {t('symptoms.backToSymptoms')}
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const symptom = symptomData[id as keyof typeof symptomData];
 
   if (!symptom) {
     return (
       <div className="min-h-screen py-8 w-full">
-        <div className="w-full px-4 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center py-16">
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Condition Not Found
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  The condition you're looking for doesn't exist or has been removed.
-                </p>
-                <Link to="/symptoms-and-treatments">
-                  <Button variant="outline">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    {t('symptoms.backToSymptoms')}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
+        <div className="w-full px-4 lg:px-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">Symptom Not Found</h1>
+          <Button asChild>
+            <Link to="/symptoms">Back to Symptoms</Link>
+          </Button>
         </div>
       </div>
     );
   }
-
-  // Use multilingual content based on current language
-  const title = symptom[`title${langSuffix}`] || symptom.title_en;
-  const description = symptom[`description${langSuffix}`] || symptom.description_en;
-  const commonCauses = symptom[`common_causes${langSuffix}`] || symptom.common_causes_en || [];
-  const symptomsList = symptom[`symptoms_list${langSuffix}`] || symptom.symptoms_list_en || [];
-  const conservativeTreatments = symptom[`conservative_treatments${langSuffix}`] || symptom.conservative_treatments_en || [];
-  const surgicalTreatments = symptom[`surgical_treatments${langSuffix}`] || symptom.surgical_treatments_en || [];
-  const doctorApproach = symptom[`doctor_approach${langSuffix}`] || symptom.doctor_approach_en;
 
   return (
     <div className="min-h-screen py-8 w-full">
@@ -353,127 +277,57 @@ const SymptomDetail = () => {
         <div className="max-w-6xl mx-auto">
           {/* Back Button */}
           <Button variant="ghost" asChild className="mb-6">
-            <Link to="/symptoms-and-treatments">
+            <Link to="/symptoms">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              {t('symptoms.backToSymptoms')}
+              {t('common.back')} to {t('symptoms.title')}
             </Link>
           </Button>
 
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">{title}</h1>
-            <p className="text-xl text-gray-600 leading-relaxed">{description}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h1 className="text-4xl font-bold mb-4">{symptom.title}</h1>
+              <p className="text-xl text-gray-600 mb-6">{symptom.description}</p>
+              <Button asChild size="lg">
+                <Link to="/contact">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  {t('symptoms.scheduleConsultation')}
+                </Link>
+              </Button>
+            </div>
+            <div>
+              <img
+                src={symptom.image}
+                alt={symptom.title}
+                className="w-full h-64 object-cover rounded-lg shadow-lg"
+              />
+            </div>
           </div>
 
-          {/* Main Content */}
-          <div className="space-y-8">
-            {/* Common Causes */}
-            {commonCauses.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">{t('symptoms.commonCauses')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {commonCauses.map((cause: string, index: number) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{cause}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+          {/* Content */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Detailed Information</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div 
+                className="prose max-w-none prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg prose-p:text-gray-700 prose-ul:text-gray-700 prose-li:text-gray-700"
+                dangerouslySetInnerHTML={{ __html: symptom.content }}
+              />
+            </CardContent>
+          </Card>
 
-            {/* Symptoms */}
-            {symptomsList.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">{t('symptoms.symptomsList')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {symptomsList.map((symptomItem: string, index: number) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{symptomItem}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Treatment Options */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">{t('symptoms.treatmentOptions')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Conservative Treatment */}
-                  {conservativeTreatments.length > 0 && (
-                    <div className="bg-green-50 p-6 rounded-lg">
-                      <h3 className="text-xl font-semibold mb-4 text-green-900">
-                        {t('symptoms.conservativeTreatment')}
-                      </h3>
-                      <div className="space-y-3">
-                        {conservativeTreatments.map((treatment: string, index: number) => (
-                          <div key={index} className="flex items-start space-x-3">
-                            <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span className="text-green-800">{treatment}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Surgical Treatment */}
-                  {surgicalTreatments.length > 0 && (
-                    <div className="bg-blue-50 p-6 rounded-lg">
-                      <h3 className="text-xl font-semibold mb-4 text-blue-900">
-                        {t('symptoms.surgicalTreatment')}
-                      </h3>
-                      <div className="space-y-3">
-                        {surgicalTreatments.map((treatment: string, index: number) => (
-                          <div key={index} className="flex items-start space-x-3">
-                            <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                            <span className="text-blue-800">{treatment}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Doctor's Approach */}
-            {doctorApproach && (
-              <Card className="bg-gray-50">
-                <CardHeader>
-                  <CardTitle className="text-2xl">{t('symptoms.doctorApproach')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 leading-relaxed text-lg">{doctorApproach}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* CTA */}
+          {/* CTA */}
+          <div className="mt-8 text-center">
             <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="pt-8 pb-8 text-center">
+              <CardContent className="pt-8 pb-8">
                 <h2 className="text-2xl font-bold mb-4">Ready to Get Treatment?</h2>
                 <p className="text-gray-600 mb-6">
                   Contact Dr. Eryanılmaz to discuss your symptoms and treatment options.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button asChild size="lg">
-                    <Link to="/contact">
-                      <Calendar className="mr-2 h-5 w-5" />
-                      {t('symptoms.scheduleConsultation')}
-                    </Link>
+                    <Link to="/contact">{t('services.scheduleAppointment')}</Link>
                   </Button>
                   <Button variant="outline" size="lg" asChild>
                     <a href="tel:+994553977874">{t('home.callNow')}</a>
@@ -484,7 +338,6 @@ const SymptomDetail = () => {
           </div>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 };
