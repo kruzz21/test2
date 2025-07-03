@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Star, User, Edit, Check, X, MessageCircle } from 'lucide-react';
+import { Star, User, Edit, Check, X, MessageCircle, Trash2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 
@@ -33,13 +33,9 @@ interface Review {
 
 const ReviewManager = () => {
   const [pendingReviews, setPendingReviews] = useState<Review[]>([]);
+  const [approvedReviews, setApprovedReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
-  const [editedNames, setEditedNames] = useState({
-    name_tr: '',
-    name_az: '',
-    name_en: ''
-  });
   const [editedMessages, setEditedMessages] = useState({
     message_tr: '',
     message_az: '',
@@ -51,23 +47,37 @@ const ReviewManager = () => {
     doctor_reply_en: ''
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('pending');
 
-  const fetchPendingReviews = async () => {
+  const fetchReviews = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // Fetch pending reviews
+      const { data: pending, error: pendingError } = await supabase
         .from('reviews')
         .select('*')
         .eq('approved', false)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setPendingReviews(data || []);
+      if (pendingError) throw pendingError;
+
+      // Fetch approved reviews
+      const { data: approved, error: approvedError } = await supabase
+        .from('reviews')
+        .select('*')
+        .eq('approved', true)
+        .order('created_at', { ascending: false });
+
+      if (approvedError) throw approvedError;
+
+      setPendingReviews(pending || []);
+      setApprovedReviews(approved || []);
     } catch (error) {
-      console.error('Error fetching pending reviews:', error);
+      console.error('Error fetching reviews:', error);
       toast({
         title: "Error",
-        description: "Failed to load pending reviews.",
+        description: "Failed to load reviews.",
         variant: "destructive",
       });
     } finally {
@@ -76,7 +86,7 @@ const ReviewManager = () => {
   };
 
   useEffect(() => {
-    fetchPendingReviews();
+    fetchReviews();
   }, []);
 
   const handleApproveReview = async (id: string, withReply: boolean = false) => {
@@ -90,9 +100,11 @@ const ReviewManager = () => {
 
       // If we're editing the review, include the edited content
       if (editingReview && editingReview.id === id) {
-        updateData.name_tr = editedNames.name_tr;
-        updateData.name_az = editedNames.name_az;
-        updateData.name_en = editedNames.name_en;
+        // Names are universal, so use the same value for all languages
+        updateData.name_tr = editingReview.name;
+        updateData.name_az = editingReview.name;
+        updateData.name_en = editingReview.name;
+        
         updateData.message_tr = editedMessages.message_tr;
         updateData.message_az = editedMessages.message_az;
         updateData.message_en = editedMessages.message_en;
@@ -107,7 +119,7 @@ const ReviewManager = () => {
         }
 
         // Update legacy fields for backward compatibility
-        updateData.name = editedNames.name_en;
+        updateData.name = editingReview.name;
         updateData.message = editedMessages.message_en;
       }
 
@@ -118,8 +130,8 @@ const ReviewManager = () => {
 
       if (error) throw error;
 
-      // Refresh pending reviews
-      await fetchPendingReviews();
+      // Refresh reviews
+      await fetchReviews();
       
       toast({
         title: "Success",
@@ -142,7 +154,68 @@ const ReviewManager = () => {
     }
   };
 
-  const handleRejectReview = async (id: string) => {
+  const handleUpdateReview = async (id: string, withReply: boolean = false) => {
+    try {
+      setLoading(true);
+      
+      const updateData: any = {
+        updated_at: new Date().toISOString()
+      };
+
+      if (editingReview) {
+        // Names are universal, so use the same value for all languages
+        updateData.name_tr = editingReview.name;
+        updateData.name_az = editingReview.name;
+        updateData.name_en = editingReview.name;
+        
+        updateData.message_tr = editedMessages.message_tr;
+        updateData.message_az = editedMessages.message_az;
+        updateData.message_en = editedMessages.message_en;
+
+        // Include doctor replies
+        updateData.doctor_reply_tr = doctorReplies.doctor_reply_tr;
+        updateData.doctor_reply_az = doctorReplies.doctor_reply_az;
+        updateData.doctor_reply_en = doctorReplies.doctor_reply_en;
+        // Also update the legacy doctor_reply field for backward compatibility
+        updateData.doctor_reply = doctorReplies.doctor_reply_en;
+
+        // Update legacy fields for backward compatibility
+        updateData.name = editingReview.name;
+        updateData.message = editedMessages.message_en;
+      }
+
+      const { error } = await supabase
+        .from('reviews')
+        .update(updateData)
+        .eq('id', id);
+
+      if (error) throw error;
+
+      // Refresh reviews
+      await fetchReviews();
+      
+      toast({
+        title: "Success",
+        description: "Review updated successfully.",
+      });
+
+      // Close edit dialog
+      setEditingReview(null);
+      setIsDialogOpen(false);
+      resetEditState();
+    } catch (error) {
+      console.error('Error updating review:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update review.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteReview = async (id: string) => {
     try {
       setLoading(true);
       
@@ -153,18 +226,18 @@ const ReviewManager = () => {
 
       if (error) throw error;
 
-      // Refresh pending reviews
-      await fetchPendingReviews();
+      // Refresh reviews
+      await fetchReviews();
       
       toast({
         title: "Success",
-        description: "Review rejected and deleted successfully.",
+        description: "Review deleted successfully.",
       });
     } catch (error) {
-      console.error('Error rejecting review:', error);
+      console.error('Error deleting review:', error);
       toast({
         title: "Error",
-        description: "Failed to reject review.",
+        description: "Failed to delete review.",
         variant: "destructive",
       });
     } finally {
@@ -172,16 +245,10 @@ const ReviewManager = () => {
     }
   };
 
-  const openEditDialog = (review: Review) => {
+  const openEditDialog = (review: Review, isApproved: boolean = false) => {
     setEditingReview(review);
     
     // Pre-populate with existing data or fallback to legacy fields
-    setEditedNames({
-      name_tr: review.name_tr || review.name,
-      name_az: review.name_az || review.name,
-      name_en: review.name_en || review.name
-    });
-    
     setEditedMessages({
       message_tr: review.message_tr || review.message,
       message_az: review.message_az || review.message,
@@ -198,7 +265,6 @@ const ReviewManager = () => {
   };
 
   const resetEditState = () => {
-    setEditedNames({ name_tr: '', name_az: '', name_en: '' });
     setEditedMessages({ message_tr: '', message_az: '', message_en: '' });
     setDoctorReplies({ doctor_reply_tr: '', doctor_reply_az: '', doctor_reply_en: '' });
   };
@@ -220,279 +286,270 @@ const ReviewManager = () => {
     ));
   };
 
+  const renderReviewCard = (review: Review, isApproved: boolean = false) => (
+    <div key={review.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          {/* Review Header */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              <User className="h-5 w-5 text-blue-600" />
+              <span className="font-medium">{review.name}</span>
+              <div className="flex">{renderStars(review.rating)}</div>
+              <Badge className={getStatusColor(review.approved)}>
+                {review.approved ? 'APPROVED' : 'PENDING'}
+              </Badge>
+            </div>
+            <span className="text-sm text-gray-500">
+              {new Date(review.created_at).toLocaleDateString()}
+            </span>
+          </div>
+
+          {/* Review Content */}
+          <div className="mb-4">
+            <p className="text-gray-700">{review.message}</p>
+          </div>
+
+          {/* Existing Doctor Reply */}
+          {review.doctor_reply && (
+            <div className="bg-blue-50 border-l-4 border-blue-200 p-3 rounded mb-4">
+              <div className="flex items-center mb-2">
+                <MessageCircle className="h-4 w-4 text-blue-600 mr-2" />
+                <span className="font-medium text-blue-900">Doctor's Reply</span>
+              </div>
+              <p className="text-blue-800">{review.doctor_reply}</p>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-2">
+            <Dialog open={isDialogOpen && editingReview?.id === review.id} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => openEditDialog(review, isApproved)}
+                >
+                  <Edit className="h-3 w-3 mr-1" />
+                  {isApproved ? 'Edit' : 'Edit & Approve'}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>{isApproved ? 'Edit Review' : 'Edit & Approve Review'}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  {/* Original Review Display */}
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium mb-2">Original Review</h4>
+                    <div className="space-y-2">
+                      <div>
+                        <span className="text-sm text-gray-600">Name:</span>
+                        <span className="ml-2 font-medium">{review.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-600">Rating:</span>
+                        <div className="ml-2 inline-flex">{renderStars(review.rating)}</div>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-600">Message:</span>
+                        <p className="ml-2 text-gray-800">{review.message}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Tabs defaultValue="messages" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="messages">Edit Messages</TabsTrigger>
+                      <TabsTrigger value="replies">Add Replies</TabsTrigger>
+                    </TabsList>
+
+                    {/* Messages Tab */}
+                    <TabsContent value="messages" className="space-y-4">
+                      <p className="text-sm text-gray-600">
+                        Edit and translate the review message for all languages:
+                      </p>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Message (Turkish)</label>
+                        <Textarea
+                          value={editedMessages.message_tr}
+                          onChange={(e) => setEditedMessages(prev => ({ ...prev, message_tr: e.target.value }))}
+                          rows={4}
+                          placeholder="Turkish message..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Message (Azerbaijani)</label>
+                        <Textarea
+                          value={editedMessages.message_az}
+                          onChange={(e) => setEditedMessages(prev => ({ ...prev, message_az: e.target.value }))}
+                          rows={4}
+                          placeholder="Azerbaijani message..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Message (English)</label>
+                        <Textarea
+                          value={editedMessages.message_en}
+                          onChange={(e) => setEditedMessages(prev => ({ ...prev, message_en: e.target.value }))}
+                          rows={4}
+                          placeholder="English message..."
+                        />
+                      </div>
+                    </TabsContent>
+
+                    {/* Replies Tab */}
+                    <TabsContent value="replies" className="space-y-4">
+                      <p className="text-sm text-gray-600">
+                        Add doctor's reply in all languages (optional):
+                      </p>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Reply (Turkish)</label>
+                        <Textarea
+                          value={doctorReplies.doctor_reply_tr}
+                          onChange={(e) => setDoctorReplies(prev => ({ ...prev, doctor_reply_tr: e.target.value }))}
+                          rows={3}
+                          placeholder="Turkish reply..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Reply (Azerbaijani)</label>
+                        <Textarea
+                          value={doctorReplies.doctor_reply_az}
+                          onChange={(e) => setDoctorReplies(prev => ({ ...prev, doctor_reply_az: e.target.value }))}
+                          rows={3}
+                          placeholder="Azerbaijani reply..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Reply (English)</label>
+                        <Textarea
+                          value={doctorReplies.doctor_reply_en}
+                          onChange={(e) => setDoctorReplies(prev => ({ ...prev, doctor_reply_en: e.target.value }))}
+                          rows={3}
+                          placeholder="English reply..."
+                        />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                  
+                  <div className="flex justify-end space-x-2 pt-4 border-t">
+                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={() => isApproved ? handleUpdateReview(review.id) : handleApproveReview(review.id, true)}>
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      {isApproved ? 'Update Review' : 'Approve & Reply'}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {!isApproved && (
+              <Button 
+                size="sm" 
+                onClick={() => handleApproveReview(review.id, false)}
+                disabled={loading}
+              >
+                <Check className="h-3 w-3 mr-1" />
+                Quick Approve
+              </Button>
+            )}
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="text-red-600 hover:text-red-700"
+                >
+                  {isApproved ? <Trash2 className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
+                  {isApproved ? 'Delete' : 'Reject'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{isApproved ? 'Delete Review' : 'Reject Review'}</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to {isApproved ? 'delete' : 'reject'} this review from {review.name}? 
+                    This action will permanently delete the review.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDeleteReview(review.id)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    {isApproved ? 'Delete' : 'Reject & Delete'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialog>
+            </AlertDialog>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
           <Star className="h-5 w-5 mr-2" />
-          Pending Reviews ({pendingReviews.length})
+          Patient Reviews Management
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {loading ? (
-            <div className="text-center py-8">
-              <p>Loading reviews...</p>
-            </div>
-          ) : pendingReviews.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-gray-600">No pending reviews</p>
-            </div>
-          ) : (
-            pendingReviews.map((review) => (
-              <div key={review.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    {/* Review Header */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <User className="h-5 w-5 text-blue-600" />
-                        <span className="font-medium">{review.name}</span>
-                        <div className="flex">{renderStars(review.rating)}</div>
-                        <Badge className={getStatusColor(review.approved)}>
-                          {review.approved ? 'APPROVED' : 'PENDING'}
-                        </Badge>
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        {new Date(review.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="pending">
+              Pending ({pendingReviews.length})
+            </TabsTrigger>
+            <TabsTrigger value="approved">
+              Approved ({approvedReviews.length})
+            </TabsTrigger>
+          </TabsList>
 
-                    {/* Review Content */}
-                    <div className="mb-4">
-                      <p className="text-gray-700">{review.message}</p>
-                    </div>
-
-                    {/* Existing Doctor Reply */}
-                    {review.doctor_reply && (
-                      <div className="bg-blue-50 border-l-4 border-blue-200 p-3 rounded mb-4">
-                        <div className="flex items-center mb-2">
-                          <MessageCircle className="h-4 w-4 text-blue-600 mr-2" />
-                          <span className="font-medium text-blue-900">Doctor's Reply</span>
-                        </div>
-                        <p className="text-blue-800">{review.doctor_reply}</p>
-                      </div>
-                    )}
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-2">
-                      <Dialog open={isDialogOpen && editingReview?.id === review.id} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => openEditDialog(review)}
-                          >
-                            <Edit className="h-3 w-3 mr-1" />
-                            Edit & Approve
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle>Edit Review</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-6">
-                            {/* Original Review Display */}
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                              <h4 className="font-medium mb-2">Original Review</h4>
-                              <div className="space-y-2">
-                                <div>
-                                  <span className="text-sm text-gray-600">Name:</span>
-                                  <span className="ml-2 font-medium">{review.name}</span>
-                                </div>
-                                <div>
-                                  <span className="text-sm text-gray-600">Rating:</span>
-                                  <div className="ml-2 inline-flex">{renderStars(review.rating)}</div>
-                                </div>
-                                <div>
-                                  <span className="text-sm text-gray-600">Message:</span>
-                                  <p className="ml-2 text-gray-800">{review.message}</p>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <Tabs defaultValue="names" className="w-full">
-                              <TabsList className="grid w-full grid-cols-3">
-                                <TabsTrigger value="names">Edit Names</TabsTrigger>
-                                <TabsTrigger value="messages">Edit Messages</TabsTrigger>
-                                <TabsTrigger value="replies">Add Replies</TabsTrigger>
-                              </TabsList>
-
-                              {/* Names Tab */}
-                              <TabsContent value="names" className="space-y-4">
-                                <p className="text-sm text-gray-600">
-                                  Edit and translate the reviewer name for all languages:
-                                </p>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Name (Turkish)</label>
-                                  <Input
-                                    value={editedNames.name_tr}
-                                    onChange={(e) => setEditedNames(prev => ({ ...prev, name_tr: e.target.value }))}
-                                    placeholder="Turkish name..."
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Name (Azerbaijani)</label>
-                                  <Input
-                                    value={editedNames.name_az}
-                                    onChange={(e) => setEditedNames(prev => ({ ...prev, name_az: e.target.value }))}
-                                    placeholder="Azerbaijani name..."
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Name (English)</label>
-                                  <Input
-                                    value={editedNames.name_en}
-                                    onChange={(e) => setEditedNames(prev => ({ ...prev, name_en: e.target.value }))}
-                                    placeholder="English name..."
-                                  />
-                                </div>
-                              </TabsContent>
-
-                              {/* Messages Tab */}
-                              <TabsContent value="messages" className="space-y-4">
-                                <p className="text-sm text-gray-600">
-                                  Edit and translate the review message for all languages:
-                                </p>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Message (Turkish)</label>
-                                  <Textarea
-                                    value={editedMessages.message_tr}
-                                    onChange={(e) => setEditedMessages(prev => ({ ...prev, message_tr: e.target.value }))}
-                                    rows={4}
-                                    placeholder="Turkish message..."
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Message (Azerbaijani)</label>
-                                  <Textarea
-                                    value={editedMessages.message_az}
-                                    onChange={(e) => setEditedMessages(prev => ({ ...prev, message_az: e.target.value }))}
-                                    rows={4}
-                                    placeholder="Azerbaijani message..."
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Message (English)</label>
-                                  <Textarea
-                                    value={editedMessages.message_en}
-                                    onChange={(e) => setEditedMessages(prev => ({ ...prev, message_en: e.target.value }))}
-                                    rows={4}
-                                    placeholder="English message..."
-                                  />
-                                </div>
-                              </TabsContent>
-
-                              {/* Replies Tab */}
-                              <TabsContent value="replies" className="space-y-4">
-                                <p className="text-sm text-gray-600">
-                                  Add doctor's reply in all languages (optional):
-                                </p>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Reply (Turkish)</label>
-                                  <Textarea
-                                    value={doctorReplies.doctor_reply_tr}
-                                    onChange={(e) => setDoctorReplies(prev => ({ ...prev, doctor_reply_tr: e.target.value }))}
-                                    rows={3}
-                                    placeholder="Turkish reply..."
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Reply (Azerbaijani)</label>
-                                  <Textarea
-                                    value={doctorReplies.doctor_reply_az}
-                                    onChange={(e) => setDoctorReplies(prev => ({ ...prev, doctor_reply_az: e.target.value }))}
-                                    rows={3}
-                                    placeholder="Azerbaijani reply..."
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block text-sm font-medium mb-1">Reply (English)</label>
-                                  <Textarea
-                                    value={doctorReplies.doctor_reply_en}
-                                    onChange={(e) => setDoctorReplies(prev => ({ ...prev, doctor_reply_en: e.target.value }))}
-                                    rows={3}
-                                    placeholder="English reply..."
-                                  />
-                                </div>
-                              </TabsContent>
-                            </Tabs>
-                            
-                            <div className="flex justify-end space-x-2 pt-4 border-t">
-                              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                                Cancel
-                              </Button>
-                              <Button 
-                                variant="outline"
-                                onClick={() => handleApproveReview(review.id, false)}
-                              >
-                                <Check className="h-4 w-4 mr-2" />
-                                Approve Only
-                              </Button>
-                              <Button onClick={() => handleApproveReview(review.id, true)}>
-                                <MessageCircle className="h-4 w-4 mr-2" />
-                                Approve & Reply
-                              </Button>
-                            </div>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleApproveReview(review.id, false)}
-                        disabled={loading}
-                      >
-                        <Check className="h-3 w-3 mr-1" />
-                        Quick Approve
-                      </Button>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <X className="h-3 w-3 mr-1" />
-                            Reject
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Reject Review</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to reject this review from {review.name}? 
-                              This action will permanently delete the review.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleRejectReview(review.id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              Reject & Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                </div>
+          <TabsContent value="pending" className="space-y-4 mt-6">
+            {loading ? (
+              <div className="text-center py-8">
+                <p>Loading pending reviews...</p>
               </div>
-            ))
-          )}
-        </div>
+            ) : pendingReviews.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No pending reviews</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {pendingReviews.map((review) => renderReviewCard(review, false))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="approved" className="space-y-4 mt-6">
+            {loading ? (
+              <div className="text-center py-8">
+                <p>Loading approved reviews...</p>
+              </div>
+            ) : approvedReviews.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No approved reviews</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {approvedReviews.map((review) => renderReviewCard(review, true))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

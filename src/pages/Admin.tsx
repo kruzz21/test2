@@ -31,46 +31,15 @@ import AppointmentHistory from '@/components/AppointmentHistory';
 import AppointmentManager from '@/components/AppointmentManager';
 import EnhancedAppointmentCalendar from '@/components/EnhancedAppointmentCalendar';
 import ReviewManager from '@/components/ReviewManager';
+import FAQManager from '@/components/FAQManager';
 
 const Admin = () => {
   const { t } = useTranslation();
   const { session, loading: authLoading, isAuthenticated, logout } = useAdminAuth();
   const { 
     stats, 
-    fetchPendingFAQSubmissions,
-    answerFAQSubmission,
-    rejectFAQSubmission,
     fetchStats
   } = useAdmin(isAuthenticated);
-  
-  const [pendingFAQSubmissions, setPendingFAQSubmissions] = useState<any[]>([]);
-  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
-  const [questions, setQuestions] = useState({
-    question_tr: '',
-    question_az: '',
-    question_en: ''
-  });
-  const [answers, setAnswers] = useState({
-    answer_tr: '',
-    answer_az: '',
-    answer_en: ''
-  });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const faqSubmissions = await fetchPendingFAQSubmissions();
-        setPendingFAQSubmissions(faqSubmissions);
-      } catch (error) {
-        console.error('Error loading admin data:', error);
-      }
-    };
-
-    if (isAuthenticated) {
-      loadData();
-    }
-  }, [isAuthenticated, fetchPendingFAQSubmissions]);
 
   // Show loading screen if authentication is loading
   if (authLoading) {
@@ -96,89 +65,6 @@ const Admin = () => {
     } catch (error) {
       console.error('Logout error:', error);
     }
-  };
-
-  const handleAnswerFAQ = async () => {
-    if (!selectedSubmission || !answers.answer_tr || !answers.answer_az || !answers.answer_en) {
-      toast({
-        title: "Error",
-        description: "Please provide answers in all languages.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!questions.question_tr || !questions.question_az || !questions.question_en) {
-      toast({
-        title: "Error",
-        description: "Please provide questions in all languages.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      // Create the FAQ with edited questions and answers
-      await answerFAQSubmission(selectedSubmission.id, {
-        question_tr: questions.question_tr,
-        question_az: questions.question_az,
-        question_en: questions.question_en,
-        answer_tr: answers.answer_tr,
-        answer_az: answers.answer_az,
-        answer_en: answers.answer_en
-      });
-      
-      // Refresh pending FAQ submissions
-      const submissions = await fetchPendingFAQSubmissions();
-      setPendingFAQSubmissions(submissions);
-      setSelectedSubmission(null);
-      setQuestions({ question_tr: '', question_az: '', question_en: '' });
-      setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
-      setIsDialogOpen(false);
-      toast({
-        title: "Success",
-        description: "FAQ answered and published successfully.",
-      });
-    } catch (error) {
-      console.error('Error answering FAQ:', error);
-      toast({
-        title: "Error",
-        description: "Failed to answer FAQ submission.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRejectFAQ = async (id: string) => {
-    try {
-      await rejectFAQSubmission(id);
-      // Refresh pending FAQ submissions
-      const submissions = await fetchPendingFAQSubmissions();
-      setPendingFAQSubmissions(submissions);
-      toast({
-        title: "Success",
-        description: "FAQ submission rejected.",
-      });
-    } catch (error) {
-      console.error('Error rejecting FAQ:', error);
-      toast({
-        title: "Error",
-        description: "Failed to reject FAQ submission.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const openAnswerDialog = (submission: any) => {
-    setSelectedSubmission(submission);
-    // Pre-populate questions with the original submission
-    setQuestions({
-      question_tr: submission.question_tr || '',
-      question_az: submission.question_az || '',
-      question_en: submission.question_en || ''
-    });
-    setAnswers({ answer_tr: '', answer_az: '', answer_en: '' });
-    setIsDialogOpen(true);
   };
 
   return (
@@ -308,58 +194,9 @@ const Admin = () => {
               <ReviewManager />
             </TabsContent>
 
-            {/* FAQ Submissions Tab */}
+            {/* FAQ Tab */}
             <TabsContent value="faq">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <HelpCircle className="h-5 w-5 mr-2" />
-                    FAQ Submissions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {pendingFAQSubmissions.length === 0 ? (
-                      <p className="text-gray-600 text-center py-4">No pending FAQ submissions</p>
-                    ) : (
-                      pendingFAQSubmissions.map((submission) => (
-                        <div key={submission.id} className="flex items-start justify-between p-4 border rounded-lg">
-                          <div className="flex-1">
-                            <div className="flex items-center mb-2">
-                              <p className="font-medium mr-2">{submission.name}</p>
-                              {submission.email && (
-                                <p className="text-sm text-gray-500">({submission.email})</p>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-700 mb-2">{submission.question_en}</p>
-                            <p className="text-xs text-gray-500">
-                              Submitted on: {new Date(submission.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="secondary">{submission.status}</Badge>
-                            <Button 
-                              size="sm"
-                              onClick={() => openAnswerDialog(submission)}
-                            >
-                              <CheckCircle className="h-4 w-4 mr-1" />
-                              Answer
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleRejectFAQ(submission.id)}
-                            >
-                              <XCircle className="h-4 w-4 mr-1" />
-                              Reject
-                            </Button>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <FAQManager />
             </TabsContent>
 
             {/* Settings Tab */}
@@ -399,119 +236,6 @@ const Admin = () => {
           </Tabs>
         </div>
       </div>
-
-      {/* Enhanced Answer FAQ Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Answer FAQ Question</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6">
-            {/* Original Question Display */}
-            <div>
-              <p className="font-medium mb-2">Original Question:</p>
-              <div className="p-3 bg-gray-50 rounded border">
-                <p className="text-sm text-gray-700">
-                  <strong>From:</strong> {selectedSubmission?.name} {selectedSubmission?.email && `(${selectedSubmission.email})`}
-                </p>
-                <p className="text-sm text-gray-700 mt-2">
-                  {selectedSubmission?.question_en}
-                </p>
-              </div>
-            </div>
-            
-            <Tabs defaultValue="questions" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="questions">Edit Questions</TabsTrigger>
-                <TabsTrigger value="answers">Add Answers</TabsTrigger>
-              </TabsList>
-
-              {/* Questions Tab */}
-              <TabsContent value="questions" className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  Edit and translate the question for all languages before publishing:
-                </p>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Question (Turkish)</label>
-                  <Textarea
-                    value={questions.question_tr}
-                    onChange={(e) => setQuestions(prev => ({ ...prev, question_tr: e.target.value }))}
-                    rows={3}
-                    placeholder="Turkish question..."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Question (Azerbaijani)</label>
-                  <Textarea
-                    value={questions.question_az}
-                    onChange={(e) => setQuestions(prev => ({ ...prev, question_az: e.target.value }))}
-                    rows={3}
-                    placeholder="Azerbaijani question..."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Question (English)</label>
-                  <Textarea
-                    value={questions.question_en}
-                    onChange={(e) => setQuestions(prev => ({ ...prev, question_en: e.target.value }))}
-                    rows={3}
-                    placeholder="English question..."
-                  />
-                </div>
-              </TabsContent>
-
-              {/* Answers Tab */}
-              <TabsContent value="answers" className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  Provide answers in all languages:
-                </p>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
-                  <Textarea
-                    value={answers.answer_tr}
-                    onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
-                    rows={4}
-                    placeholder="Turkish answer..."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
-                  <Textarea
-                    value={answers.answer_az}
-                    onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
-                    rows={4}
-                    placeholder="Azerbaijani answer..."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Answer (English)</label>
-                  <Textarea
-                    value={answers.answer_en}
-                    onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
-                    rows={4}
-                    placeholder="English answer..."
-                  />
-                </div>
-              </TabsContent>
-            </Tabs>
-            
-            <div className="flex justify-end space-x-2 pt-4 border-t">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAnswerFAQ}>
-                Approve & Publish FAQ
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <Toaster />
     </div>
