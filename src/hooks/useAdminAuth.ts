@@ -9,28 +9,49 @@ export const useAdminAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log('🔄 useAdminAuth: Starting auth check...');
         setLoading(true);
         const currentSession = adminAuth.getCurrentSession();
         
+        console.log('📋 useAdminAuth: Current session check:', {
+          hasCurrentSession: !!currentSession,
+          sessionData: currentSession ? {
+            adminId: currentSession.admin.id,
+            adminEmail: currentSession.admin.email,
+            expiresAt: currentSession.expiresAt
+          } : null
+        });
+        
         if (currentSession) {
+          console.log('🔍 useAdminAuth: Validating existing session...');
           const isValid = await adminAuth.validateSession();
+          console.log('✅ useAdminAuth: Session validation result:', isValid);
+          
           if (isValid) {
-            setSession(currentSession);
+            const updatedSession = adminAuth.getCurrentSession();
+            console.log('✅ useAdminAuth: Setting valid session:', {
+              adminEmail: updatedSession?.admin.email,
+              isAuthenticated: true
+            });
+            setSession(updatedSession);
             setIsAuthenticated(true);
           } else {
+            console.log('❌ useAdminAuth: Session invalid, clearing state');
             setSession(null);
             setIsAuthenticated(false);
           }
         } else {
+          console.log('ℹ️ useAdminAuth: No current session found');
           setSession(null);
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.error('💥 useAdminAuth: Auth check failed:', error);
         setSession(null);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
+        console.log('🏁 useAdminAuth: Auth check completed');
       }
     };
 
@@ -39,11 +60,17 @@ export const useAdminAuth = () => {
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('🚀 useAdminAuth: Starting login for:', email);
       const newSession = await adminAuth.login(email, password);
+      console.log('✅ useAdminAuth: Login successful, updating state:', {
+        adminEmail: newSession.admin.email,
+        isAuthenticated: true
+      });
       setSession(newSession);
       setIsAuthenticated(true);
       return newSession;
     } catch (error) {
+      console.error('❌ useAdminAuth: Login failed:', error);
       setSession(null);
       setIsAuthenticated(false);
       throw error;
@@ -52,12 +79,21 @@ export const useAdminAuth = () => {
 
   const logout = async () => {
     try {
+      console.log('🚪 useAdminAuth: Starting logout...');
       await adminAuth.logout();
+      console.log('✅ useAdminAuth: Logout successful, clearing state');
     } finally {
       setSession(null);
       setIsAuthenticated(false);
     }
   };
+
+  console.log('📊 useAdminAuth: Current state:', {
+    hasSession: !!session,
+    isAuthenticated,
+    loading,
+    adminEmail: session?.admin.email
+  });
 
   return {
     session,
