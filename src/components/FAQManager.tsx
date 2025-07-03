@@ -442,7 +442,7 @@ const FAQManager = () => {
                                 Reject & Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>
-                          </AlertDialog>
+                          </AlertDialogContent>
                         </AlertDialog>
                       </div>
                     </div>
@@ -518,7 +518,7 @@ const FAQManager = () => {
                                 Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>
-                          </AlertDialog>
+                          </AlertDialogContent>
                         </AlertDialog>
                       </div>
                     </div>
