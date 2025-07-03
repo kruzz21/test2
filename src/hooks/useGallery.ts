@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
-import { galleryApi, type GalleryItem, type GalleryItemInsert, type GalleryItemUpdate } from '@/lib/api';
+import { galleryApi } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
+import type { Database } from '@/lib/supabase';
+
+type GalleryItem = Database['public']['Tables']['gallery_items']['Row'];
+type GalleryItemInsert = Database['public']['Tables']['gallery_items']['Insert'];
+type GalleryItemUpdate = Database['public']['Tables']['gallery_items']['Update'];
 
 export const useGallery = () => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
@@ -11,7 +16,7 @@ export const useGallery = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('Fetching gallery items...');
+      console.log('Fetching published gallery items...');
       
       const data = await galleryApi.getAllPublished();
       console.log('Gallery items fetched successfully:', data);
@@ -63,15 +68,18 @@ export const useGallery = () => {
       setError(null);
       console.log('Creating gallery item:', itemData);
       
-      await galleryApi.create(itemData);
+      const newItem = await galleryApi.create(itemData);
+      console.log('Gallery item created successfully:', newItem);
+      
+      // Refresh the list
+      await fetchAllGalleryItems();
       
       toast({
         title: "Success",
         description: "Gallery item created successfully.",
       });
       
-      // Refresh the list
-      await fetchAllGalleryItems();
+      return newItem;
     } catch (error) {
       console.error('Error creating gallery item:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to create gallery item';
@@ -94,15 +102,18 @@ export const useGallery = () => {
       setError(null);
       console.log('Updating gallery item:', id, itemData);
       
-      await galleryApi.update(id, itemData);
+      const updatedItem = await galleryApi.update(id, itemData);
+      console.log('Gallery item updated successfully:', updatedItem);
+      
+      // Refresh the list
+      await fetchAllGalleryItems();
       
       toast({
         title: "Success",
         description: "Gallery item updated successfully.",
       });
       
-      // Refresh the list
-      await fetchAllGalleryItems();
+      return updatedItem;
     } catch (error) {
       console.error('Error updating gallery item:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to update gallery item';
@@ -126,14 +137,15 @@ export const useGallery = () => {
       console.log('Deleting gallery item:', id);
       
       await galleryApi.delete(id);
+      console.log('Gallery item deleted successfully');
+      
+      // Refresh the list
+      await fetchAllGalleryItems();
       
       toast({
         title: "Success",
         description: "Gallery item deleted successfully.",
       });
-      
-      // Refresh the list
-      await fetchAllGalleryItems();
     } catch (error) {
       console.error('Error deleting gallery item:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to delete gallery item';

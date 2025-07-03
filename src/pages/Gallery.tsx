@@ -1,64 +1,72 @@
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { Play } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Play, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useGallery } from '@/hooks/useGallery';
+import { Toaster } from '@/components/ui/toaster';
 
 const Gallery = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { galleryItems, loading, error, fetchGalleryItems } = useGallery();
 
-  const photos = [
-    {
-      id: 1,
-      url: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      caption: 'Operating Room - Knee Surgery'
-    },
-    {
-      id: 2,
-      url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      caption: 'Surgical Equipment'
-    },
-    {
-      id: 3,
-      url: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      caption: 'Patient Consultation'
-    },
-    {
-      id: 4,
-      url: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      caption: 'Dr. Eryanılmaz with Patient'
-    },
-    {
-      id: 5,
-      url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      caption: 'Pediatric Consultation'
-    },
-    {
-      id: 6,
-      url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      caption: 'Sports Medicine Clinic'
-    }
-  ];
+  // Get current language suffix for multilingual content
+  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
-  const videos = [
-    {
-      id: 1,
-      title: 'Dr. Gürkan Eryanılmaz Introduction',
-      thumbnail: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      description: 'Introduction video from Dr. Eryanılmaz'
-    },
-    {
-      id: 2,
-      title: 'Knee Replacement Surgery Overview',
-      thumbnail: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      description: 'Educational video about knee replacement procedures'
-    },
-    {
-      id: 3,
-      title: 'Post-Surgery Rehabilitation',
-      thumbnail: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      description: 'Guidelines for post-operative care and rehabilitation'
-    }
-  ];
+  // Filter items by type
+  const photos = galleryItems.filter(item => item.type === 'photo');
+  const videos = galleryItems.filter(item => item.type === 'video');
+
+  const handleRetry = () => {
+    fetchGalleryItems();
+  };
+
+  const renderGalleryItem = (item: any) => {
+    const title = item[`title${langSuffix}`] || item.title_en;
+    const description = item[`description${langSuffix}`] || item.description_en;
+    const altText = item[`alt_text${langSuffix}`] || item.alt_text_en || title;
+
+    return (
+      <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+        <CardContent className="p-0">
+          <div className="relative">
+            {item.type === 'photo' ? (
+              <img
+                src={item.thumbnail_url || item.url}
+                alt={altText}
+                className="w-full h-64 object-cover"
+              />
+            ) : (
+              <>
+                <img
+                  src={item.thumbnail_url || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}
+                  alt={altText}
+                  className="w-full h-64 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                  <Play className="h-12 w-12 text-white" />
+                </div>
+              </>
+            )}
+            {item.categories_en && (
+              <div className="absolute top-2 right-2">
+                <Badge variant="secondary" className="text-xs">
+                  {item.categories_en.split(',')[0]?.trim()}
+                </Badge>
+              </div>
+            )}
+          </div>
+          <div className="p-4">
+            <h3 className="font-semibold mb-2">{title}</h3>
+            {description && (
+              <p className="text-sm text-gray-600">{description}</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="min-h-screen py-8 w-full">
@@ -103,62 +111,78 @@ const Gallery = () => {
           </CardContent>
         </Card>
 
-        {/* Tabs for Photos and Videos */}
+        {/* Content */}
         <div className="max-w-7xl mx-auto">
-          <Tabs defaultValue="photos" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="photos">{t('gallery.photos')}</TabsTrigger>
-              <TabsTrigger value="videos">{t('gallery.videos')}</TabsTrigger>
-            </TabsList>
-
-            {/* Photos Tab */}
-            <TabsContent value="photos">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {photos.map((photo) => (
-                  <Card key={photo.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardContent className="p-0">
-                      <img
-                        src={photo.url}
-                        alt={photo.caption}
-                        className="w-full h-64 object-cover"
-                      />
-                      <div className="p-4">
-                        <p className="text-sm text-gray-600">{photo.caption}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">{t('gallery.loading')}</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                <h3 className="text-lg font-semibold text-red-800 mb-2">
+                  {t('gallery.loadError')}
+                </h3>
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={handleRetry} variant="outline" className="text-red-600 border-red-300 hover:bg-red-50">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  {t('gallery.tryAgain')}
+                </Button>
               </div>
-            </TabsContent>
-
-            {/* Videos Tab */}
-            <TabsContent value="videos">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {videos.map((video) => (
-                  <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardContent className="p-0">
-                      <div className="relative">
-                        <img
-                          src={video.thumbnail}
-                          alt={video.title}
-                          className="w-full h-64 object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                          <Play className="h-12 w-12 text-white" />
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-semibold mb-2">{video.title}</h3>
-                        <p className="text-sm text-gray-600">{video.description}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+            </div>
+          ) : galleryItems.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {t('gallery.noItems')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('gallery.noItemsDescription')}
+                </p>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          ) : (
+            <Tabs defaultValue="photos" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-8">
+                <TabsTrigger value="photos">
+                  {t('gallery.photos')} ({photos.length})
+                </TabsTrigger>
+                <TabsTrigger value="videos">
+                  {t('gallery.videos')} ({videos.length})
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Photos Tab */}
+              <TabsContent value="photos">
+                {photos.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">{t('gallery.noPhotos')}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {photos.map(renderGalleryItem)}
+                  </div>
+                )}
+              </TabsContent>
+
+              {/* Videos Tab */}
+              <TabsContent value="videos">
+                {videos.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">{t('gallery.noVideos')}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {videos.map(renderGalleryItem)}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

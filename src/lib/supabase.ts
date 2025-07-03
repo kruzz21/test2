@@ -287,7 +287,14 @@ export type Database = {
           description_tr?: string;
           description_az?: string;
           description_en?: string;
+          alt_text_tr?: string;
+          alt_text_az?: string;
+          alt_text_en?: string;
+          categories_tr?: string;
+          categories_az?: string;
+          categories_en?: string;
           published: boolean;
+          display_order?: number;
           created_at: string;
           updated_at: string;
         };
@@ -301,7 +308,14 @@ export type Database = {
           description_tr?: string;
           description_az?: string;
           description_en?: string;
+          alt_text_tr?: string;
+          alt_text_az?: string;
+          alt_text_en?: string;
+          categories_tr?: string;
+          categories_az?: string;
+          categories_en?: string;
           published?: boolean;
+          display_order?: number;
         };
         Update: {
           type?: 'photo' | 'video';
@@ -313,7 +327,14 @@ export type Database = {
           description_tr?: string;
           description_az?: string;
           description_en?: string;
+          alt_text_tr?: string;
+          alt_text_az?: string;
+          alt_text_en?: string;
+          categories_tr?: string;
+          categories_az?: string;
+          categories_en?: string;
           published?: boolean;
+          display_order?: number;
         };
       };
     };

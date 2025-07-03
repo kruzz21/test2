@@ -20,7 +20,8 @@ import {
   XCircle,
   LogOut,
   History,
-  CalendarDays
+  CalendarDays,
+  Images
 } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
@@ -33,6 +34,7 @@ import EnhancedAppointmentCalendar from '@/components/EnhancedAppointmentCalenda
 import ReviewManager from '@/components/ReviewManager';
 import FAQManager from '@/components/FAQManager';
 import BlogManager from '@/components/BlogManager';
+import GalleryManager from '@/components/GalleryManager';
 
 const Admin = () => {
   const { t } = useTranslation();
@@ -48,7 +50,7 @@ const Admin = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <p>{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -79,13 +81,13 @@ const Admin = () => {
               <p className="text-gray-600">{t('admin.subtitle')}</p>
               {session && (
                 <p className="text-sm text-gray-500 mt-1">
-                  Welcome back, {session.admin.name}
+                  {t('admin.welcomeBack', { name: session.admin.name })}
                 </p>
               )}
             </div>
             <Button variant="outline" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              {t('admin.logout')}
             </Button>
           </div>
 
@@ -166,14 +168,15 @@ const Admin = () => {
 
           {/* Main Content */}
           <Tabs defaultValue="appointments" className="w-full">
-            <TabsList className="grid w-full grid-cols-7">
-              <TabsTrigger value="appointments">Pending</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
-              <TabsTrigger value="calendar">Calendar</TabsTrigger>
-              <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              <TabsTrigger value="blog">Blog</TabsTrigger>
-              <TabsTrigger value="faq">FAQ</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-8">
+              <TabsTrigger value="appointments">{t('admin.pending')}</TabsTrigger>
+              <TabsTrigger value="history">{t('admin.history')}</TabsTrigger>
+              <TabsTrigger value="calendar">{t('admin.calendar')}</TabsTrigger>
+              <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
+              <TabsTrigger value="blog">{t('admin.blog')}</TabsTrigger>
+              <TabsTrigger value="faq">{t('admin.faq')}</TabsTrigger>
+              <TabsTrigger value="gallery">{t('admin.gallery')}</TabsTrigger>
+              <TabsTrigger value="settings">{t('admin.settings')}</TabsTrigger>
             </TabsList>
 
             {/* Pending Appointments Tab */}
@@ -206,6 +209,11 @@ const Admin = () => {
               <FAQManager />
             </TabsContent>
 
+            {/* Gallery Tab */}
+            <TabsContent value="gallery">
+              <GalleryManager />
+            </TabsContent>
+
             {/* Settings Tab */}
             <TabsContent value="settings">
               <Card>
@@ -218,22 +226,22 @@ const Admin = () => {
                 <CardContent>
                   <div className="space-y-6">
                     <div>
-                      <h3 className="font-semibold mb-4">Contact Information</h3>
+                      <h3 className="font-semibold mb-4">{t('admin.contactInformation')}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Button variant="outline">Update Phone Number</Button>
-                        <Button variant="outline">Update Email</Button>
-                        <Button variant="outline">Update Address</Button>
-                        <Button variant="outline">Update Social Media</Button>
+                        <Button variant="outline">{t('admin.updatePhone')}</Button>
+                        <Button variant="outline">{t('admin.updateEmail')}</Button>
+                        <Button variant="outline">{t('admin.updateAddress')}</Button>
+                        <Button variant="outline">{t('admin.updateSocialMedia')}</Button>
                       </div>
                     </div>
                     
                     <div>
-                      <h3 className="font-semibold mb-4">System Configuration</h3>
+                      <h3 className="font-semibold mb-4">{t('admin.systemConfiguration')}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Button variant="outline">Backup Data</Button>
-                        <Button variant="outline">Export Appointments</Button>
-                        <Button variant="outline">Site Analytics</Button>
-                        <Button variant="outline">Security Settings</Button>
+                        <Button variant="outline">{t('admin.backupData')}</Button>
+                        <Button variant="outline">{t('admin.exportAppointments')}</Button>
+                        <Button variant="outline">{t('admin.siteAnalytics')}</Button>
+                        <Button variant="outline">{t('admin.securitySettings')}</Button>
                       </div>
                     </div>
                   </div>
