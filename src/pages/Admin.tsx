@@ -28,24 +28,22 @@ import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/hooks/use-toast';
 import AdminLogin from '@/components/AdminLogin';
 import AppointmentHistory from '@/components/AppointmentHistory';
-import AppointmentCalendar from '@/components/AppointmentCalendar';
+import AppointmentManager from '@/components/AppointmentManager';
+import EnhancedAppointmentCalendar from '@/components/EnhancedAppointmentCalendar';
 
 const Admin = () => {
   const { t } = useTranslation();
   const { session, loading: authLoading, isAuthenticated, logout } = useAdminAuth();
   const { 
     stats, 
-    fetchPendingAppointments, 
     fetchPendingReviews, 
     fetchPendingFAQSubmissions,
-    updateAppointmentStatus,
     approveReview,
     answerFAQSubmission,
     rejectFAQSubmission,
     fetchStats
   } = useAdmin(isAuthenticated);
   
-  const [pendingAppointments, setPendingAppointments] = useState<any[]>([]);
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);
   const [pendingFAQSubmissions, setPendingFAQSubmissions] = useState<any[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
@@ -64,13 +62,11 @@ const Admin = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [appointments, reviews, faqSubmissions] = await Promise.all([
-          fetchPendingAppointments(),
+        const [reviews, faqSubmissions] = await Promise.all([
           fetchPendingReviews(),
           fetchPendingFAQSubmissions()
         ]);
         
-        setPendingAppointments(appointments);
         setPendingReviews(reviews);
         setPendingFAQSubmissions(faqSubmissions);
       } catch (error) {
@@ -81,7 +77,7 @@ const Admin = () => {
     if (isAuthenticated) {
       loadData();
     }
-  }, [isAuthenticated, fetchPendingAppointments, fetchPendingReviews, fetchPendingFAQSubmissions]);
+  }, [isAuthenticated, fetchPendingReviews, fetchPendingFAQSubmissions]);
 
   // Show loading screen if authentication is loading
   if (authLoading) {
@@ -106,26 +102,6 @@ const Admin = () => {
       window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
-    }
-  };
-
-  const handleAppointmentAction = async (id: string, status: string) => {
-    try {
-      await updateAppointmentStatus(id, status);
-      // Refresh pending appointments
-      const appointments = await fetchPendingAppointments();
-      setPendingAppointments(appointments);
-      toast({
-        title: "Success",
-        description: `Appointment ${status} successfully.`,
-      });
-    } catch (error) {
-      console.error('Error updating appointment:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update appointment status.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -341,51 +317,7 @@ const Admin = () => {
 
             {/* Pending Appointments Tab */}
             <TabsContent value="appointments">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Pending Appointments
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {pendingAppointments.length === 0 ? (
-                      <p className="text-gray-600 text-center py-4">No pending appointments</p>
-                    ) : (
-                      pendingAppointments.map((appointment) => (
-                        <div key={appointment.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <p className="font-medium">{appointment.name} - {appointment.service}</p>
-                            <p className="text-sm text-gray-600">{appointment.preferred_date} at {appointment.preferred_time}</p>
-                            <p className="text-sm text-gray-600">{appointment.phone}</p>
-                            <p className="text-sm text-gray-600">{appointment.email}</p>
-                            {appointment.message && (
-                              <p className="text-sm text-gray-600 mt-1">Message: {appointment.message}</p>
-                            )}
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="secondary">{appointment.status}</Badge>
-                            <Button 
-                              size="sm" 
-                              onClick={() => handleAppointmentAction(appointment.id, 'confirmed')}
-                            >
-                              Confirm
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleAppointmentAction(appointment.id, 'rejected')}
-                            >
-                              Reject
-                            </Button>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <AppointmentManager />
             </TabsContent>
 
             {/* Appointment History Tab */}
@@ -395,7 +327,7 @@ const Admin = () => {
 
             {/* Appointment Calendar Tab */}
             <TabsContent value="calendar">
-              <AppointmentCalendar />
+              <EnhancedAppointmentCalendar />
             </TabsContent>
 
             {/* Reviews Tab */}
