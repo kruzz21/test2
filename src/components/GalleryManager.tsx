@@ -10,7 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Images, Edit, Trash2, Plus, Video, Image as ImageIcon, Eye, Calendar } from 'lucide-react';
+import { Images, Edit, Trash2, Plus, Video, Image as ImageIcon, Eye, Calendar, Play } from 'lucide-react';
 import { useGallery } from '@/hooks/useGallery';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@/hooks/use-toast';
@@ -48,6 +48,37 @@ const GalleryManager = () => {
     published: false,
     display_order: 0
   });
+
+  // Helper function to extract YouTube video ID from URL
+  const getYouTubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+    
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    
+    return null;
+  };
+
+  // Helper function to get YouTube embed URL
+  const getYouTubeEmbedUrl = (url: string): string | null => {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  };
+
+  // Helper function to get YouTube thumbnail URL
+  const getYouTubeThumbnail = (url: string): string | null => {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  };
 
   useEffect(() => {
     fetchAllGalleryItems();
@@ -90,7 +121,16 @@ const GalleryManager = () => {
         return;
       }
 
-      await createGalleryItem(formData);
+      // Auto-generate thumbnail for YouTube videos if not provided
+      let finalFormData = { ...formData };
+      if (formData.type === 'video' && !formData.thumbnail_url) {
+        const autoThumbnail = getYouTubeThumbnail(formData.url);
+        if (autoThumbnail) {
+          finalFormData.thumbnail_url = autoThumbnail;
+        }
+      }
+
+      await createGalleryItem(finalFormData);
       setIsCreateDialogOpen(false);
       resetForm();
     } catch (error) {
@@ -111,7 +151,16 @@ const GalleryManager = () => {
         return;
       }
 
-      await updateGalleryItem(editingItem.id, formData);
+      // Auto-generate thumbnail for YouTube videos if not provided
+      let finalFormData = { ...formData };
+      if (formData.type === 'video' && !formData.thumbnail_url) {
+        const autoThumbnail = getYouTubeThumbnail(formData.url);
+        if (autoThumbnail) {
+          finalFormData.thumbnail_url = autoThumbnail;
+        }
+      }
+
+      await updateGalleryItem(editingItem.id, finalFormData);
       setIsEditDialogOpen(false);
       setEditingItem(null);
       resetForm();
@@ -172,6 +221,55 @@ const GalleryManager = () => {
     return type === 'video' ? Video : ImageIcon;
   };
 
+  const renderMediaPreview = (item: GalleryItem, isLarge: boolean = false) => {
+    if (item.type === 'photo') {
+      return (
+        <img
+          src={item.thumbnail_url || item.url}
+          alt={item.alt_text_en || item.title_en}
+          className={`w-full object-cover ${isLarge ? 'h-full' : 'h-full'}`}
+        />
+      );
+    } else if (item.type === 'video') {
+      const embedUrl = getYouTubeEmbedUrl(item.url);
+      const thumbnailUrl = item.thumbnail_url || getYouTubeThumbnail(item.url);
+      
+      if (isLarge && embedUrl) {
+        return (
+          <iframe
+            src={embedUrl}
+            title={item.title_en}
+            className="w-full h-full"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        );
+      } else {
+        return (
+          <div className="relative w-full h-full">
+            {thumbnailUrl ? (
+              <img
+                src={thumbnailUrl}
+                alt={item.alt_text_en || item.title_en}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <Video className="h-12 w-12 text-gray-400" />
+              </div>
+            )}
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+              <Play className="h-12 w-12 text-white" />
+            </div>
+          </div>
+        );
+      }
+    }
+    
+    return null;
+  };
+
   const sortedItems = [...galleryItems].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
   return (
@@ -207,17 +305,7 @@ const GalleryManager = () => {
                   <div key={item.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     {/* Media Preview */}
                     <div className="relative h-48 bg-gray-100">
-                      {item.type === 'photo' ? (
-                        <img
-                          src={item.thumbnail_url || item.url}
-                          alt={item.alt_text_en || item.title_en}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                          <Video className="h-12 w-12 text-gray-400" />
-                        </div>
-                      )}
+                      {renderMediaPreview(item)}
                       <div className="absolute top-2 left-2">
                         <Badge className={getStatusColor(item.published)}>
                           {item.published ? t('gallery.published') : t('gallery.draft')}
@@ -356,12 +444,19 @@ const GalleryManager = () => {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium mb-1">{t('gallery.url')} *</Label>
+                    <Label className="text-sm font-medium mb-1">
+                      {formData.type === 'video' ? 'YouTube URL' : t('gallery.url')} *
+                    </Label>
                     <Input
                       value={formData.url}
                       onChange={(e) => handleInputChange('url', e.target.value)}
-                      placeholder="https://example.com/image.jpg"
+                      placeholder={formData.type === 'video' ? 'https://www.youtube.com/watch?v=...' : 'https://example.com/image.jpg'}
                     />
+                    {formData.type === 'video' && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Supports YouTube URLs in formats: youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -371,6 +466,11 @@ const GalleryManager = () => {
                       onChange={(e) => handleInputChange('thumbnail_url', e.target.value)}
                       placeholder="https://example.com/thumbnail.jpg"
                     />
+                    {formData.type === 'video' && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty to auto-generate from YouTube video
+                      </p>
+                    )}
                   </div>
                 </TabsContent>
 
@@ -546,12 +646,19 @@ const GalleryManager = () => {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium mb-1">{t('gallery.url')} *</Label>
+                    <Label className="text-sm font-medium mb-1">
+                      {formData.type === 'video' ? 'YouTube URL' : t('gallery.url')} *
+                    </Label>
                     <Input
                       value={formData.url}
                       onChange={(e) => handleInputChange('url', e.target.value)}
-                      placeholder="https://example.com/image.jpg"
+                      placeholder={formData.type === 'video' ? 'https://www.youtube.com/watch?v=...' : 'https://example.com/image.jpg'}
                     />
+                    {formData.type === 'video' && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Supports YouTube URLs in formats: youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -561,6 +668,11 @@ const GalleryManager = () => {
                       onChange={(e) => handleInputChange('thumbnail_url', e.target.value)}
                       placeholder="https://example.com/thumbnail.jpg"
                     />
+                    {formData.type === 'video' && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty to auto-generate from YouTube video
+                      </p>
+                    )}
                   </div>
                 </TabsContent>
 
@@ -704,21 +816,7 @@ const GalleryManager = () => {
             {selectedItem && (
               <div className="space-y-4">
                 <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                  {selectedItem.type === 'photo' ? (
-                    <img
-                      src={selectedItem.url}
-                      alt={selectedItem.alt_text_en || selectedItem.title_en}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                      <Video className="h-16 w-16 text-gray-400" />
-                      <div className="ml-4">
-                        <p className="font-medium">{selectedItem.title_en}</p>
-                        <p className="text-sm text-gray-600">{t('gallery.videoPreviewNotAvailable')}</p>
-                      </div>
-                    </div>
-                  )}
+                  {renderMediaPreview(selectedItem, true)}
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-2">{selectedItem.title_en}</h3>
