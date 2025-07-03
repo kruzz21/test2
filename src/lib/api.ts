@@ -14,6 +14,9 @@ export type FAQInsert = Database['public']['Tables']['faqs']['Insert'];
 export type FAQSubmission = Database['public']['Tables']['faq_submissions']['Row'];
 export type FAQSubmissionInsert = Database['public']['Tables']['faq_submissions']['Insert'];
 export type Symptom = Database['public']['Tables']['symptoms']['Row'];
+export type GalleryItem = Database['public']['Tables']['gallery_items']['Row'];
+export type GalleryItemInsert = Database['public']['Tables']['gallery_items']['Insert'];
+export type GalleryItemUpdate = Database['public']['Tables']['gallery_items']['Update'];
 
 // Helper function to check admin authentication
 const checkAdminAuth = () => {
@@ -415,16 +418,133 @@ export const symptomsApi = {
   }
 };
 
+// Gallery API
+export const galleryApi = {
+  async getAllPublished() {
+    try {
+      console.log('galleryApi.getAllPublished: Starting fetch...');
+      
+      const { data, error } = await supabase
+        .from('gallery_items')
+        .select('*')
+        .eq('published', true)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('galleryApi.getAllPublished: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('galleryApi.getAllPublished: Success, fetched', data?.length || 0, 'items');
+      return data || [];
+    } catch (error) {
+      console.error('galleryApi.getAllPublished: Unexpected error:', error);
+      throw error;
+    }
+  },
+
+  async getAll() {
+    try {
+      checkAdminAuth(); // Require admin auth to view all items
+      
+      const { data, error } = await supabase
+        .from('gallery_items')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('galleryApi.getAll: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('galleryApi.getAll: Success, fetched', data?.length || 0, 'items');
+      return data || [];
+    } catch (error) {
+      console.error('galleryApi.getAll: Unexpected error:', error);
+      throw error;
+    }
+  },
+
+  async create(itemData: GalleryItemInsert) {
+    try {
+      checkAdminAuth(); // Require admin auth for creating items
+      
+      const { data, error } = await supabase
+        .from('gallery_items')
+        .insert(itemData)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('galleryApi.create: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('galleryApi.create: Success, created item with ID:', data?.id);
+      return data;
+    } catch (error) {
+      console.error('galleryApi.create: Unexpected error:', error);
+      throw error;
+    }
+  },
+
+  async update(id: string, itemData: GalleryItemUpdate) {
+    try {
+      checkAdminAuth(); // Require admin auth for updating items
+      
+      const { data, error } = await supabase
+        .from('gallery_items')
+        .update({ ...itemData, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('galleryApi.update: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('galleryApi.update: Success, updated item with ID:', data?.id);
+      return data;
+    } catch (error) {
+      console.error('galleryApi.update: Unexpected error:', error);
+      throw error;
+    }
+  },
+
+  async delete(id: string) {
+    try {
+      checkAdminAuth(); // Require admin auth for deleting items
+      
+      const { error } = await supabase
+        .from('gallery_items')
+        .delete()
+        .eq('id', id);
+      
+      if (error) {
+        console.error('galleryApi.delete: Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+      
+      console.log('galleryApi.delete: Success, deleted item with ID:', id);
+    } catch (error) {
+      console.error('galleryApi.delete: Unexpected error:', error);
+      throw error;
+    }
+  }
+};
+
 // Admin API
 export const adminApi = {
   async getStats() {
     checkAdminAuth(); // Require admin auth for stats
     
-    const [appointments, reviews, faqSubmissions, blogs] = await Promise.all([
+    const [appointments, reviews, faqSubmissions, blogs, galleryItems] = await Promise.all([
       supabase.from('appointments').select('status'),
       supabase.from('reviews').select('approved'),
       supabase.from('faq_submissions').select('status'),
-      supabase.from('blog_posts').select('published')
+      supabase.from('blog_posts').select('published'),
+      supabase.from('gallery_items').select('published')
     ]);
 
     const pendingAppointments = appointments.data?.filter(a => a.status === 'pending').length || 0;
@@ -432,6 +552,7 @@ export const adminApi = {
     const pendingReviews = reviews.data?.filter(r => !r.approved).length || 0;
     const unansweredQuestions = faqSubmissions.data?.filter(f => f.status === 'pending').length || 0;
     const publishedBlogs = blogs.data?.filter(b => b.published).length || 0;
+    const publishedGalleryItems = galleryItems.data?.filter(g => g.published).length || 0;
 
     return {
       pendingAppointments,
@@ -439,6 +560,7 @@ export const adminApi = {
       pendingReviews,
       unansweredQuestions,
       publishedBlogs,
+      publishedGalleryItems,
       totalViews: 8932 // Placeholder
     };
   },

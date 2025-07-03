@@ -125,6 +125,15 @@ export type Database = {
           doctor_reply?: string;
           created_at: string;
           updated_at: string;
+          name_tr?: string;
+          name_az?: string;
+          name_en?: string;
+          message_tr?: string;
+          message_az?: string;
+          message_en?: string;
+          doctor_reply_tr?: string;
+          doctor_reply_az?: string;
+          doctor_reply_en?: string;
         };
         Insert: {
           name: string;
@@ -132,6 +141,15 @@ export type Database = {
           rating: number;
           approved?: boolean;
           doctor_reply?: string;
+          name_tr?: string;
+          name_az?: string;
+          name_en?: string;
+          message_tr?: string;
+          message_az?: string;
+          message_en?: string;
+          doctor_reply_tr?: string;
+          doctor_reply_az?: string;
+          doctor_reply_en?: string;
         };
         Update: {
           name?: string;
@@ -139,6 +157,15 @@ export type Database = {
           rating?: number;
           approved?: boolean;
           doctor_reply?: string;
+          name_tr?: string;
+          name_az?: string;
+          name_en?: string;
+          message_tr?: string;
+          message_az?: string;
+          message_en?: string;
+          doctor_reply_tr?: string;
+          doctor_reply_az?: string;
+          doctor_reply_en?: string;
         };
       };
       faqs: {
@@ -246,6 +273,47 @@ export type Database = {
           content_az?: string;
           content_en?: string;
           image_url?: string;
+        };
+      };
+      gallery_items: {
+        Row: {
+          id: string;
+          type: 'photo' | 'video';
+          url: string;
+          thumbnail_url?: string;
+          title_tr: string;
+          title_az: string;
+          title_en: string;
+          description_tr?: string;
+          description_az?: string;
+          description_en?: string;
+          published: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          type: 'photo' | 'video';
+          url: string;
+          thumbnail_url?: string;
+          title_tr: string;
+          title_az: string;
+          title_en: string;
+          description_tr?: string;
+          description_az?: string;
+          description_en?: string;
+          published?: boolean;
+        };
+        Update: {
+          type?: 'photo' | 'video';
+          url?: string;
+          thumbnail_url?: string;
+          title_tr?: string;
+          title_az?: string;
+          title_en?: string;
+          description_tr?: string;
+          description_az?: string;
+          description_en?: string;
+          published?: boolean;
         };
       };
     };
