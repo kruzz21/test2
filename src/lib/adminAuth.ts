@@ -58,9 +58,9 @@ class AdminAuthService {
 
   private async setSupabaseSession(session: AdminSession): Promise<void> {
     try {
-      // Create a proper Supabase auth session
+      // Create a proper Supabase auth session with our custom session token
       const authSession = {
-        access_token: session.sessionToken,
+        access_token: session.sessionToken, // This is our custom session token
         refresh_token: session.sessionToken,
         expires_in: Math.floor((new Date(session.expiresAt).getTime() - Date.now()) / 1000),
         expires_at: Math.floor(new Date(session.expiresAt).getTime() / 1000),
@@ -79,8 +79,10 @@ class AdminAuthService {
         }
       };
 
-      // Set the session in Supabase
+      // Set the session in Supabase - this will make our custom token available to RLS policies
       await supabase.auth.setSession(authSession as any);
+      
+      console.log('Admin session set in Supabase client');
     } catch (error) {
       console.error('Error setting Supabase session:', error);
     }
@@ -130,6 +132,7 @@ class AdminAuthService {
         // Set the session in Supabase client for authenticated requests
         await this.setSupabaseSession(session);
 
+        console.log('Admin login successful, session token:', sessionToken);
         return session;
       } else {
         throw new Error('Invalid email or password');
@@ -171,16 +174,13 @@ class AdminAuthService {
     }
 
     try {
-      // Validate session with database
-      const { data, error } = await supabase
-        .from('admin_sessions')
-        .select('*')
-        .eq('session_token', this.currentSession.sessionToken)
-        .eq('admin_id', this.currentSession.admin.id)
-        .gt('expires_at', new Date().toISOString())
-        .single();
+      // Validate session with database using our custom function
+      const { data, error } = await supabase.rpc('is_admin_session_valid', {
+        session_token: this.currentSession.sessionToken
+      });
 
       if (error || !data) {
+        console.log('Session validation failed:', error);
         await this.logout();
         return false;
       }

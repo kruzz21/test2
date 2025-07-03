@@ -56,16 +56,6 @@ export const useAdmin = (isAuthenticated: boolean = false) => {
     }
   }, [isAuthenticated]);
 
-  const fetchPendingAppointments = async (): Promise<Appointment[]> => {
-    try {
-      return await adminApi.getPendingAppointments();
-    } catch (err) {
-      console.error('Error fetching pending appointments:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      throw new Error(`Failed to fetch pending appointments: ${errorMessage}`);
-    }
-  };
-
   const fetchPendingReviews = async (): Promise<Review[]> => {
     try {
       return await adminApi.getPendingReviews();
@@ -144,33 +134,6 @@ export const useAdmin = (isAuthenticated: boolean = false) => {
       console.error('Error fetching pending FAQ submissions:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       throw new Error(`Failed to fetch pending FAQ submissions: ${errorMessage}`);
-    }
-  };
-
-  const updateAppointmentStatus = async (id: string, status: Appointment['status']) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const { error } = await supabase
-        .from('appointments')
-        .update({ status, updated_at: new Date().toISOString() })
-        .eq('id', id);
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
-      }
-
-      // Refresh stats after updating
-      await fetchStats();
-    } catch (err) {
-      console.error('Error updating appointment status:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(`Failed to update appointment: ${errorMessage}`);
-      throw err;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -404,13 +367,11 @@ export const useAdmin = (isAuthenticated: boolean = false) => {
     error,
     stats,
     fetchStats,
-    fetchPendingAppointments,
     fetchPendingReviews,
     fetchBlogPosts,
     fetchBlogComments,
     fetchFAQs,
     fetchPendingFAQSubmissions,
-    updateAppointmentStatus,
     approveReview,
     replyToReview,
     createBlogPost,
