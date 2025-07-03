@@ -11,37 +11,24 @@ export const useAdminAuth = () => {
       try {
         console.log('🔄 useAdminAuth: Starting auth check...');
         setLoading(true);
-        const currentSession = adminAuth.getCurrentSession();
         
-        console.log('📋 useAdminAuth: Current session check:', {
-          hasCurrentSession: !!currentSession,
-          sessionData: currentSession ? {
-            adminId: currentSession.admin.id,
-            adminEmail: currentSession.admin.email,
-            expiresAt: currentSession.expiresAt
-          } : null
-        });
+        // Wait for adminAuth to validate the session first
+        // This ensures the adminAuth service has completed its internal session loading
+        console.log('🔍 useAdminAuth: Validating session with adminAuth...');
+        const isValid = await adminAuth.validateSession();
+        console.log('✅ useAdminAuth: Session validation result:', isValid);
         
-        if (currentSession) {
-          console.log('🔍 useAdminAuth: Validating existing session...');
-          const isValid = await adminAuth.validateSession();
-          console.log('✅ useAdminAuth: Session validation result:', isValid);
-          
-          if (isValid) {
-            const updatedSession = adminAuth.getCurrentSession();
-            console.log('✅ useAdminAuth: Setting valid session:', {
-              adminEmail: updatedSession?.admin.email,
-              isAuthenticated: true
-            });
-            setSession(updatedSession);
-            setIsAuthenticated(true);
-          } else {
-            console.log('❌ useAdminAuth: Session invalid, clearing state');
-            setSession(null);
-            setIsAuthenticated(false);
-          }
+        if (isValid) {
+          // Get the updated session after validation
+          const updatedSession = adminAuth.getCurrentSession();
+          console.log('✅ useAdminAuth: Setting valid session:', {
+            adminEmail: updatedSession?.admin.email,
+            isAuthenticated: true
+          });
+          setSession(updatedSession);
+          setIsAuthenticated(true);
         } else {
-          console.log('ℹ️ useAdminAuth: No current session found');
+          console.log('❌ useAdminAuth: Session invalid, clearing state');
           setSession(null);
           setIsAuthenticated(false);
         }
