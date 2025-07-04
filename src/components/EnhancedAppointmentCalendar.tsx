@@ -284,13 +284,37 @@ const EnhancedAppointmentCalendar = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Calendar */}
+              {/* Calendar with improved styling */}
               <div>
                 <Calendar
                   mode="single"
                   selected={selectedDate}
                   onSelect={(date) => date && setSelectedDate(date)}
-                  className="rounded-md border"
+                  className="rounded-md border bg-white"
+                  classNames={{
+                    months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                    month: "space-y-4",
+                    caption: "flex justify-center pt-1 relative items-center",
+                    caption_label: "text-sm font-medium text-gray-900",
+                    nav: "space-x-1 flex items-center",
+                    nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 text-gray-900 hover:bg-gray-100 border border-gray-300 rounded",
+                    nav_button_previous: "absolute left-1",
+                    nav_button_next: "absolute right-1",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "flex",
+                    head_cell: "text-gray-600 rounded-md w-9 font-normal text-[0.8rem]",
+                    row: "flex w-full mt-2",
+                    cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-blue-50 [&:has([aria-selected].day-outside)]:bg-blue-50/50",
+                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-gray-900 hover:bg-gray-100 rounded-md border border-transparent hover:border-gray-300",
+                    day_range_start: "day-range-start",
+                    day_range_end: "day-range-end",
+                    day_selected: "bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white border-blue-600",
+                    day_today: "bg-gray-100 text-gray-900 font-semibold border-gray-300",
+                    day_outside: "day-outside text-gray-400 opacity-50 aria-selected:bg-blue-50/50 aria-selected:text-gray-400 aria-selected:opacity-30",
+                    day_disabled: "text-gray-300 opacity-50",
+                    day_range_middle: "aria-selected:bg-blue-50 aria-selected:text-gray-900",
+                    day_hidden: "invisible",
+                  }}
                   modifiers={{
                     hasAppointments: (date) => getAppointmentsForDate(date).length > 0
                   }}
@@ -298,7 +322,8 @@ const EnhancedAppointmentCalendar = () => {
                     hasAppointments: { 
                       backgroundColor: '#dbeafe', 
                       fontWeight: 'bold',
-                      color: '#1e40af'
+                      color: '#1e40af',
+                      border: '1px solid #3b82f6'
                     }
                   }}
                 />
@@ -636,6 +661,27 @@ const EnhancedAppointmentCalendar = () => {
                         onSelect={setEditDate}
                         disabled={(date) => date < startOfDay(new Date())}
                         initialFocus
+                        className="bg-white"
+                        classNames={{
+                          months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                          month: "space-y-4",
+                          caption: "flex justify-center pt-1 relative items-center",
+                          caption_label: "text-sm font-medium text-gray-900",
+                          nav: "space-x-1 flex items-center",
+                          nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 text-gray-900 hover:bg-gray-100 border border-gray-300 rounded",
+                          nav_button_previous: "absolute left-1",
+                          nav_button_next: "absolute right-1",
+                          table: "w-full border-collapse space-y-1",
+                          head_row: "flex",
+                          head_cell: "text-gray-600 rounded-md w-9 font-normal text-[0.8rem]",
+                          row: "flex w-full mt-2",
+                          cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20",
+                          day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-gray-900 hover:bg-gray-100 rounded-md",
+                          day_selected: "bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white",
+                          day_today: "bg-gray-100 text-gray-900 font-semibold",
+                          day_outside: "text-gray-400 opacity-50",
+                          day_disabled: "text-gray-300 opacity-50",
+                        }}
                       />
                     </PopoverContent>
                   </Popover>
