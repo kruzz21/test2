@@ -25,64 +25,7 @@
     "viewAllServices": "Bütün Xidmətləri Görüntülə",
     "ctaTitle": "Layiq Olduğunuz Qayğını Almağa Hazırsınız?",
     "ctaDescription": "Bu gün konsultasiyanızı planlaşdırın və daha yaxşı sağlamlığa doğru ilk addımı atın.",
-    "callNow": "İndi Zəng Et",
-    "hero": {
-      "heading": "Dr. Gürkan Eryanılmaz",
-      "subheading": "1969-cu ildə İzmirdə doğulub, 1987–1993-cü illərdə Ege Universiteti Tibb Fakültəsində və 1996-cı ildə İzmir Tepecik Təhsil və Tədqiqat Xəstəxanasında rezidentura keçən Dr. Eryanılmaz, 20 000-dən çox ortopedik prosedur icra edib.",
-      "badge": {
-        "born": "1969-cu ildə İzmir doğumlu",
-        "education": "Ege Universiteti Tibb Fakültəsi (1987–1993)",
-        "residency": "Rezidentura: İzmir Tepecik Təhsil və Tədqiqat Xəstəxanası (1996)",
-        "current": "Hazırda Afyon Kocatepe Dövlət Xəstəxanasındadır"
-      },
-      "button": {
-        "book": "Randevu Alın",
-        "treatments": "Müalicələrə Bax"
-      }
-    },
-    "about": {
-      "heading": "Dr. Eryanılmaz Haqqında",
-      "subtitle": "Mürəkkəb oynaqların protezləri, artroskopik prosedurlar və travma cərrahiyyəsində iyirmi ildən çox təcrübəyə malik nüfuzlu ortopedik cərrah.",
-      "info": {
-        "education": "Ege Universiteti Tibb Fakültəsi (1987–1993)",
-        "specialization": "Rezidentura, İzmir Tepecik Təhsil və Tədqiqat Xəstəxanası (1996)",
-        "position": "Baş ortopedik cərrah, Afyon Kocatepe Dövlət Xəstəxanası",
-        "languages": "Türk, İngilis"
-      },
-      "gallery": {
-        "preview": "Peşəkar Qalereya",
-        "title": "Peşəkar Qalereya",
-        "subtitle": "Klinika və Cərrahiyyə Fotoşəkilləri",
-        "button": "Qalereyaya Bax"
-      },
-      "locations": "Hazırda Afyon Kocatepe Dövlət Xəstəxanasında xəstələrə xidmət göstərilir."
-    },
-    "experience": {
-      "heading": "Sübut Olunmuş Mükəmməllik Təcrübəsi",
-      "subheading": "Xəstə qayğısı və cərrahi mükəmməllik öhdəliyimizi əks etdirən rəqəmlər.",
-      "stat": {
-        "knee": {
-          "number": "10 000+",
-          "title": "Diz Protezləri"
-        },
-        "fracture": {
-          "number": "5 000+",
-          "title": "Sınıq Cərrahiyyələri"
-        },
-        "arthroscopy": {
-          "number": "5 000+",
-          "title": "Artroskopik Prosedurlar"
-        },
-        "pediatric_hip": {
-          "number": "500+",
-          "title": "Pediatrik Bud Cərrahiyyələri"
-        },
-        "clubfoot": {
-          "number": "350+",
-          "title": "Duburoq Düzəlişləri"
-        }
-      }
-    }
+    "callNow": "İndi Zəng Et"
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",
