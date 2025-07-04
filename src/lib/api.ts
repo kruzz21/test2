@@ -18,6 +18,12 @@ export type GalleryItem = Database['public']['Tables']['gallery_items']['Row'];
 export type GalleryItemInsert = Database['public']['Tables']['gallery_items']['Insert'];
 export type GalleryItemUpdate = Database['public']['Tables']['gallery_items']['Update'];
 
+// Helper function to validate UUID format
+const isValidUUID = (uuid: string): boolean => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+};
+
 // Helper function to check admin authentication
 const checkAdminAuth = () => {
   const session = adminAuth.getCurrentSession();
@@ -104,6 +110,12 @@ export const blogApi = {
     try {
       console.log('blogApi.getById: Fetching post with ID:', id);
       
+      // Validate UUID format before making the request
+      if (!isValidUUID(id)) {
+        console.error('blogApi.getById: Invalid UUID format:', id);
+        throw new Error(`Invalid blog post ID format: "${id}". Expected a valid UUID.`);
+      }
+      
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
@@ -128,6 +140,12 @@ export const blogApi = {
     try {
       console.log('blogApi.getComments: Fetching comments for post ID:', postId);
       
+      // Validate UUID format before making the request
+      if (!isValidUUID(postId)) {
+        console.error('blogApi.getComments: Invalid UUID format:', postId);
+        throw new Error(`Invalid post ID format: "${postId}". Expected a valid UUID.`);
+      }
+      
       const { data, error } = await supabase
         .from('blog_comments')
         .select('*')
@@ -151,6 +169,12 @@ export const blogApi = {
   async addComment(comment: { post_id: string; name: string; message: string }) {
     try {
       console.log('blogApi.addComment: Adding comment:', comment);
+      
+      // Validate UUID format before making the request
+      if (!isValidUUID(comment.post_id)) {
+        console.error('blogApi.addComment: Invalid UUID format:', comment.post_id);
+        throw new Error(`Invalid post ID format: "${comment.post_id}". Expected a valid UUID.`);
+      }
       
       // Insert comment without selecting it back to avoid RLS violation
       // New comments are unapproved by default and can't be read by public users
