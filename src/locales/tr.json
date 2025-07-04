@@ -26,19 +26,23 @@
     "ctaTitle": "Hak Ettiğiniz Bakımı Almaya Hazır mısınız?",
     "ctaDescription": "Bugün konsültasyonunuzu planlayın ve daha iyi sağlığa doğru ilk adımı atın.",
     "callNow": "Hemen Ara",
-    "secondOpinion": {
-      "title": "İkinci Görüş Alın",
-      "description": "Durumunuzun uzman değerlendirmesi ve kapsamlı tedavi önerileri.",
-      "button": "Konsültasyon İsteyin"
+    "contactUs": {
+      "title": "Bize Ulaşın",
+      "description": "Acil tıbbi endişeler ve konsültasyonlar için hemen arayın veya mesaj gönderin.",
+      "call": "Ara",
+      "whatsapp": "WhatsApp"
     },
-    "telemedicine": {
-      "title": "Teletıp Hizmeti",
-      "description": "Kontroller ve ilk değerlendirmeler için online konsültasyon imkanı.",
-      "button": "Online Randevu"
+    "appointment": {
+      "title": "Randevu Al",
+      "description": "Randevunuzu onaylamak için 24 saat içinde sizinle iletişime geçeceğiz.",
+      "button": "Hemen Planla"
     },
     "about": {
-      "title": "Dr. Gürkan Eryanılmaz Kimdir?",
-      "subtitle": "Ortopedik Bakımda Mükemmelliğe Adanmış Bir Kariyer",
+      "whoIsTitle": "Op. Dr. Gürkan Eryanılmaz Kimdir?",
+      "subtitle": "Ortopedik Bakımda Mükemmelliğe Adanmış",
+      "paragraph1": "1969 yılında İzmir'de doğan Dr. Gürkan Eryanılmaz, tıp eğitimine 1987'de Ege Üniversitesi Tıp Fakültesi'nde başladı ve 1993'te onur derecesiyle mezun oldu. Kas-iskelet sistemi sağlığına duyduğu ilgiyle 1996–2000 yılları arasında İzmir Tepecik Eğitim ve Araştırma Hastanesi'nde ortopedi ve travmatoloji cerrahisi ihtisasını tamamladı.",
+      "paragraph2": "2000 yılından bu yana ortopedi ve travmatoloji uzmanı olarak görev yapan Dr. Eryanılmaz, minimal invaziv artroskopik onarımlardan kompleks eklem protez ameliyatlarına kadar binlerce cerrahi girişim gerçekleştirdi. Titiz yaklaşımı ve hasta sonuçlarına olan adanmışlığıyla mükemmeliyetle tanınıyor.",
+      "paragraph3": "Afyon Kocatepe Devlet Hastanesi'nde uzun yıllar çalışan Dr. Eryanılmaz, ardından Bakü'deki Medera Hastanesi'ne katılarak uluslararası vakalarla deneyimini genişletti. Şimdi Türkiye'ye dönerek Afyon Kocatepe Devlet Hastanesi'nde küresel deneyimini yansıtan kişiye özel bakım sunmaya devam ediyor.",
       "button": "Daha Fazla Bilgi"
     },
     "surgicalExperience": {

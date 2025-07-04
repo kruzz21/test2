@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User } from 'lucide-react';
+import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -137,50 +137,79 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Integrated Quick Action Cards */}
-        <div className="relative -mt-16 w-full px-4 lg:px-8 z-10">
+        {/* Integrated Quick Action Cards - Mobile Responsive */}
+        <div className="relative -mt-8 md:-mt-16 w-full px-4 lg:px-8 z-10">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Second Opinion Card */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+              {/* Contact Us Card */}
               <Card className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-8">
-                  <div className="flex items-start space-x-6">
-                    <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                      <CheckCircle className="h-8 w-8 text-white" />
+                <CardContent className="p-4 md:p-8">
+                  <div className="flex items-start space-x-3 md:space-x-6">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <Phone className="h-6 w-6 md:h-8 md:w-8 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-blue-900 mb-3">
-                        {t('home.secondOpinion.title')}
+                      <h3 className="text-lg md:text-xl font-bold text-blue-900 mb-2 md:mb-3">
+                        {t('home.contactUs.title')}
                       </h3>
-                      <p className="text-blue-700 mb-6 leading-relaxed">
-                        {t('home.secondOpinion.description')}
+                      <p className="text-sm md:text-base text-blue-700 mb-4 md:mb-6 leading-relaxed">
+                        {t('home.contactUs.description')}
                       </p>
-                      <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300">
-                        {t('home.secondOpinion.button')}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+                      <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                        <Button 
+                          asChild 
+                          size="sm" 
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          <a href="tel:+994553977874">
+                            <Phone className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                            {t('home.contactUs.call')}
+                          </a>
+                        </Button>
+                        <Button 
+                          asChild 
+                          variant="outline" 
+                          size="sm"
+                          className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                        >
+                          <a 
+                            href="https://wa.me/994553977874" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          >
+                            <MessageCircle className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                            {t('home.contactUs.whatsapp')}
+                          </a>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Telemedicine Card */}
+              {/* Book Appointment Card */}
               <Card className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-8">
-                  <div className="flex items-start space-x-6">
-                    <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                      <Calendar className="h-8 w-8 text-white" />
+                <CardContent className="p-4 md:p-8">
+                  <div className="flex items-start space-x-3 md:space-x-6">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <Calendar className="h-6 w-6 md:h-8 md:w-8 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-green-900 mb-3">
-                        {t('home.telemedicine.title')}
+                      <h3 className="text-lg md:text-xl font-bold text-green-900 mb-2 md:mb-3">
+                        {t('home.appointment.title')}
                       </h3>
-                      <p className="text-green-700 mb-6 leading-relaxed">
-                        {t('home.telemedicine.description')}
+                      <p className="text-sm md:text-base text-green-700 mb-4 md:mb-6 leading-relaxed">
+                        {t('home.appointment.description')}
                       </p>
-                      <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all duration-300">
-                        {t('home.telemedicine.button')}
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                      <Button 
+                        asChild 
+                        size="sm" 
+                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Link to="/contact">
+                          <Calendar className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                          {t('home.appointment.button')}
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -198,17 +227,23 @@ const Home = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  {t('home.about.title')}
+                  {t('home.about.whoIsTitle')}
                 </h2>
                 <p className="text-xl text-gray-600 mb-6">
                   {t('home.about.subtitle')}
                 </p>
-                <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                  Dr. Gürkan Eryanılmaz is a highly experienced orthopedic surgeon with over 25 years of 
-                  expertise in orthopedics and traumatology. Throughout his distinguished career, he has 
-                  performed thousands of successful surgeries and helped patients from Turkey and Azerbaijan 
-                  regain their mobility and quality of life.
-                </p>
+                
+                <div className="space-y-4 mb-8">
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    {t('home.about.paragraph1')}
+                  </p>
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    {t('home.about.paragraph2')}
+                  </p>
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    {t('home.about.paragraph3')}
+                  </p>
+                </div>
 
                 {/* Areas of Expertise */}
                 <div className="mb-8">
@@ -234,9 +269,13 @@ const Home = () => {
               <div className="relative">
                 <div className="relative z-10">
                   <img
-                    src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    src="/images/doctor-portrait.jpg"
                     alt="Dr. Gürkan Eryanılmaz"
                     className="rounded-lg shadow-xl w-full h-[500px] object-cover"
+                    onError={(e) => {
+                      // Fallback to placeholder if doctor-portrait.jpg is not found
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+                    }}
                   />
                 </div>
                 {/* Decorative elements */}

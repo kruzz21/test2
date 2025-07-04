@@ -26,19 +26,23 @@
     "ctaTitle": "Ready to Get the Care You Deserve?",
     "ctaDescription": "Schedule your consultation today and take the first step towards better health.",
     "callNow": "Call Now",
-    "secondOpinion": {
-      "title": "Get a Second Opinion",
-      "description": "Expert evaluation of your condition with comprehensive treatment recommendations.",
-      "button": "Request Consultation"
+    "contactUs": {
+      "title": "Contact Us",
+      "description": "Call or message us immediately for urgent medical concerns and consultations.",
+      "call": "Call",
+      "whatsapp": "WhatsApp"
     },
-    "telemedicine": {
-      "title": "Telemedicine Available",
-      "description": "Online consultations available for follow-ups and initial assessments.",
-      "button": "Schedule Online"
+    "appointment": {
+      "title": "Book Appointment",
+      "description": "We will reach out to you within 24 hours to confirm your appointment.",
+      "button": "Schedule Now"
     },
     "about": {
-      "title": "About Dr. Gürkan Eryanılmaz",
+      "whoIsTitle": "Who is Op. Dr. Gürkan Eryanılmaz?",
       "subtitle": "Dedicated to Excellence in Orthopedic Care",
+      "paragraph1": "Born and raised in İzmir, Turkey, Dr. Gürkan Eryanılmaz began his medical education at Ege University Faculty of Medicine in 1987 and graduated with honors in 1993. Motivated by a passion for musculoskeletal health, he pursued residency in orthopedic and traumatology surgery at İzmir Tepecik Training and Research Hospital from 1996 to 2000.",
+      "paragraph2": "Since 2000, he has practiced as an orthopedic and traumatology specialist, performing thousands of surgeries including minimally invasive arthroscopic repairs and complex joint replacements. His meticulous approach and dedication to patient outcomes have earned him a reputation for excellence.",
+      "paragraph3": "He served many years at Afyon Kocatepe State Hospital before joining Medera Hospital in Baku, where he expanded his expertise with international cases. Now back in Turkey, he continues his practice at Afyon Kocatepe State Hospital, offering personalized care informed by global experience.",
       "button": "Learn More"
     },
     "surgicalExperience": {

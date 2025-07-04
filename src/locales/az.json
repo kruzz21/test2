@@ -26,19 +26,23 @@
     "ctaTitle": "Layiq Olduğunuz Qayğını Almağa Hazırsınız?",
     "ctaDescription": "Bu gün konsultasiyanızı planlaşdırın və daha yaxşı sağlamlığa doğru ilk addımı atın.",
     "callNow": "İndi Zəng Et",
-    "secondOpinion": {
-      "title": "İkinci Rəy Alın",
-      "description": "Vəziyyətinizin mütəxəssis qiymətləndirilməsi və hərtərəfli müalicə tövsiyələri.",
-      "button": "Konsultasiya İstəyin"
+    "contactUs": {
+      "title": "Bizimlə Əlaqə",
+      "description": "Təcili tibbi narahatlıqlar və konsultasiyalar üçün dərhal zəng edin və ya mesaj göndərin.",
+      "call": "Zəng Et",
+      "whatsapp": "WhatsApp"
     },
-    "telemedicine": {
-      "title": "Teletibb Xidməti",
-      "description": "Nəzarət və ilkin qiymətləndirmələr üçün onlayn konsultasiya imkanı.",
-      "button": "Onlayn Görüş"
+    "appointment": {
+      "title": "Görüş Təyin Et",
+      "description": "Görüşünüzü təsdiqləmək üçün 24 saat ərzində sizinlə əlaqə saxlayacağıq.",
+      "button": "İndi Planlaşdır"
     },
     "about": {
-      "title": "Dr. Gürkan Eryanılmaz Kimdir?",
-      "subtitle": "Ortopedik Baxımda Mükəmməlliyə Həsr Olunmuş Bir Karyera",
+      "whoIsTitle": "Op. Dr. Gürkan Eryanılmaz Kimdir?",
+      "subtitle": "Ortopedik Qayğıda Mükəmməlliyə Həsr Olunmuş",
+      "paragraph1": "1969-cu ildə İzmir şəhərində anadan olan Dr. Gürkan Eryanılmaz, 1987-ci ildə Egey Universiteti Tibb Fakültəsində təhsilinə başlayıb və 1993-cü ildə onur diplomu ilə məzun olub. Əzələ-skelet sistemi sağlamlığına olan marağı onu 1996–2000-ci illərdə İzmir Tepecik Təlim və Tədqiqat Xəstəxanasında ortopediya və travmatologiya cərrahiyyəsi üzrə rezidenturanı tamamlamasına gətirdi.",
+      "paragraph2": "2000-ci ildən etibarən ortopediya və travmatologiya üzrə mütəxəssis kimi fəaliyyət göstərən Dr. Eryanılmaz minlərlə əməliyyat həyata keçirib; bunlara minimal invaziv artroskopik əməliyyatlar və mürəkkəb oynağın protez edilməsi daxildir. Dəqiq yanaşması və xəstə nəticələrinə verdiyi önəm sayəsində mükəmməllik reputasiyası qazanıb.",
+      "paragraph3": "Afyon Kocatepe Dövlət Xəstəxanasında uzun illər fəaliyyət göstərdikdən sonra Bakıda Medera Xəstəxanasına qoşulan Dr. Eryanılmaz, beynəlxalq hallar üzrə təcrübəsini artırdı. İndi yenidən Türkiyədə, Afyon Kocatepe Dövlət Xəstəxanasında dünya təcrübəsinə əsaslanan fərdi tibbi xidmət göstərməkdədir.",
       "button": "Ətraflı Bax"
     },
     "surgicalExperience": {
