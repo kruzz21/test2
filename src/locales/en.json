@@ -25,7 +25,39 @@
     "viewAllServices": "View All Services",
     "ctaTitle": "Ready to Get the Care You Deserve?",
     "ctaDescription": "Schedule your consultation today and take the first step towards better health.",
-    "callNow": "Call Now"
+    "callNow": "Call Now",
+    "secondOpinion": {
+      "title": "Get a Second Opinion",
+      "description": "Expert evaluation of your condition with comprehensive treatment recommendations.",
+      "button": "Request Consultation"
+    },
+    "telemedicine": {
+      "title": "Telemedicine Available",
+      "description": "Online consultations available for follow-ups and initial assessments.",
+      "button": "Schedule Online"
+    },
+    "about": {
+      "title": "About Dr. Gürkan Eryanılmaz",
+      "subtitle": "Dedicated to Excellence in Orthopedic Care",
+      "button": "Learn More"
+    },
+    "surgicalExperience": {
+      "title": "Surgical Experience at a Glance",
+      "button": "25+ Years of Surgical Excellence"
+    },
+    "gallery": {
+      "title": "Patient Stories & Moments",
+      "subtitle": "See real recovery stories and shared moments from patients.",
+      "button": "View Full Gallery"
+    },
+    "symptoms": {
+      "title": "Symptoms & Treatments",
+      "button": "Learn More"
+    },
+    "blog": {
+      "title": "Latest from the Blog",
+      "button": "Visit Blog"
+    }
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",

@@ -25,7 +25,39 @@
     "viewAllServices": "Tüm Hizmetleri Görüntüle",
     "ctaTitle": "Hak Ettiğiniz Bakımı Almaya Hazır mısınız?",
     "ctaDescription": "Bugün konsültasyonunuzu planlayın ve daha iyi sağlığa doğru ilk adımı atın.",
-    "callNow": "Hemen Ara"
+    "callNow": "Hemen Ara",
+    "secondOpinion": {
+      "title": "İkinci Görüş Alın",
+      "description": "Durumunuzun uzman değerlendirmesi ve kapsamlı tedavi önerileri.",
+      "button": "Konsültasyon İsteyin"
+    },
+    "telemedicine": {
+      "title": "Teletıp Hizmeti",
+      "description": "Kontroller ve ilk değerlendirmeler için online konsültasyon imkanı.",
+      "button": "Online Randevu"
+    },
+    "about": {
+      "title": "Dr. Gürkan Eryanılmaz Kimdir?",
+      "subtitle": "Ortopedik Bakımda Mükemmelliğe Adanmış Bir Kariyer",
+      "button": "Daha Fazla Bilgi"
+    },
+    "surgicalExperience": {
+      "title": "Cerrahi Deneyimlere Genel Bakış",
+      "button": "25+ Yıllık Cerrahi Tecrübe"
+    },
+    "gallery": {
+      "title": "Hasta Hikayeleri ve Anlar",
+      "subtitle": "Gerçek iyileşme hikayeleri ve hastalarla paylaşılan anları görün.",
+      "button": "Galeriyi Görüntüle"
+    },
+    "symptoms": {
+      "title": "Belirtiler ve Tedaviler",
+      "button": "Daha Fazla Bilgi"
+    },
+    "blog": {
+      "title": "Blogdan Son Yazılar",
+      "button": "Bloga Git"
+    }
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",

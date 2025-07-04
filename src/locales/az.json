@@ -25,7 +25,39 @@
     "viewAllServices": "Bütün Xidmətləri Görüntülə",
     "ctaTitle": "Layiq Olduğunuz Qayğını Almağa Hazırsınız?",
     "ctaDescription": "Bu gün konsultasiyanızı planlaşdırın və daha yaxşı sağlamlığa doğru ilk addımı atın.",
-    "callNow": "İndi Zəng Et"
+    "callNow": "İndi Zəng Et",
+    "secondOpinion": {
+      "title": "İkinci Rəy Alın",
+      "description": "Vəziyyətinizin mütəxəssis qiymətləndirilməsi və hərtərəfli müalicə tövsiyələri.",
+      "button": "Konsultasiya İstəyin"
+    },
+    "telemedicine": {
+      "title": "Teletibb Xidməti",
+      "description": "Nəzarət və ilkin qiymətləndirmələr üçün onlayn konsultasiya imkanı.",
+      "button": "Onlayn Görüş"
+    },
+    "about": {
+      "title": "Dr. Gürkan Eryanılmaz Kimdir?",
+      "subtitle": "Ortopedik Baxımda Mükəmməlliyə Həsr Olunmuş Bir Karyera",
+      "button": "Ətraflı Bax"
+    },
+    "surgicalExperience": {
+      "title": "Cərrahi Təcrübələrə Baxış",
+      "button": "25+ İllik Cərrahiyyə Təcrübəsi"
+    },
+    "gallery": {
+      "title": "Pasiyent Hekayələri və Anlar",
+      "subtitle": "Həqiqi sağalma hekayələri və xəstələrlə bölüşülən anları görün.",
+      "button": "Qalereyaya Bax"
+    },
+    "symptoms": {
+      "title": "Simptomlar və Müalicələr",
+      "button": "Ətraflı Bax"
+    },
+    "blog": {
+      "title": "Bloqdan Son Yazılar",
+      "button": "Bloqa Bax"
+    }
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",
