@@ -155,29 +155,7 @@ const Home = () => {
                       <p className="text-sm md:text-base text-blue-700 mb-4 md:mb-6 leading-relaxed">
                         {t('home.contactUs.description')}
                       </p>
-                      
-                      {/* Mobile Square Buttons (max-width: 768px) */}
-                      <div className="md:hidden flex gap-3 mb-4">
-                        <a 
-                          href="tel:+994553977874"
-                          className="flex-1 aspect-square bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex flex-col items-center justify-center transition-colors duration-200 shadow-md hover:shadow-lg"
-                        >
-                          <Phone className="h-6 w-6 mb-1" />
-                          <span className="text-xs font-medium">Call</span>
-                        </a>
-                        <a 
-                          href="https://wa.me/994553977874"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex-1 aspect-square bg-green-600 hover:bg-green-700 text-white rounded-lg flex flex-col items-center justify-center transition-colors duration-200 shadow-md hover:shadow-lg"
-                        >
-                          <MessageCircle className="h-6 w-6 mb-1" />
-                          <span className="text-xs font-medium">WhatsApp</span>
-                        </a>
-                      </div>
-
-                      {/* Desktop Buttons (768px and above) */}
-                      <div className="hidden md:flex flex-col sm:flex-row gap-2 md:gap-3">
+                      <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
                         <Button 
                           asChild 
                           size="sm" 
