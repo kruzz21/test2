@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calendar, User, MessageCircle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Calendar, User, MessageCircle, RefreshCw, AlertTriangle } from 'lucide-react';
 import { useBlog } from '@/hooks/useBlog';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -99,6 +99,23 @@ const BlogDetail = () => {
     }
   };
 
+  // Helper function to determine error type and message
+  const getErrorInfo = () => {
+    if (!error) return null;
+    
+    const isInvalidUUID = error.includes('Invalid blog post ID format') || 
+                         error.includes('Invalid UUID format') ||
+                         error.includes('uuid');
+    
+    return {
+      title: isInvalidUUID ? 'Invalid Blog Post ID' : 'Failed to Load Blog Post',
+      message: isInvalidUUID 
+        ? 'The blog post ID in the URL is not valid. Please check the URL and try again.'
+        : error,
+      icon: isInvalidUUID ? AlertTriangle : RefreshCw
+    };
+  };
+
   if (loading && !post) {
     return (
       <div className="min-h-screen py-8 w-full">
@@ -115,21 +132,31 @@ const BlogDetail = () => {
   }
 
   if (error && !post) {
+    const errorInfo = getErrorInfo();
+    const ErrorIcon = errorInfo?.icon || RefreshCw;
+    
     return (
       <div className="min-h-screen py-8 w-full">
         <div className="w-full px-4 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center py-16">
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                <div className="flex justify-center mb-4">
+                  <ErrorIcon className="h-12 w-12 text-red-600" />
+                </div>
                 <h3 className="text-lg font-semibold text-red-800 mb-2">
-                  Failed to Load Blog Post
+                  {errorInfo?.title}
                 </h3>
-                <p className="text-red-600 mb-4">{error}</p>
-                <div className="space-y-2">
-                  <Button onClick={handleRetry} variant="outline" className="text-red-600 border-red-300 hover:bg-red-50">
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Try Again
-                  </Button>
+                <p className="text-red-600 mb-4 text-sm leading-relaxed">
+                  {errorInfo?.message}
+                </p>
+                <div className="space-y-3">
+                  {!errorInfo?.title.includes('Invalid') && (
+                    <Button onClick={handleRetry} variant="outline" className="text-red-600 border-red-300 hover:bg-red-50">
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Try Again
+                    </Button>
+                  )}
                   <div>
                     <Link to="/blog">
                       <Button variant="ghost" className="text-gray-600">
@@ -154,6 +181,9 @@ const BlogDetail = () => {
           <div className="max-w-4xl mx-auto">
             <div className="text-center py-16">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
+                <div className="flex justify-center mb-4">
+                  <AlertTriangle className="h-12 w-12 text-gray-400" />
+                </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Blog Post Not Found
                 </h3>
