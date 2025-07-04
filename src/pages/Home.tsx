@@ -94,9 +94,26 @@ const Home = () => {
             <p className="text-xl md:text-2xl mb-4 text-blue-100">
               {t('hero.subtitle')}
             </p>
-            <p className="text-lg md:text-xl mb-8 text-blue-200 max-w-2xl mx-auto">
-              {t('hero.description')}
+            <p className="text-lg md:text-xl mb-8 text-blue-200 max-w-3xl mx-auto leading-relaxed">
+              {t('home.hero.subtitle')}
             </p>
+            
+            {/* Updated Badges */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
+                {t('home.hero.badge.born')}
+              </Badge>
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
+                {t('home.hero.badge.education')}
+              </Badge>
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
+                {t('home.hero.badge.residency')}
+              </Badge>
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
+                {t('home.hero.badge.current')}
+              </Badge>
+            </div>
+            
             <Button asChild size="lg" className="bg-white text-blue-900 hover:bg-blue-50">
               <Link to="/contact">
                 {t('hero.cta')}
@@ -182,9 +199,6 @@ const Home = () => {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Badge variant="secondary">{t('about.surgeries')}</Badge>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Badge variant="secondary">{t('about.locations')}</Badge>
                 </div>
               </div>
               <Button asChild variant="outline">
