@@ -155,30 +155,32 @@ const Home = () => {
                       <p className="text-sm md:text-base text-blue-700 mb-4 md:mb-6 leading-relaxed">
                         {t('home.contactUs.description')}
                       </p>
-                      <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                      {/* Fixed button layout - always side by side */}
+                      <div className="flex gap-2 md:gap-3">
                         <Button 
                           asChild 
                           size="sm" 
-                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm md:text-base px-2 sm:px-3 py-2 min-w-0"
                         >
-                          <a href="tel:+994553977874">
-                            <Phone className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                            {t('home.contactUs.call')}
+                          <a href="tel:+994553977874" className="flex items-center justify-center">
+                            <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                            <span className="truncate">{t('home.contactUs.call')}</span>
                           </a>
                         </Button>
                         <Button 
                           asChild 
                           variant="outline" 
                           size="sm"
-                          className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-sm md:text-base"
+                          className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs sm:text-sm md:text-base px-2 sm:px-3 py-2 min-w-0"
                         >
                           <a 
                             href="https://wa.me/994553977874" 
                             target="_blank" 
                             rel="noopener noreferrer"
+                            className="flex items-center justify-center"
                           >
-                            <MessageCircle className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                            {t('home.contactUs.whatsapp')}
+                            <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                            <span className="truncate">WhatsApp</span>
                           </a>
                         </Button>
                       </div>
@@ -559,21 +561,23 @@ const Home = () => {
             <p className="text-lg md:text-xl mb-6 md:mb-8 text-blue-100 max-w-2xl mx-auto leading-relaxed">
               {t('home.ctaDescription')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-              <Button asChild size="lg" className="bg-white text-blue-900 hover:bg-blue-50 text-base">
-                <Link to="/contact">
-                  {t('home.bookAppointment')}
-                  <Calendar className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+            {/* Fixed CTA buttons - always side by side */}
+            <div className="flex gap-3 md:gap-4 justify-center max-w-md mx-auto">
+              <Button asChild size="lg" className="flex-1 bg-white text-blue-900 hover:bg-blue-50 text-sm sm:text-base px-3 sm:px-6 py-3">
+                <Link to="/contact" className="flex items-center justify-center">
+                  <Calendar className="mr-1 sm:mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  <span className="truncate">{t('home.bookAppointment')}</span>
                 </Link>
               </Button>
               <Button 
                 asChild 
                 size="lg" 
                 variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-blue-900 bg-transparent text-base"
+                className="flex-1 border-white text-white hover:bg-white hover:text-blue-900 bg-transparent text-sm sm:text-base px-3 sm:px-6 py-3"
               >
-                <a href="tel:+994553977874">
-                  {t('home.callNow')}
+                <a href="tel:+994553977874" className="flex items-center justify-center">
+                  <Phone className="mr-1 sm:mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  <span className="truncate">{t('home.callNow')}</span>
                 </a>
               </Button>
             </div>
