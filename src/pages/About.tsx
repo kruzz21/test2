@@ -117,16 +117,10 @@ Dr. Eryanılmaz is currently seeing patients at Afyon Kocatepe State Hospital, s
                 <div className="text-center">
                   <h3 className="text-xl font-bold mb-2">Op. Dr. Gürkan Eryanılmaz</h3>
                   <p className="text-gray-600 mb-4">Orthopedics & Traumatology Specialist</p>
-                  <div className="space-y-3">
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-lg shadow-lg">
-                      <div className="text-2xl font-bold">25+</div>
-                      <div className="text-sm opacity-90">{t('about.experience')}</div>
-                    </div>
-                    <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 rounded-lg shadow-lg">
-                      <div className="text-2xl font-bold">20,000+</div>
-                      <div className="text-sm opacity-90">Successful Surgeries</div>
-                    </div>
-                    <Badge variant="secondary" className="w-full py-2">{t('about.locations')}</Badge>
+                  <div className="space-y-2">
+                    <Badge variant="secondary">25+ Years Experience</Badge>
+                    <br />
+                    <Badge variant="secondary">20,000+ Successful Surgeries</Badge>
                   </div>
                 </div>
               </CardContent>
