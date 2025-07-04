@@ -305,7 +305,7 @@ const EnhancedAppointmentCalendar = () => {
                     head_cell: "text-gray-600 rounded-md w-9 font-normal text-[0.8rem]",
                     row: "flex w-full mt-2",
                     cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-blue-50 [&:has([aria-selected].day-outside)]:bg-blue-50/50",
-                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-gray-900 hover:bg-gray-100 rounded-md border border-transparent hover:border-gray-300",
+                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-gray-600 hover:bg-gray-100 rounded-md border border-transparent hover:border-gray-300",
                     day_range_start: "day-range-start",
                     day_range_end: "day-range-end",
                     day_selected: "bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white border-blue-600",
