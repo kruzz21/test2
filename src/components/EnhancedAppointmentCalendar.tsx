@@ -308,7 +308,7 @@ const EnhancedAppointmentCalendar = () => {
                     day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-gray-500 hover:bg-gray-100 rounded-md border border-transparent hover:border-gray-300",
                     day_range_start: "day-range-start",
                     day_range_end: "day-range-end",
-                    day_selected: "bg-blue-800 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white border-blue-600",
+                    day_selected: "bg-blue-700 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white border-blue-600",
                     day_today: "bg-gray-100 text-gray-900 font-semibold border-gray-300",
                     day_outside: "day-outside text-gray-400 opacity-50 aria-selected:bg-blue-50/50 aria-selected:text-gray-400 aria-selected:opacity-30",
                     day_disabled: "text-gray-300 opacity-50",
