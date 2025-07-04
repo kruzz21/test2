@@ -152,19 +152,21 @@ export const blogApi = {
     try {
       console.log('blogApi.addComment: Adding comment:', comment);
       
-      const { data, error } = await supabase
+      // Insert comment without selecting it back to avoid RLS violation
+      // New comments are unapproved by default and can't be read by public users
+      const { error } = await supabase
         .from('blog_comments')
-        .insert(comment)
-        .select()
-        .single();
+        .insert(comment);
       
       if (error) {
         console.error('blogApi.addComment: Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
       
-      console.log('blogApi.addComment: Success, added comment with ID:', data?.id);
-      return data;
+      console.log('blogApi.addComment: Success, comment submitted for moderation');
+      
+      // Return a success indicator instead of the actual comment data
+      return { success: true, message: 'Comment submitted for moderation' };
     } catch (error) {
       console.error('blogApi.addComment: Unexpected error:', error);
       throw error;
