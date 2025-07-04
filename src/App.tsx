@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import './lib/i18n';
@@ -18,6 +18,17 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
+
+// Component to handle scroll to top on route change
+function ScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  return null;
+}
 
 function App() {
   const { i18n } = useTranslation();
@@ -46,6 +57,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
