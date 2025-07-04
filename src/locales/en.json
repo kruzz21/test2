@@ -25,7 +25,64 @@
     "viewAllServices": "View All Services",
     "ctaTitle": "Ready to Get the Care You Deserve?",
     "ctaDescription": "Schedule your consultation today and take the first step towards better health.",
-    "callNow": "Call Now"
+    "callNow": "Call Now",
+    "hero": {
+      "heading": "Dr. Gürkan Eryanılmaz",
+      "subheading": "Born in İzmir in 1969 and trained at Ege University Faculty of Medicine (1987–1993) and İzmir Tepecik Training & Research Hospital (Residency '96), Dr. Eryanılmaz has performed over 20,000 orthopedic procedures.",
+      "badge": {
+        "born": "Born in İzmir, 1969",
+        "education": "Ege University Faculty of Medicine (1987–1993)",
+        "residency": "Residency: İzmir Tepecik Training & Research Hospital (1996)",
+        "current": "Currently at Afyon Kocatepe State Hospital"
+      },
+      "button": {
+        "book": "Book Appointment",
+        "treatments": "View Treatments"
+      }
+    },
+    "about": {
+      "heading": "About Dr. Eryanılmaz",
+      "subtitle": "A distinguished orthopedic surgeon with over two decades of experience in complex joint replacements, arthroscopic procedures, and trauma surgery.",
+      "info": {
+        "education": "Ege University Faculty of Medicine (1987–1993)",
+        "specialization": "Residency, İzmir Tepecik Training & Research Hospital (1996)",
+        "position": "Senior Orthopedic Surgeon, Afyon Kocatepe State Hospital",
+        "languages": "Turkish, English"
+      },
+      "gallery": {
+        "preview": "Professional Gallery",
+        "title": "Professional Gallery",
+        "subtitle": "Clinic & Surgery Photos",
+        "button": "View Gallery"
+      },
+      "locations": "Currently serving patients at Afyon Kocatepe State Hospital."
+    },
+    "experience": {
+      "heading": "Proven Track Record of Excellence",
+      "subheading": "Numbers that reflect our commitment to patient care and surgical excellence.",
+      "stat": {
+        "knee": {
+          "number": "10,000+",
+          "title": "Knee Replacements"
+        },
+        "fracture": {
+          "number": "5,000+",
+          "title": "Fracture Surgeries"
+        },
+        "arthroscopy": {
+          "number": "5,000+",
+          "title": "Arthroscopic Procedures"
+        },
+        "pediatric_hip": {
+          "number": "500+",
+          "title": "Pediatric Hip Surgeries"
+        },
+        "clubfoot": {
+          "number": "350+",
+          "title": "Clubfoot Corrections"
+        }
+      }
+    }
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",

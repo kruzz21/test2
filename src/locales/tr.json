@@ -25,7 +25,64 @@
     "viewAllServices": "Tüm Hizmetleri Görüntüle",
     "ctaTitle": "Hak Ettiğiniz Bakımı Almaya Hazır mısınız?",
     "ctaDescription": "Bugün konsültasyonunuzu planlayın ve daha iyi sağlığa doğru ilk adımı atın.",
-    "callNow": "Hemen Ara"
+    "callNow": "Hemen Ara",
+    "hero": {
+      "heading": "Dr. Gürkan Eryanılmaz",
+      "subheading": "1969'da İzmir'de doğup 1987–1993 arasında Ege Üniversitesi Tıp Fakültesi'nde ve 1996'da İzmir Tepecik Eğitim ve Araştırma Hastanesi'nde uzmanlık yapan Dr. Eryanılmaz, 20.000'den fazla ortopedik işlem gerçekleştirdi.",
+      "badge": {
+        "born": "1969'da İzmir'de doğdu",
+        "education": "Ege Üniversitesi Tıp Fakültesi (1987–1993)",
+        "residency": "Uzmanlık: İzmir Tepecik Eğitim & Araştırma Hastanesi (1996)",
+        "current": "Şu anda Afyon Kocatepe Devlet Hastanesi'nde"
+      },
+      "button": {
+        "book": "Randevu Al",
+        "treatments": "Tedavilere Bak"
+      }
+    },
+    "about": {
+      "heading": "Dr. Eryanılmaz Hakkında",
+      "subtitle": "Komple eklem protezleri, artroskopik işlemler ve travma cerrahisinde yirmi yılı aşkın deneyime sahip seçkin bir ortopedik cerrah.",
+      "info": {
+        "education": "Ege Üniversitesi Tıp Fakültesi (1987–1993)",
+        "specialization": "Uzmanlık, İzmir Tepecik Eğitim & Araştırma Hastanesi (1996)",
+        "position": "Kıdemli Ortopedi Cerrahı, Afyon Kocatepe Devlet Hastanesi",
+        "languages": "Türkçe, İngilizce"
+      },
+      "gallery": {
+        "preview": "Profesyonel Galeri",
+        "title": "Profesyonel Galeri",
+        "subtitle": "Klinik & Ameliyat Fotoğrafları",
+        "button": "Galeriye Git"
+      },
+      "locations": "Şu anda Afyon Kocatepe Devlet Hastanesi'nde hastalarımıza hizmet verilmektedir."
+    },
+    "experience": {
+      "heading": "Kanıtlanmış Mükemmeliyet Geçmişi",
+      "subheading": "Hasta bakımı ve cerrahi mükemmellik taahhüdümüzü yansıtan sayılar.",
+      "stat": {
+        "knee": {
+          "number": "10.000+",
+          "title": "Diz Protezleri"
+        },
+        "fracture": {
+          "number": "5.000+",
+          "title": "Kırık Ameliyatları"
+        },
+        "arthroscopy": {
+          "number": "5.000+",
+          "title": "Artroskopik İşlemler"
+        },
+        "pediatric_hip": {
+          "number": "500+",
+          "title": "Pediatrik Kalça Ameliyatları"
+        },
+        "clubfoot": {
+          "number": "350+",
+          "title": "Çarpık Ayak Düzeltmeleri"
+        }
+      }
+    }
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",
