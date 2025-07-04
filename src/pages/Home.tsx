@@ -2,11 +2,16 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle } from 'lucide-react';
+import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useBlog } from '@/hooks/useBlog';
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { blogPosts, loading: blogLoading, error: blogError, fetchBlogPosts } = useBlog();
+
+  // Get current language suffix for multilingual content
+  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   const surgicalStats = [
     { 
@@ -77,30 +82,12 @@ const Home = () => {
     'Joint & Nerve Surgery'
   ];
 
-  // Mock blog posts for preview
-  const blogPosts = [
-    {
-      id: 1,
-      title: 'Understanding Knee Replacement Surgery',
-      excerpt: 'Learn about the latest techniques in knee replacement and what to expect during recovery.',
-      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      date: '2024-01-15'
-    },
-    {
-      id: 2,
-      title: 'Pediatric Hip Dysplasia Treatment',
-      excerpt: 'Early detection and treatment options for developmental hip dysplasia in children.',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      date: '2024-01-10'
-    },
-    {
-      id: 3,
-      title: 'Sports Injury Prevention',
-      excerpt: 'Essential tips for athletes to prevent common orthopedic injuries.',
-      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      date: '2024-01-05'
-    }
-  ];
+  const handleBlogRetry = () => {
+    fetchBlogPosts();
+  };
+
+  // Get the first 3 blog posts for preview
+  const previewBlogPosts = blogPosts.slice(0, 3);
 
   return (
     <div className="min-h-screen w-full">
@@ -496,48 +483,86 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
-              {blogPosts.map((post) => (
-                <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative h-40 md:h-48">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="secondary" className="text-xs">
-                        <FileText className="h-3 w-3 mr-1" />
-                        Article
-                      </Badge>
-                      <span className="text-xs text-gray-500">
-                        {new Date(post.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <CardTitle className="text-base md:text-lg line-clamp-2 leading-tight">{post.title}</CardTitle>
-                    <CardDescription className="line-clamp-2 text-sm leading-relaxed">
-                      {post.excerpt}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-xs md:text-sm text-gray-500">
-                        <User className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                        Dr. Gürkan Eryanılmaz
+            {/* Blog Posts Content */}
+            {blogLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading latest articles...</p>
+              </div>
+            ) : blogError ? (
+              <div className="text-center py-8">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">
+                    Failed to Load Blog Posts
+                  </h3>
+                  <p className="text-red-600 mb-4 text-sm">{blogError}</p>
+                  <Button onClick={handleBlogRetry} variant="outline" className="text-red-600 border-red-300 hover:bg-red-50">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Try Again
+                  </Button>
+                </div>
+              </div>
+            ) : previewBlogPosts.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    No Blog Posts Available
+                  </h3>
+                  <p className="text-gray-600">
+                    Check back later for new articles and insights from Dr. Eryanılmaz.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
+                {previewBlogPosts.map((post: any) => {
+                  // Use multilingual content based on current language
+                  const title = post[`title${langSuffix}`] || post.title_en;
+                  const excerpt = post[`excerpt${langSuffix}`] || post.excerpt_en;
+
+                  return (
+                    <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <div className="relative h-40 md:h-48">
+                        <img
+                          src={post.image_url || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'}
+                          alt={title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <Button variant="ghost" size="sm" asChild className="text-xs md:text-sm">
-                        <Link to={`/blog/${post.id}`}>
-                          Read More
-                          <ArrowRight className="ml-1 h-3 w-3" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge variant="secondary" className="text-xs">
+                            <FileText className="h-3 w-3 mr-1" />
+                            Article
+                          </Badge>
+                          <span className="text-xs text-gray-500">
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <CardTitle className="text-base md:text-lg line-clamp-2 leading-tight">{title}</CardTitle>
+                        <CardDescription className="line-clamp-2 text-sm leading-relaxed">
+                          {excerpt}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center text-xs md:text-sm text-gray-500">
+                            <User className="h-3 w-3 md:h-4 md:w-4 mr-1" />
+                            Dr. Gürkan Eryanılmaz
+                          </div>
+                          <Button variant="ghost" size="sm" asChild className="text-xs md:text-sm">
+                            <Link to={`/blog/${post.id}`}>
+                              Read More
+                              <ArrowRight className="ml-1 h-3 w-3" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="text-center">
               <Button asChild variant="outline" size="lg" className="text-base">
