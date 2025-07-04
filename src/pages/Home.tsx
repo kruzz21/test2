@@ -135,59 +135,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Quick Action Cards */}
-      <section className="py-12 bg-white w-full">
-        <div className="w-full px-4 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Second Opinion Card */}
-              <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
-                      <CheckCircle className="h-8 w-8 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-blue-900 mb-2">
-                        {t('home.secondOpinion.title')}
-                      </h3>
-                      <p className="text-blue-700 mb-4">
-                        {t('home.secondOpinion.description')}
-                      </p>
-                      <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
-                        {t('home.secondOpinion.button')}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Telemedicine Card */}
-              <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
-                      <Calendar className="h-8 w-8 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-green-900 mb-2">
-                        {t('home.telemedicine.title')}
-                      </h3>
-                      <p className="text-green-700 mb-4">
-                        {t('home.telemedicine.description')}
-                      </p>
-                      <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white">
-                        {t('home.telemedicine.button')}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* About Section */}
       <section className="py-20 bg-slate-50 w-full">
         <div className="w-full px-4 lg:px-8">
@@ -240,6 +187,55 @@ const Home = () => {
                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-200 rounded-full opacity-20"></div>
                 <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-300 rounded-full opacity-20"></div>
               </div>
+            </div>
+
+            {/* Integrated Action Cards */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Second Opinion Card */}
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <CardContent className="p-8">
+                  <div className="flex items-start space-x-6">
+                    <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <CheckCircle className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-blue-900 mb-3">
+                        {t('home.secondOpinion.title')}
+                      </h3>
+                      <p className="text-blue-700 mb-6 leading-relaxed">
+                        {t('home.secondOpinion.description')}
+                      </p>
+                      <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300">
+                        {t('home.secondOpinion.button')}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Telemedicine Card */}
+              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <CardContent className="p-8">
+                  <div className="flex items-start space-x-6">
+                    <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <Calendar className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-green-900 mb-3">
+                        {t('home.telemedicine.title')}
+                      </h3>
+                      <p className="text-green-700 mb-6 leading-relaxed">
+                        {t('home.telemedicine.description')}
+                      </p>
+                      <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all duration-300">
+                        {t('home.telemedicine.button')}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
