@@ -25,16 +25,7 @@
     "viewAllServices": "View All Services",
     "ctaTitle": "Ready to Get the Care You Deserve?",
     "ctaDescription": "Schedule your consultation today and take the first step towards better health.",
-    "callNow": "Call Now",
-    "hero": {
-      "subtitle": "Born in İzmir in 1969 and trained at Ege University Faculty of Medicine (1987–1993) and İzmir Tepecik Training & Research Hospital (Residency '96), Dr. Eryanılmaz has performed over 20,000 orthopedic procedures.",
-      "badge": {
-        "born": "Born in İzmir, 1969",
-        "education": "Ege University Faculty of Medicine (1987–1993)",
-        "residency": "Residency: İzmir Tepecik Training & Research Hospital (1996)",
-        "current": "Currently at Afyon Kocatepe State Hospital"
-      }
-    }
+    "callNow": "Call Now"
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",

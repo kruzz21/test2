@@ -25,16 +25,7 @@
     "viewAllServices": "Bütün Xidmətləri Görüntülə",
     "ctaTitle": "Layiq Olduğunuz Qayğını Almağa Hazırsınız?",
     "ctaDescription": "Bu gün konsultasiyanızı planlaşdırın və daha yaxşı sağlamlığa doğru ilk addımı atın.",
-    "callNow": "İndi Zəng Et",
-    "hero": {
-      "subtitle": "1969-cu ildə İzmirdə doğulmuş, 1987–1993-cü illərdə Ege Universiteti Tibb Fakültəsində, 1996-cı ildə İzmir Tepecik Təhsil və Tədqiqat Xəstəxanasında rezidentura keçmiş Dr. Eryanılmaz, 20.000-dən çox ortopedik əməliyyat edib.",
-      "badge": {
-        "born": "1969-cu ildə İzmir doğumlu",
-        "education": "Ege Universiteti Tibb Fakültəsi (1987–1993)",
-        "residency": "Rezidentura: İzmir Tepecik Təhsil və Tədqiqat Xəstəxanası (1996)",
-        "current": "Hazırda Afyon Kocatepe Dövlət Xəstəxanasındadır"
-      }
-    }
+    "callNow": "İndi Zəng Et"
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",

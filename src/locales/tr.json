@@ -25,16 +25,7 @@
     "viewAllServices": "Tüm Hizmetleri Görüntüle",
     "ctaTitle": "Hak Ettiğiniz Bakımı Almaya Hazır mısınız?",
     "ctaDescription": "Bugün konsültasyonunuzu planlayın ve daha iyi sağlığa doğru ilk adımı atın.",
-    "callNow": "Hemen Ara",
-    "hero": {
-      "subtitle": "1969'da İzmir'de doğup 1987–1993 yılları arasında Ege Üniversitesi Tıp Fakültesi'nde, 1996'da İzmir Tepecik Eğitim ve Araştırma Hastanesi'nde uzmanlık eğitimi gören Dr. Eryanılmaz, 20.000'den fazla ortopedik işlem gerçekleştirdi.",
-      "badge": {
-        "born": "1969'da İzmir'de doğdu",
-        "education": "Ege Üniversitesi Tıp Fakültesi (1987–1993)",
-        "residency": "Uzmanlık: İzmir Tepecik Eğitim & Araştırma Hastanesi (1996)",
-        "current": "Şu anda Afyon Kocatepe Devlet Hastanesi'nde"
-      }
-    }
+    "callNow": "Hemen Ara"
   },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",
