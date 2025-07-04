@@ -104,44 +104,45 @@ const Home = () => {
 
   return (
     <div className="min-h-screen w-full">
-      {/* Hero Section */}
-      <section 
-        className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-20 md:py-32 w-full"
-        style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundBlendMode: 'overlay'
-        }}
-      >
-        <div className="w-full px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              {t('hero.title')}
-            </h1>
-            <p className="text-xl md:text-2xl mb-4 text-blue-100">
-              {t('hero.subtitle')}
-            </p>
-            <p className="text-lg md:text-xl mb-8 text-blue-200 max-w-2xl mx-auto">
-              {t('hero.description')}
-            </p>
-            <Button asChild size="lg" className="bg-white text-blue-900 hover:bg-blue-50">
-              <Link to="/contact">
-                {t('hero.cta')}
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+      {/* Hero Section with Integrated Cards */}
+      <section className="relative w-full">
+        {/* Main Hero Content */}
+        <div 
+          className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-20 md:py-32 w-full"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundBlendMode: 'overlay'
+          }}
+        >
+          <div className="w-full px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                {t('hero.title')}
+              </h1>
+              <p className="text-xl md:text-2xl mb-4 text-blue-100">
+                {t('hero.subtitle')}
+              </p>
+              <p className="text-lg md:text-xl mb-8 text-blue-200 max-w-2xl mx-auto">
+                {t('hero.description')}
+              </p>
+              <Button asChild size="lg" className="bg-white text-blue-900 hover:bg-blue-50">
+                <Link to="/contact">
+                  {t('hero.cta')}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Quick Action Cards - Between Hero and About */}
-      <section className="py-16 bg-white w-full">
-        <div className="w-full px-4 lg:px-8">
+        {/* Integrated Quick Action Cards */}
+        <div className="relative -mt-16 w-full px-4 lg:px-8 z-10">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Second Opinion Card */}
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <Card className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 <CardContent className="p-8">
                   <div className="flex items-start space-x-6">
                     <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -164,7 +165,7 @@ const Home = () => {
               </Card>
 
               {/* Telemedicine Card */}
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <Card className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 <CardContent className="p-8">
                   <div className="flex items-start space-x-6">
                     <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
