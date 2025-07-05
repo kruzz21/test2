@@ -394,35 +394,44 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Gallery and Media Section - Enhanced with Improved Design */}
-      <section className="py-16 md:py-20 bg-white w-full">
+      {/* Gallery and Media Section - Enhanced with Premium Design */}
+      <section className="py-16 md:py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50 w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4">
+            <div className="text-center mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
                 Gallery and Media
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6 md:mb-8 leading-relaxed">
                 {t('home.gallery.subtitle')}
               </p>
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto rounded-full"></div>
             </div>
 
             {galleryLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading media gallery...</p>
+              <div className="text-center py-16">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
+                  <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-blue-300 mx-auto animate-ping"></div>
+                </div>
+                <p className="text-gray-600 text-lg">Loading media gallery...</p>
               </div>
             ) : (
-              <div className="space-y-16">
-                {/* Featured Videos Section with Improved Slider */}
+              <div className="space-y-20">
+                {/* Featured Videos Section with Premium Design */}
                 {featuredVideos.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-xl md:text-2xl font-bold flex items-center">
-                        <Video className="h-6 w-6 mr-2 text-red-600" />
-                        Featured Videos
-                      </h3>
-                      <Button asChild variant="outline">
+                    <div className="flex items-center justify-between mb-10">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <Video className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Videos</h3>
+                          <p className="text-gray-600">Educational content and patient stories</p>
+                        </div>
+                      </div>
+                      <Button asChild variant="outline" className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-md transition-all duration-300">
                         <Link to="/gallery" state={{ activeTab: 'videos' }}>
                           View All Videos
                           <ArrowRight className="ml-2 h-4 w-4" />
@@ -430,14 +439,14 @@ const Home = () => {
                       </Button>
                     </div>
                     
-                    {/* Video Slider Container with External Navigation */}
+                    {/* Video Slider Container with Premium Navigation */}
                     <div className="relative">
-                      {/* External Navigation Buttons */}
-                      <div className="flex justify-between items-center mb-6">
+                      {/* Navigation Buttons */}
+                      <div className="absolute -top-16 right-0 flex space-x-3 z-10">
                         <Button
                           variant="outline"
                           size="icon"
-                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border-gray-200 hover:shadow-xl transition-all duration-300"
                           onClick={() => scrollContainer(videoScrollRef, 'left')}
                         >
                           <ChevronLeft className="h-5 w-5" />
@@ -445,7 +454,7 @@ const Home = () => {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border-gray-200 hover:shadow-xl transition-all duration-300"
                           onClick={() => scrollContainer(videoScrollRef, 'right')}
                         >
                           <ChevronRight className="h-5 w-5" />
@@ -455,7 +464,7 @@ const Home = () => {
                       {/* Scrollable Video Container */}
                       <div 
                         ref={videoScrollRef}
-                        className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide"
+                        className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide"
                         style={{ 
                           scrollSnapType: 'x mandatory',
                           scrollbarWidth: 'none',
@@ -470,59 +479,67 @@ const Home = () => {
                           return (
                             <Card 
                               key={video.id} 
-                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
+                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-2"
                               style={{ scrollSnapAlign: 'start' }}
                               onClick={() => openMediaModal(video, false)}
                             >
-                              <div className="relative aspect-video bg-gray-100">
+                              <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                                 {thumbnailUrl ? (
                                   <img
                                     src={thumbnailUrl}
                                     alt={title}
-                                    className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                   />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                                    <Video className="h-12 w-12 text-gray-400" />
+                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
+                                    <Video className="h-16 w-16 text-gray-400" />
                                   </div>
                                 )}
                                 
-                                {/* Play Button Overlay */}
-                                <div 
-                                  className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover/card:bg-opacity-40 transition-all duration-300"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    startVideo(video);
-                                  }}
-                                >
-                                  <div className="bg-white bg-opacity-95 rounded-full p-4 group-hover/card:scale-110 transition-transform duration-300 shadow-lg">
-                                    <Play className="h-8 w-8 text-red-600" />
+                                {/* Premium Play Button Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-center justify-center group-hover:from-black/70 transition-all duration-500">
+                                  <div className="bg-white/95 backdrop-blur-sm rounded-full p-4 group-hover:scale-125 transition-all duration-500 shadow-2xl border border-white/20">
+                                    <Play className="h-8 w-8 text-red-600 ml-1" />
                                   </div>
                                 </div>
                                 
                                 {/* Type Badge */}
-                                <div className="absolute top-3 left-3">
-                                  <Badge variant="secondary" className="text-xs bg-white/90 text-gray-800">
+                                <div className="absolute top-4 left-4">
+                                  <Badge className="bg-red-600/90 text-white border-0 backdrop-blur-sm">
+                                    <Video className="h-3 w-3 mr-1" />
                                     Video
                                   </Badge>
                                 </div>
+
+                                {/* Duration Badge (if available) */}
+                                <div className="absolute bottom-4 right-4">
+                                  <Badge variant="secondary" className="bg-black/70 text-white border-0 backdrop-blur-sm">
+                                    HD
+                                  </Badge>
+                                </div>
                               </div>
+                              
                               <CardHeader className="pb-3">
-                                <CardTitle className="text-lg line-clamp-2 text-gray-900">{title}</CardTitle>
+                                <CardTitle className="text-lg line-clamp-2 text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
+                                  {title}
+                                </CardTitle>
                                 {description && (
-                                  <CardDescription className="line-clamp-2 text-gray-600">{description}</CardDescription>
+                                  <CardDescription className="line-clamp-2 text-gray-600 leading-relaxed">
+                                    {description}
+                                  </CardDescription>
                                 )}
                               </CardHeader>
+                              
                               <CardContent className="pt-0">
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center text-sm text-gray-500">
-                                    <Calendar className="h-4 w-4 mr-1" />
+                                    <Calendar className="h-4 w-4 mr-2" />
                                     {new Date(video.created_at).toLocaleDateString()}
                                   </div>
-                                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
-                                    <Eye className="h-4 w-4 mr-1" />
+                                  <div className="flex items-center text-sm text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
+                                    <Play className="h-4 w-4 mr-1" />
                                     Watch
-                                  </Button>
+                                  </div>
                                 </div>
                               </CardContent>
                             </Card>
@@ -533,15 +550,20 @@ const Home = () => {
                   </div>
                 )}
 
-                {/* Featured Photos Section with Improved Slider */}
+                {/* Featured Photos Section with Premium Design */}
                 {featuredPhotos.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-xl md:text-2xl font-bold flex items-center">
-                        <ImageIcon className="h-6 w-6 mr-2 text-blue-600" />
-                        Medical Center Photos
-                      </h3>
-                      <Button asChild variant="outline">
+                    <div className="flex items-center justify-between mb-10">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <ImageIcon className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Medical Center Photos</h3>
+                          <p className="text-gray-600">State-of-the-art facilities and equipment</p>
+                        </div>
+                      </div>
+                      <Button asChild variant="outline" className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-md transition-all duration-300">
                         <Link to="/gallery" state={{ activeTab: 'photos' }}>
                           View All Photos
                           <ArrowRight className="ml-2 h-4 w-4" />
@@ -549,14 +571,14 @@ const Home = () => {
                       </Button>
                     </div>
                     
-                    {/* Photo Slider Container with External Navigation */}
+                    {/* Photo Slider Container with Premium Navigation */}
                     <div className="relative">
-                      {/* External Navigation Buttons */}
-                      <div className="flex justify-between items-center mb-6">
+                      {/* Navigation Buttons */}
+                      <div className="absolute -top-16 right-0 flex space-x-3 z-10">
                         <Button
                           variant="outline"
                           size="icon"
-                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border-gray-200 hover:shadow-xl transition-all duration-300"
                           onClick={() => scrollContainer(photoScrollRef, 'left')}
                         >
                           <ChevronLeft className="h-5 w-5" />
@@ -564,7 +586,7 @@ const Home = () => {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg border-gray-200 hover:shadow-xl transition-all duration-300"
                           onClick={() => scrollContainer(photoScrollRef, 'right')}
                         >
                           <ChevronRight className="h-5 w-5" />
@@ -574,7 +596,7 @@ const Home = () => {
                       {/* Scrollable Photo Container */}
                       <div 
                         ref={photoScrollRef}
-                        className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
+                        className="flex overflow-x-auto gap-5 pb-6 scrollbar-hide"
                         style={{ 
                           scrollSnapType: 'x mandatory',
                           scrollbarWidth: 'none',
@@ -588,28 +610,47 @@ const Home = () => {
                           return (
                             <Card 
                               key={photo.id} 
-                              className="flex-shrink-0 w-64 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
+                              className="flex-shrink-0 w-72 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-2"
                               style={{ scrollSnapAlign: 'start' }}
                               onClick={() => openMediaModal(photo, false)}
                             >
-                              <div className="relative aspect-square bg-gray-100">
+                              <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                                 <img
                                   src={photo.thumbnail_url || photo.url}
                                   alt={altText}
-                                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
                                 
-                                {/* Hover Overlay */}
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                                  <div className="opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
-                                    <div className="bg-white rounded-full p-3 shadow-lg">
-                                      <Eye className="h-5 w-5 text-gray-800" />
-                                    </div>
+                                {/* Premium Hover Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                                  <div className="bg-white/95 backdrop-blur-sm rounded-full p-3 shadow-2xl border border-white/20 transform scale-75 group-hover:scale-100 transition-transform duration-500">
+                                    <Expand className="h-5 w-5 text-gray-800" />
                                   </div>
                                 </div>
+
+                                {/* Type Badge */}
+                                <div className="absolute top-4 left-4">
+                                  <Badge className="bg-blue-600/90 text-white border-0 backdrop-blur-sm">
+                                    <ImageIcon className="h-3 w-3 mr-1" />
+                                    Photo
+                                  </Badge>
+                                </div>
                               </div>
-                              <CardContent className="p-4">
-                                <h4 className="font-medium text-sm line-clamp-2 text-gray-900">{title}</h4>
+                              
+                              <CardContent className="p-5">
+                                <h4 className="font-semibold text-base line-clamp-2 text-gray-900 group-hover:text-blue-700 transition-colors duration-300 leading-tight">
+                                  {title}
+                                </h4>
+                                <div className="flex items-center justify-between mt-3">
+                                  <div className="flex items-center text-sm text-gray-500">
+                                    <Calendar className="h-3 w-3 mr-1" />
+                                    {new Date(photo.created_at).toLocaleDateString()}
+                                  </div>
+                                  <div className="flex items-center text-sm text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    View
+                                  </div>
+                                </div>
                               </CardContent>
                             </Card>
                           );
@@ -764,18 +805,18 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Media Modal */}
+      {/* Enhanced Media Modal */}
       <Dialog open={isMediaModalOpen} onOpenChange={setIsMediaModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto bg-white/95 backdrop-blur-md border-gray-200">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-gray-900">
               {selectedMedia ? (selectedMedia[`title${langSuffix}`] || selectedMedia.title_en) : 'Media Item'}
             </DialogTitle>
           </DialogHeader>
           {selectedMedia && (
             <div className="space-y-6">
               {/* Media Display */}
-              <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+              <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden shadow-2xl">
                 {selectedMedia.type === 'photo' ? (
                   <img
                     src={selectedMedia.url}
@@ -791,7 +832,7 @@ const Home = () => {
                           <iframe
                             src={embedUrl}
                             title={selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}
-                            className="w-full h-full"
+                            className="w-full h-full rounded-xl"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
@@ -811,16 +852,16 @@ const Home = () => {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                            <Video className="h-16 w-16 text-gray-400" />
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
+                            <Video className="h-20 w-20 text-gray-400" />
                           </div>
                         )}
                         <div 
-                          className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center cursor-pointer hover:bg-opacity-50 transition-all duration-300"
+                          className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-center justify-center cursor-pointer hover:from-black/70 transition-all duration-500"
                           onClick={() => setIsVideoPlaying(true)}
                         >
-                          <div className="bg-white bg-opacity-90 rounded-full p-4 hover:scale-110 transition-transform duration-300">
-                            <Play className="h-12 w-12 text-red-600" />
+                          <div className="bg-white/95 backdrop-blur-sm rounded-full p-6 hover:scale-110 transition-all duration-500 shadow-2xl border border-white/20">
+                            <Play className="h-16 w-16 text-red-600 ml-2" />
                           </div>
                         </div>
                       </div>
@@ -830,36 +871,43 @@ const Home = () => {
               </div>
 
               {/* Item Details */}
-              <div className="space-y-4">
+              <div className="space-y-6 bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200">
                 <div>
-                  <h2 className="text-2xl font-bold mb-2">{selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}</h2>
+                  <h2 className="text-3xl font-bold mb-3 text-gray-900">{selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}</h2>
                   {(selectedMedia[`description${langSuffix}`] || selectedMedia.description_en) && (
-                    <p className="text-gray-700 leading-relaxed">{selectedMedia[`description${langSuffix}`] || selectedMedia.description_en}</p>
+                    <p className="text-gray-700 leading-relaxed text-lg">{selectedMedia[`description${langSuffix}`] || selectedMedia.description_en}</p>
                   )}
                 </div>
 
                 {/* Metadata Grid */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium text-gray-600">Type:</span>
-                    <span className="ml-2 capitalize">{selectedMedia.type}</span>
+                <div className="grid grid-cols-2 gap-6 text-base">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      {selectedMedia.type === 'video' ? <Video className="h-5 w-5 text-blue-600" /> : <ImageIcon className="h-5 w-5 text-blue-600" />}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-600">Type:</span>
+                      <span className="ml-2 capitalize font-semibold text-gray-900">{selectedMedia.type}</span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="font-medium text-gray-600">Created:</span>
-                    <span className="ml-2 flex items-center">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {new Date(selectedMedia.created_at).toLocaleDateString()}
-                    </span>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Calendar className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-600">Created:</span>
+                      <span className="ml-2 font-semibold text-gray-900">{new Date(selectedMedia.created_at).toLocaleDateString()}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Categories */}
                 {selectedMedia.categories_en && (
                   <div>
-                    <span className="font-medium text-gray-600 text-sm">Categories:</span>
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <span className="font-medium text-gray-600 text-base">Categories:</span>
+                    <div className="flex flex-wrap gap-2 mt-3">
                       {selectedMedia.categories_en.split(',').map((category: string, index: number) => (
-                        <Badge key={index} variant="outline" className="text-xs">
+                        <Badge key={index} variant="outline" className="text-sm px-3 py-1 bg-blue-50 text-blue-700 border-blue-200">
                           {category.trim()}
                         </Badge>
                       ))}
