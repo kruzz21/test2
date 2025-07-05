@@ -59,33 +59,6 @@ const Home = () => {
     },
   ];
 
-  const symptoms = [
-    {
-      id: 'knee-pain',
-      title: 'Knee Pain',
-      description: 'Comprehensive treatment for knee arthritis and joint problems',
-      icon: '🦵'
-    },
-    {
-      id: 'shoulder-injuries',
-      title: 'Shoulder Injuries',
-      description: 'Expert care for rotator cuff tears and shoulder conditions',
-      icon: '💪'
-    },
-    {
-      id: 'hip-problems',
-      title: 'Hip Problems',
-      description: 'Advanced hip replacement and dysplasia treatment',
-      icon: '🦴'
-    },
-    {
-      id: 'pediatric-conditions',
-      title: 'Pediatric Orthopedic Issues',
-      description: 'Specialized care for children\'s orthopedic conditions',
-      icon: '👶'
-    }
-  ];
-
   const expertiseAreas = [
     'Arthroscopic Surgery',
     'Joint Replacement Surgery',
@@ -662,46 +635,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Symptoms & Treatments Section */}
-      <section className="py-16 md:py-20 bg-slate-50 w-full">
-        <div className="w-full px-5 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4">
-                {t('home.symptoms.title')}
-              </h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Learn about common orthopedic conditions and their treatments
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {symptoms.map((symptom) => (
-                <Card key={symptom.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="text-center pb-4">
-                    <div className="text-3xl md:text-4xl mb-3 md:mb-4">{symptom.icon}</div>
-                    <CardTitle className="text-lg md:text-xl leading-tight">{symptom.title}</CardTitle>
-                    <CardDescription className="text-sm md:text-base leading-relaxed">
-                      {symptom.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button asChild variant="outline" className="w-full text-sm md:text-base">
-                      <Link to={`/symptoms/${symptom.id}`}>
-                        {t('home.symptoms.button')}
-                        <ArrowRight className="ml-2 h-3 w-3 md:h-4 md:w-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Blog Preview Section */}
-      <section className="py-16 md:py-20 bg-white w-full">
+      <section className="py-16 md:py-20 bg-slate-50 w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8 md:mb-12">
