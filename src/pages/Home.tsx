@@ -19,9 +19,6 @@ const Home = () => {
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
-  // Featured video state
-  const [featuredVideo, setFeaturedVideo] = useState<any>(null);
-
   // Scroll refs
   const videoScrollRef = useRef<HTMLDivElement>(null);
   const photoScrollRef = useRef<HTMLDivElement>(null);
@@ -141,11 +138,6 @@ const Home = () => {
   // Filter gallery items by type and get featured items
   const featuredVideos = galleryItems.filter(item => item.type === 'video').slice(0, 6);
   const featuredPhotos = galleryItems.filter(item => item.type === 'photo').slice(0, 8);
-
-  // Set the first video as featured if not already set
-  if (!featuredVideo && featuredVideos.length > 0) {
-    setFeaturedVideo(featuredVideos[0]);
-  }
 
   return (
     <div className="min-h-screen w-full">
@@ -402,180 +394,264 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Gallery and Media Section - Sharp UI Design */}
-      <section className="py-16 md:py-20 bg-white w-full">
+      {/* Gallery and Media Section - Enhanced with Premium Design */}
+      <section className="py-16 md:py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50 w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                Medical Videos & Gallery
+            <div className="text-center mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
+                Gallery and Media
               </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Educational content and insights from Dr. Eryanılmaz's medical practice
+              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6 md:mb-8 leading-relaxed">
+                {t('home.gallery.subtitle')}
               </p>
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto rounded-full"></div>
             </div>
 
             {galleryLoading ? (
               <div className="text-center py-16">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading media gallery...</p>
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
+                  <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-blue-300 mx-auto animate-ping"></div>
+                </div>
+                <p className="text-gray-600 text-lg">Loading media gallery...</p>
               </div>
             ) : (
-              <div className="space-y-16">
-                {/* Video Section */}
+              <div className="space-y-20">
+                {/* Featured Videos Section with Premium Design */}
                 {featuredVideos.length > 0 && (
-                  <div>
-                    <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-2xl font-bold text-gray-900">Featured Videos</h3>
-                      <Button asChild variant="outline" className="border-gray-300">
-                        <Link to="/gallery">
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-10">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <Video className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Videos</h3>
+                          <p className="text-gray-600">Educational content and patient stories</p>
+                        </div>
+                      </div>
+                      <Button asChild variant="outline" className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-md transition-all duration-300">
+                        <Link to="/gallery" state={{ activeTab: 'videos' }}>
                           View All Videos
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>
                     </div>
                     
-                    {/* Video Layout: Large player on left, list on right */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                      {/* Main Video Player */}
-                      <div className="lg:col-span-2">
-                        {featuredVideo && (
-                          <div className="bg-black rounded-none overflow-hidden shadow-lg">
-                            <div className="aspect-video relative">
-                              {isVideoPlaying && selectedMedia?.id === featuredVideo.id ? (
-                                <iframe
-                                  src={getYouTubeEmbedUrl(featuredVideo.url, true) || ''}
-                                  title={featuredVideo[`title${langSuffix}`] || featuredVideo.title_en}
-                                  className="w-full h-full"
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                />
-                              ) : (
-                                <>
+                    {/* Video Slider Container with Premium Navigation */}
+                    <div className="relative">
+                      {/* Navigation Buttons - Positioned in the middle */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        onClick={() => scrollContainer(videoScrollRef, 'left')}
+                      >
+                        <ChevronLeft className="h-6 w-6 text-gray-700" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        onClick={() => scrollContainer(videoScrollRef, 'right')}
+                      >
+                        <ChevronRight className="h-6 w-6 text-gray-700" />
+                      </Button>
+                      
+                      {/* Scrollable Video Container */}
+                      <div 
+                        ref={videoScrollRef}
+                        className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide px-16"
+                        style={{ 
+                          scrollSnapType: 'x mandatory',
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none'
+                        }}
+                      >
+                        {featuredVideos.map((video) => {
+                          const title = video[`title${langSuffix}`] || video.title_en;
+                          const description = video[`description${langSuffix}`] || video.description_en;
+                          const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
+
+                          return (
+                            <Card 
+                              key={video.id} 
+                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-2"
+                              style={{ scrollSnapAlign: 'start' }}
+                              onClick={() => openMediaModal(video, false)}
+                            >
+                              <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                                {thumbnailUrl ? (
                                   <img
-                                    src={getYouTubeThumbnail(featuredVideo.url) || ''}
-                                    alt={featuredVideo[`title${langSuffix}`] || featuredVideo.title_en}
-                                    className="w-full h-full object-cover"
+                                    src={thumbnailUrl}
+                                    alt={title}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                   />
-                                  <div 
-                                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center cursor-pointer hover:bg-opacity-50 transition-all"
-                                    onClick={() => {
-                                      setSelectedMedia(featuredVideo);
-                                      setIsVideoPlaying(true);
-                                    }}
-                                  >
-                                    <div className="bg-red-600 rounded-full p-4 hover:bg-red-700 transition-colors">
-                                      <Play className="h-8 w-8 text-white ml-1" />
-                                    </div>
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
+                                    <Video className="h-16 w-16 text-gray-400" />
                                   </div>
-                                </>
-                              )}
-                            </div>
-                            <div className="p-4 bg-white border-t">
-                              <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                                {featuredVideo[`title${langSuffix}`] || featuredVideo.title_en}
-                              </h4>
-                              {(featuredVideo[`description${langSuffix}`] || featuredVideo.description_en) && (
-                                <p className="text-gray-600 text-sm">
-                                  {featuredVideo[`description${langSuffix}`] || featuredVideo.description_en}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Video List */}
-                      <div className="lg:col-span-1">
-                        <div className="space-y-3">
-                          {featuredVideos.map((video, index) => {
-                            const title = video[`title${langSuffix}`] || video.title_en;
-                            const thumbnailUrl = getYouTubeThumbnail(video.url);
-                            const isActive = featuredVideo?.id === video.id;
-
-                            return (
-                              <div
-                                key={video.id}
-                                className={`flex cursor-pointer border transition-all ${
-                                  isActive 
-                                    ? 'border-blue-500 bg-blue-50' 
-                                    : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
-                                }`}
-                                onClick={() => {
-                                  setFeaturedVideo(video);
-                                  setIsVideoPlaying(false);
-                                }}
-                              >
-                                <div className="relative w-32 h-20 flex-shrink-0">
-                                  {thumbnailUrl ? (
-                                    <img
-                                      src={thumbnailUrl}
-                                      alt={title}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                      <Video className="h-6 w-6 text-gray-400" />
-                                    </div>
-                                  )}
-                                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                                    <Play className="h-4 w-4 text-white" />
-                                  </div>
-                                  <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
-                                    {String(index + 1).padStart(2, '0')}
+                                )}
+                                
+                                {/* Premium Play Button Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-center justify-center group-hover:from-black/70 transition-all duration-500">
+                                  <div className="bg-white/95 backdrop-blur-sm rounded-full p-4 group-hover:scale-125 transition-all duration-500 shadow-2xl border border-white/20">
+                                    <Play className="h-8 w-8 text-red-600 ml-1" />
                                   </div>
                                 </div>
-                                <div className="p-3 flex-1 min-w-0">
-                                  <h5 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight mb-1">
-                                    {title}
-                                  </h5>
-                                  <p className="text-xs text-gray-500">
-                                    {new Date(video.created_at).toLocaleDateString()}
-                                  </p>
+                                
+                                {/* Type Badge */}
+                                <div className="absolute top-4 left-4">
+                                  <Badge className="bg-red-600/90 text-white border-0 backdrop-blur-sm">
+                                    <Video className="h-3 w-3 mr-1" />
+                                    Video
+                                  </Badge>
+                                </div>
+
+                                {/* Duration Badge (if available) */}
+                                <div className="absolute bottom-4 right-4">
+                                  <Badge variant="secondary" className="bg-black/70 text-white border-0 backdrop-blur-sm">
+                                    HD
+                                  </Badge>
                                 </div>
                               </div>
-                            );
-                          })}
-                        </div>
+                              
+                              <CardHeader className="pb-3">
+                                <CardTitle className="text-lg line-clamp-2 text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
+                                  {title}
+                                </CardTitle>
+                                {description && (
+                                  <CardDescription className="line-clamp-2 text-gray-600 leading-relaxed">
+                                    {description}
+                                  </CardDescription>
+                                )}
+                              </CardHeader>
+                              
+                              <CardContent className="pt-0">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center text-sm text-gray-500">
+                                    <Calendar className="h-4 w-4 mr-2" />
+                                    {new Date(video.created_at).toLocaleDateString()}
+                                  </div>
+                                  <div className="flex items-center text-sm text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
+                                    <Play className="h-4 w-4 mr-1" />
+                                    Watch
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Photos Section */}
+                {/* Featured Photos Section with Premium Design */}
                 {featuredPhotos.length > 0 && (
-                  <div>
-                    <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-2xl font-bold text-gray-900">Medical Center Photos</h3>
-                      <Button asChild variant="outline" className="border-gray-300">
-                        <Link to="/gallery">
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-10">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <ImageIcon className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Medical Center Photos</h3>
+                          <p className="text-gray-600">State-of-the-art facilities and equipment</p>
+                        </div>
+                      </div>
+                      <Button asChild variant="outline" className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-md transition-all duration-300">
+                        <Link to="/gallery" state={{ activeTab: 'photos' }}>
                           View All Photos
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>
                     </div>
                     
-                    {/* Photos Grid - Simple layout */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {featuredPhotos.map((photo) => {
-                        const title = photo[`title${langSuffix}`] || photo.title_en;
-                        const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
+                    {/* Photo Slider Container with Premium Navigation */}
+                    <div className="relative">
+                      {/* Navigation Buttons - Positioned in the middle */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        onClick={() => scrollContainer(photoScrollRef, 'left')}
+                      >
+                        <ChevronLeft className="h-6 w-6 text-gray-700" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        onClick={() => scrollContainer(photoScrollRef, 'right')}
+                      >
+                        <ChevronRight className="h-6 w-6 text-gray-700" />
+                      </Button>
+                      
+                      {/* Scrollable Photo Container */}
+                      <div 
+                        ref={photoScrollRef}
+                        className="flex overflow-x-auto gap-5 pb-6 scrollbar-hide px-16"
+                        style={{ 
+                          scrollSnapType: 'x mandatory',
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none'
+                        }}
+                      >
+                        {featuredPhotos.map((photo) => {
+                          const title = photo[`title${langSuffix}`] || photo.title_en;
+                          const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
 
-                        return (
-                          <div
-                            key={photo.id}
-                            className="aspect-square bg-gray-100 overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200"
-                            onClick={() => openMediaModal(photo, false)}
-                          >
-                            <img
-                              src={photo.thumbnail_url || photo.url}
-                              alt={altText}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        );
-                      })}
+                          return (
+                            <Card 
+                              key={photo.id} 
+                              className="flex-shrink-0 w-72 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-2"
+                              style={{ scrollSnapAlign: 'start' }}
+                              onClick={() => openMediaModal(photo, false)}
+                            >
+                              <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                                <img
+                                  src={photo.thumbnail_url || photo.url}
+                                  alt={altText}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                />
+                                
+                                {/* Premium Hover Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                                  <div className="bg-white/95 backdrop-blur-sm rounded-full p-3 shadow-2xl border border-white/20 transform scale-75 group-hover:scale-100 transition-transform duration-500">
+                                    <Expand className="h-5 w-5 text-gray-800" />
+                                  </div>
+                                </div>
+
+                                {/* Type Badge */}
+                                <div className="absolute top-4 left-4">
+                                  <Badge className="bg-blue-600/90 text-white border-0 backdrop-blur-sm">
+                                    <ImageIcon className="h-3 w-3 mr-1" />
+                                    Photo
+                                  </Badge>
+                                </div>
+                              </div>
+                              
+                              <CardContent className="p-5">
+                                <h4 className="font-semibold text-base line-clamp-2 text-gray-900 group-hover:text-blue-700 transition-colors duration-300 leading-tight">
+                                  {title}
+                                </h4>
+                                <div className="flex items-center justify-between mt-3">
+                                  <div className="flex items-center text-sm text-gray-500">
+                                    <Calendar className="h-3 w-3 mr-1" />
+                                    {new Date(photo.created_at).toLocaleDateString()}
+                                  </div>
+                                  <div className="flex items-center text-sm text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    View
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
