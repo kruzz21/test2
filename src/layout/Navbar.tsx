@@ -43,8 +43,8 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          {/* Desktop Navigation - Changed from lg:flex to xl:flex */}
+          <nav className="hidden xl:flex items-center space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.key}
@@ -60,8 +60,8 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Desktop Actions - Changed from lg:flex to xl:flex */}
+          <div className="hidden xl:flex items-center space-x-4">
             {/* Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -108,9 +108,9 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu - Changed from lg:hidden to xl:hidden */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="lg:hidden">
+            <SheetTrigger asChild className="xl:hidden">
               <Button variant="ghost" size="sm">
                 <Menu className="h-5 w-5" />
               </Button>
