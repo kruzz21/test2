@@ -430,184 +430,104 @@ const Home = () => {
                       </Button>
                     </div>
                     
-                    {/* Video Slider Container with Side Navigation */}
+                    {/* Video Slider Container with External Navigation */}
                     <div className="relative">
-                      {/* Side Navigation Buttons */}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/95 hover:bg-white shadow-lg border-gray-300 h-12 w-12"
-                        onClick={() => scrollContainer(videoScrollRef, 'left')}
-                      >
-                        <ChevronLeft className="h-6 w-6 text-gray-700" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/95 hover:bg-white shadow-lg border-gray-300 h-12 w-12"
-                        onClick={() => scrollContainer(videoScrollRef, 'right')}
-                      >
-                        <ChevronRight className="h-6 w-6 text-gray-700" />
-                      </Button>
+                      {/* External Navigation Buttons */}
+                      <div className="flex justify-between items-center mb-6">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(videoScrollRef, 'left')}
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(videoScrollRef, 'right')}
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </Button>
+                      </div>
                       
                       {/* Scrollable Video Container */}
-                      <div className="px-16">
-                        <div 
-                          ref={videoScrollRef}
-                          className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide"
-                          style={{ 
-                            scrollSnapType: 'x mandatory',
-                            scrollbarWidth: 'none',
-                            msOverflowStyle: 'none'
-                          }}
-                        >
-                          {/* Pinned Dr. Eryanılmaz Introduction Video */}
-                          <Card 
-                            className="flex-shrink-0 w-80 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-4 border-gradient-to-r from-blue-500 to-purple-600 bg-gradient-to-br from-blue-50 to-purple-50 relative"
-                            style={{ 
-                              scrollSnapAlign: 'start',
-                              background: 'linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #f3e8ff 100%)',
-                              borderImage: 'linear-gradient(135deg, #3b82f6, #8b5cf6) 1'
-                            }}
-                            onClick={() => openMediaModal({
-                              id: 'intro-video',
-                              type: 'video',
-                              url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                              title_en: 'Dr. Gürkan Eryanılmaz Introduction',
-                              title_tr: 'Dr. Gürkan Eryanılmaz Tanıtım',
-                              title_az: 'Dr. Gürkan Eryanılmaz Təqdimat',
-                              description_en: 'Personal introduction and experience sharing from Dr. Eryanılmaz',
-                              description_tr: 'Dr. Eryanılmaz\'dan kişisel tanıtım ve deneyim paylaşımı',
-                              description_az: 'Dr. Eryanılmaz\'dan şəxsi təqdimat və təcrübə paylaşımı',
-                              published: true,
-                              created_at: new Date().toISOString(),
-                              display_order: 0
-                            }, false)}
-                          >
-                            {/* Special "FEATURED" badge */}
-                            <div className="absolute top-3 left-3 z-20">
-                              <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold px-3 py-1 shadow-lg">
-                                ⭐ FEATURED
-                              </Badge>
-                            </div>
-                            
-                            <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200">
-                              <img
-                                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                                alt="Dr. Gürkan Eryanılmaz Introduction"
-                                className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
-                              />
-                              
-                              {/* Enhanced Play Button Overlay */}
-                              <div 
-                                className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-center justify-center group-hover/card:from-black/60 group-hover/card:via-black/30 transition-all duration-300"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  startVideo({
-                                    id: 'intro-video',
-                                    type: 'video',
-                                    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                                    title_en: 'Dr. Gürkan Eryanılmaz Introduction',
-                                    title_tr: 'Dr. Gürkan Eryanılmaz Tanıtım',
-                                    title_az: 'Dr. Gürkan Eryanılmaz Təqdimat'
-                                  });
-                                }}
-                              >
-                                <div className="bg-white/95 rounded-full p-4 group-hover/card:scale-110 transition-transform duration-300 shadow-2xl border-2 border-white/50">
-                                  <Play className="h-8 w-8 text-red-600" />
+                      <div 
+                        ref={videoScrollRef}
+                        className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide"
+                        style={{ 
+                          scrollSnapType: 'x mandatory',
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none'
+                        }}
+                      >
+                        {featuredVideos.map((video) => {
+                          const title = video[`title${langSuffix}`] || video.title_en;
+                          const description = video[`description${langSuffix}`] || video.description_en;
+                          const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
+
+                          return (
+                            <Card 
+                              key={video.id} 
+                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
+                              style={{ scrollSnapAlign: 'start' }}
+                              onClick={() => openMediaModal(video, false)}
+                            >
+                              <div className="relative aspect-video bg-gray-100">
+                                {thumbnailUrl ? (
+                                  <img
+                                    src={thumbnailUrl}
+                                    alt={title}
+                                    className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                                    <Video className="h-12 w-12 text-gray-400" />
+                                  </div>
+                                )}
+                                
+                                {/* Play Button Overlay */}
+                                <div 
+                                  className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover/card:bg-opacity-40 transition-all duration-300"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    startVideo(video);
+                                  }}
+                                >
+                                  <div className="bg-white bg-opacity-95 rounded-full p-4 group-hover/card:scale-110 transition-transform duration-300 shadow-lg">
+                                    <Play className="h-8 w-8 text-red-600" />
+                                  </div>
+                                </div>
+                                
+                                {/* Type Badge */}
+                                <div className="absolute top-3 left-3">
+                                  <Badge variant="secondary" className="text-xs bg-white/90 text-gray-800">
+                                    Video
+                                  </Badge>
                                 </div>
                               </div>
-                            </div>
-                            <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-purple-50">
-                              <CardTitle className="text-lg line-clamp-2 text-gray-900 font-bold">
-                                Dr. Gürkan Eryanılmaz Introduction
-                              </CardTitle>
-                              <CardDescription className="line-clamp-2 text-gray-700 font-medium">
-                                Personal introduction and experience sharing from Dr. Eryanılmaz
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent className="pt-0 bg-gradient-to-r from-blue-50 to-purple-50">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center text-sm text-gray-600 font-medium">
-                                  <Calendar className="h-4 w-4 mr-1" />
-                                  Featured Video
+                              <CardHeader className="pb-3">
+                                <CardTitle className="text-lg line-clamp-2 text-gray-900">{title}</CardTitle>
+                                {description && (
+                                  <CardDescription className="line-clamp-2 text-gray-600">{description}</CardDescription>
+                                )}
+                              </CardHeader>
+                              <CardContent className="pt-0">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center text-sm text-gray-500">
+                                    <Calendar className="h-4 w-4 mr-1" />
+                                    {new Date(video.created_at).toLocaleDateString()}
+                                  </div>
+                                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                                    <Eye className="h-4 w-4 mr-1" />
+                                    Watch
+                                  </Button>
                                 </div>
-                                <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 font-semibold">
-                                  <Eye className="h-4 w-4 mr-1" />
-                                  Watch
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          {/* Regular Featured Videos */}
-                          {featuredVideos.map((video) => {
-                            const title = video[`title${langSuffix}`] || video.title_en;
-                            const description = video[`description${langSuffix}`] || video.description_en;
-                            const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
-
-                            return (
-                              <Card 
-                                key={video.id} 
-                                className="flex-shrink-0 w-80 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
-                                style={{ scrollSnapAlign: 'start' }}
-                                onClick={() => openMediaModal(video, false)}
-                              >
-                                <div className="relative aspect-video bg-gray-100">
-                                  {thumbnailUrl ? (
-                                    <img
-                                      src={thumbnailUrl}
-                                      alt={title}
-                                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                                      <Video className="h-12 w-12 text-gray-400" />
-                                    </div>
-                                  )}
-                                  
-                                  {/* Play Button Overlay */}
-                                  <div 
-                                    className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover/card:bg-opacity-40 transition-all duration-300"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      startVideo(video);
-                                    }}
-                                  >
-                                    <div className="bg-white bg-opacity-95 rounded-full p-4 group-hover/card:scale-110 transition-transform duration-300 shadow-lg">
-                                      <Play className="h-8 w-8 text-red-600" />
-                                    </div>
-                                  </div>
-                                  
-                                  {/* Type Badge */}
-                                  <div className="absolute top-3 left-3">
-                                    <Badge variant="secondary" className="text-xs bg-white/90 text-gray-800">
-                                      Video
-                                    </Badge>
-                                  </div>
-                                </div>
-                                <CardHeader className="pb-3">
-                                  <CardTitle className="text-lg line-clamp-2 text-gray-900">{title}</CardTitle>
-                                  {description && (
-                                    <CardDescription className="line-clamp-2 text-gray-600">{description}</CardDescription>
-                                  )}
-                                </CardHeader>
-                                <CardContent className="pt-0">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center text-sm text-gray-500">
-                                      <Calendar className="h-4 w-4 mr-1" />
-                                      {new Date(video.created_at).toLocaleDateString()}
-                                    </div>
-                                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
-                                      <Eye className="h-4 w-4 mr-1" />
-                                      Watch
-                                    </Button>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            );
-                          })}
-                        </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -629,71 +549,71 @@ const Home = () => {
                       </Button>
                     </div>
                     
-                    {/* Photo Slider Container with Side Navigation */}
+                    {/* Photo Slider Container with External Navigation */}
                     <div className="relative">
-                      {/* Side Navigation Buttons */}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/95 hover:bg-white shadow-lg border-gray-300 h-12 w-12"
-                        onClick={() => scrollContainer(photoScrollRef, 'left')}
-                      >
-                        <ChevronLeft className="h-6 w-6 text-gray-700" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/95 hover:bg-white shadow-lg border-gray-300 h-12 w-12"
-                        onClick={() => scrollContainer(photoScrollRef, 'right')}
-                      >
-                        <ChevronRight className="h-6 w-6 text-gray-700" />
-                      </Button>
+                      {/* External Navigation Buttons */}
+                      <div className="flex justify-between items-center mb-6">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(photoScrollRef, 'left')}
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(photoScrollRef, 'right')}
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </Button>
+                      </div>
                       
                       {/* Scrollable Photo Container */}
-                      <div className="px-16">
-                        <div 
-                          ref={photoScrollRef}
-                          className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
-                          style={{ 
-                            scrollSnapType: 'x mandatory',
-                            scrollbarWidth: 'none',
-                            msOverflowStyle: 'none'
-                          }}
-                        >
-                          {featuredPhotos.map((photo) => {
-                            const title = photo[`title${langSuffix}`] || photo.title_en;
-                            const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
+                      <div 
+                        ref={photoScrollRef}
+                        className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
+                        style={{ 
+                          scrollSnapType: 'x mandatory',
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none'
+                        }}
+                      >
+                        {featuredPhotos.map((photo) => {
+                          const title = photo[`title${langSuffix}`] || photo.title_en;
+                          const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
 
-                            return (
-                              <Card 
-                                key={photo.id} 
-                                className="flex-shrink-0 w-64 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
-                                style={{ scrollSnapAlign: 'start' }}
-                                onClick={() => openMediaModal(photo, false)}
-                              >
-                                <div className="relative aspect-square bg-gray-100">
-                                  <img
-                                    src={photo.thumbnail_url || photo.url}
-                                    alt={altText}
-                                    className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
-                                  />
-                                  
-                                  {/* Hover Overlay */}
-                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                                    <div className="opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
-                                      <div className="bg-white rounded-full p-3 shadow-lg">
-                                        <Eye className="h-5 w-5 text-gray-800" />
-                                      </div>
+                          return (
+                            <Card 
+                              key={photo.id} 
+                              className="flex-shrink-0 w-64 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
+                              style={{ scrollSnapAlign: 'start' }}
+                              onClick={() => openMediaModal(photo, false)}
+                            >
+                              <div className="relative aspect-square bg-gray-100">
+                                <img
+                                  src={photo.thumbnail_url || photo.url}
+                                  alt={altText}
+                                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                                />
+                                
+                                {/* Hover Overlay */}
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                                  <div className="opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                                    <div className="bg-white rounded-full p-3 shadow-lg">
+                                      <Eye className="h-5 w-5 text-gray-800" />
                                     </div>
                                   </div>
                                 </div>
-                                <CardContent className="p-4">
-                                  <h4 className="font-medium text-sm line-clamp-2 text-gray-900">{title}</h4>
-                                </CardContent>
-                              </Card>
-                            );
-                          })}
-                        </div>
+                              </div>
+                              <CardContent className="p-4">
+                                <h4 className="font-medium text-sm line-clamp-2 text-gray-900">{title}</h4>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
