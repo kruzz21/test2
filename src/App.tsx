@@ -11,6 +11,7 @@ import Services from './pages/Services';
 import Symptoms from './pages/Symptoms';
 import SymptomDetail from './pages/SymptomDetail';
 import Gallery from './pages/Gallery';
+import MediaGalleryPage from './pages/MediaGalleryPage';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Reviews from './pages/Reviews';
@@ -66,6 +67,7 @@ function App() {
           <Route path="/symptoms" element={<Symptoms />} />
           <Route path="/symptoms/:id" element={<SymptomDetail />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/media-gallery" element={<MediaGalleryPage />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/reviews" element={<Reviews />} />
