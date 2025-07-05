@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBlog } from '@/hooks/useBlog';
+import MediaGallery from '@/components/MediaGallery';
 
 const Home = () => {
   const { t, i18n } = useTranslation();
@@ -341,7 +342,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Gallery Preview Section */}
+      {/* Media Gallery Section - Replaced Gallery Preview */}
       <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
@@ -354,80 +355,8 @@ const Home = () => {
               </p>
             </div>
 
-            {/* Gallery Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-              {/* Featured Video */}
-              <div className="lg:col-span-2 lg:row-span-2">
-                <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow">
-                  <div className="relative h-full min-h-[250px] md:min-h-[300px]">
-                    <img
-                      src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                      alt="Dr. Eryanılmaz in surgery"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                      <div className="text-center text-white px-4">
-                        <div className="bg-white bg-opacity-90 rounded-full p-3 md:p-4 mb-3 md:mb-4 mx-auto w-fit">
-                          <Play className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
-                        </div>
-                        <h3 className="text-lg md:text-xl font-semibold mb-1 md:mb-2">Patient Recovery Stories</h3>
-                        <p className="text-sm">Watch real patient testimonials</p>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Gallery Images */}
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-40 md:h-48">
-                  <img
-                    src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                    alt="Modern surgical facility"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </Card>
-
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-40 md:h-48">
-                  <img
-                    src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                    alt="Patient consultation"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </Card>
-
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-40 md:h-48">
-                  <img
-                    src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                    alt="Pediatric care"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </Card>
-
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-40 md:h-48">
-                  <img
-                    src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                    alt="Sports medicine"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </Card>
-            </div>
-
-            <div className="text-center">
-              <Button asChild variant="outline" size="lg" className="text-base">
-                <Link to="/gallery">
-                  {t('home.gallery.button')}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
+            {/* MediaGallery Component */}
+            <MediaGallery />
           </div>
         </div>
       </section>
