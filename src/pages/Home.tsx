@@ -2,14 +2,15 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw } from 'lucide-react';
+import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw, Video, Image as ImageIcon, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBlog } from '@/hooks/useBlog';
-import MediaGallery from '@/components/MediaGallery';
+import { useGallery } from '@/hooks/useGallery';
 
 const Home = () => {
   const { t, i18n } = useTranslation();
   const { blogPosts, loading: blogLoading, error: blogError, fetchBlogPosts } = useBlog();
+  const { galleryItems, loading: galleryLoading } = useGallery();
 
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
@@ -89,6 +90,17 @@ const Home = () => {
 
   // Get the first 3 blog posts for preview
   const previewBlogPosts = blogPosts.slice(0, 3);
+
+  // Filter gallery items by type and get featured items
+  const featuredVideos = galleryItems.filter(item => item.type === 'video').slice(0, 3);
+  const featuredPhotos = galleryItems.filter(item => item.type === 'photo').slice(0, 6);
+
+  // Helper function to get YouTube thumbnail
+  const getYouTubeThumbnail = (url: string): string | null => {
+    if (!url) return null;
+    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/)?.[1];
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  };
 
   return (
     <div className="min-h-screen w-full">
@@ -345,7 +357,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Media Gallery Section - Replaced Gallery Preview */}
+      {/* Media Gallery Section - Redesigned */}
       <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
@@ -358,8 +370,148 @@ const Home = () => {
               </p>
             </div>
 
-            {/* MediaGallery Component */}
-            <MediaGallery />
+            {galleryLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading media gallery...</p>
+              </div>
+            ) : (
+              <div className="space-y-12">
+                {/* Featured Videos Section */}
+                {featuredVideos.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-xl md:text-2xl font-bold flex items-center">
+                        <Video className="h-6 w-6 mr-2 text-red-600" />
+                        Featured Videos
+                      </h3>
+                      <Button asChild variant="outline">
+                        <Link to="/gallery">
+                          View All Videos
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {featuredVideos.map((video) => {
+                        const title = video[`title${langSuffix}`] || video.title_en;
+                        const description = video[`description${langSuffix}`] || video.description_en;
+                        const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
+
+                        return (
+                          <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                            <div className="relative aspect-video bg-gray-100">
+                              {thumbnailUrl ? (
+                                <img
+                                  src={thumbnailUrl}
+                                  alt={title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                                  <Video className="h-12 w-12 text-gray-400" />
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all duration-300">
+                                <div className="bg-white bg-opacity-90 rounded-full p-3 group-hover:scale-110 transition-transform duration-300">
+                                  <Play className="h-8 w-8 text-red-600" />
+                                </div>
+                              </div>
+                              <div className="absolute top-2 right-2">
+                                <Badge variant="secondary" className="text-xs bg-white bg-opacity-90">
+                                  Video
+                                </Badge>
+                              </div>
+                            </div>
+                            <CardHeader className="pb-3">
+                              <CardTitle className="text-lg line-clamp-2">{title}</CardTitle>
+                              {description && (
+                                <CardDescription className="line-clamp-2">{description}</CardDescription>
+                              )}
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center text-sm text-gray-500">
+                                  <Calendar className="h-4 w-4 mr-1" />
+                                  {new Date(video.created_at).toLocaleDateString()}
+                                </div>
+                                <Button variant="ghost" size="sm" asChild>
+                                  <Link to="/gallery">
+                                    <Eye className="h-4 w-4 mr-1" />
+                                    Watch
+                                  </Link>
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Featured Photos Section */}
+                {featuredPhotos.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-xl md:text-2xl font-bold flex items-center">
+                        <ImageIcon className="h-6 w-6 mr-2 text-blue-600" />
+                        Medical Center Photos
+                      </h3>
+                      <Button asChild variant="outline">
+                        <Link to="/gallery">
+                          View All Photos
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                      {featuredPhotos.map((photo) => {
+                        const title = photo[`title${langSuffix}`] || photo.title_en;
+                        const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
+
+                        return (
+                          <Card key={photo.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                            <div className="relative aspect-square bg-gray-100">
+                              <img
+                                src={photo.thumbnail_url || photo.url}
+                                alt={altText}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                  <div className="bg-white rounded-full p-2">
+                                    <Eye className="h-4 w-4 text-gray-800" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Call to Action */}
+                <div className="text-center">
+                  <Card className="bg-blue-50 border-blue-200 max-w-2xl mx-auto">
+                    <CardContent className="pt-8 pb-8">
+                      <h3 className="text-xl font-bold mb-3">Explore Our Complete Gallery</h3>
+                      <p className="text-gray-600 mb-6">
+                        See more videos, photos, and patient stories from our medical center.
+                      </p>
+                      <Button asChild size="lg">
+                        <Link to="/gallery">
+                          <Eye className="mr-2 h-5 w-5" />
+                          View Full Gallery
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
