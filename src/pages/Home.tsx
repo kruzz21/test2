@@ -342,149 +342,21 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Enhanced Patient Stories & Moments Section */}
-      <section className="py-20 md:py-24 bg-white w-full">
+      {/* Media Gallery Section - Replaced Gallery Preview */}
+      <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
-            {/* Enhanced Header */}
-            <div className="text-center mb-16 md:mb-20">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6 md:mb-8 tracking-tight text-gray-900">
-                Patient Stories & Moments
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4">
+                {t('home.gallery.title')}
               </h2>
-              <p className="text-xl md:text-2xl text-gray-500 max-w-3xl mx-auto leading-relaxed font-light">
-                See real recovery stories and shared moments from patients.
+              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
+                {t('home.gallery.subtitle')}
               </p>
             </div>
 
-            {/* Enhanced Tabs */}
-            <div className="flex justify-center mb-12 md:mb-16">
-              <div className="inline-flex bg-gray-100 rounded-full p-1.5 shadow-inner">
-                <button className="px-8 py-3 rounded-full bg-white text-gray-900 font-semibold shadow-md transition-all duration-200 hover:shadow-lg">
-                  Videos (4)
-                </button>
-                <button className="px-8 py-3 rounded-full text-gray-600 font-medium hover:text-gray-900 transition-colors duration-200">
-                  Photos (5)
-                </button>
-              </div>
-            </div>
-
-            {/* Enhanced Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-12">
-              {/* Enhanced Main Video Container */}
-              <div className="lg:col-span-2">
-                <Card className="overflow-hidden shadow-xl border-0 bg-white">
-                  <CardContent className="p-0">
-                    {/* Enhanced Video Player */}
-                    <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
-                      <img
-                        src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Dr. Gürkan Eryanılmaz"
-                        className="w-full h-full object-cover"
-                      />
-                      {/* Enhanced Play Button */}
-                      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group cursor-pointer hover:bg-opacity-40 transition-all duration-300">
-                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                          <Play className="h-8 w-8 text-gray-900 ml-1" />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Enhanced Video Info */}
-                    <div className="p-8">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-3 leading-tight">
-                        test
-                      </h3>
-                      <p className="text-gray-600 mb-4 leading-relaxed">
-                        test
-                      </p>
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <span className="font-medium">1 of 4</span>
-                        <span>7/5/2025</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Enhanced Video Queue */}
-              <div className="lg:col-span-1">
-                <Card className="shadow-lg border-0 bg-white">
-                  <CardContent className="p-6">
-                    <h4 className="text-xl font-bold text-gray-900 mb-6">
-                      Queue (4 items)
-                    </h4>
-                    <div className="space-y-4">
-                      {/* Enhanced Queue Item - Selected */}
-                      <Card className="bg-blue-50 border-2 border-blue-200 hover:shadow-md transition-all duration-200 cursor-pointer">
-                        <CardContent className="p-4">
-                          <div className="flex space-x-4">
-                            <div className="relative w-20 h-14 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden">
-                              <img
-                                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80"
-                                alt="test"
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="bg-black bg-opacity-60 rounded-full p-1">
-                                  <Play className="h-3 w-3 text-white" />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h5 className="font-semibold text-gray-900 line-clamp-2 mb-1 text-sm leading-tight">
-                                test
-                              </h5>
-                              <div className="flex items-center text-xs text-gray-500">
-                                <Calendar className="h-3 w-3 mr-1" />
-                                7/3/2025
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Enhanced Queue Items - Regular */}
-                      {[
-                        { title: "Dr. Gürkan Eryanılmaz Introduction Video", description: "Personal introduction and experience sharing", date: "7/3/2025" },
-                        { title: "Knee Replacement Surgery Overview", description: "Educational video about knee replacement", date: "7/3/2025" },
-                        { title: "Post-Surgery Rehabilitation", description: "Guidelines for post-operative care and", date: "7/3/2025" }
-                      ].map((item, index) => (
-                        <Card key={index} className="hover:shadow-md hover:bg-gray-50 transition-all duration-200 cursor-pointer border border-gray-100">
-                          <CardContent className="p-4">
-                            <div className="flex space-x-4">
-                              <div className="relative w-20 h-14 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden">
-                                <img
-                                  src={`https://images.unsplash.com/photo-${index === 0 ? '1612349317150-e413f6a5b16d' : index === 1 ? '1559757148-5c350d0d3c56' : '1576091160399-112ba8d25d1f'}?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80`}
-                                  alt={item.title}
-                                  className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="bg-black bg-opacity-60 rounded-full p-1">
-                                    <Play className="h-3 w-3 text-white" />
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h5 className="font-semibold text-gray-900 line-clamp-2 mb-1 text-sm leading-tight">
-                                  {item.title}
-                                </h5>
-                                <p className="text-xs text-gray-600 line-clamp-1 mb-2">
-                                  {item.description}
-                                </p>
-                                <div className="flex items-center text-xs text-gray-500">
-                                  <Calendar className="h-3 w-3 mr-1" />
-                                  {item.date}
-                                </div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+            {/* MediaGallery Component */}
+            <MediaGallery />
           </div>
         </div>
       </section>
@@ -660,7 +532,7 @@ const Home = () => {
                 <a href="tel:+994553977874" className="flex items-center justify-center">
                   <Phone className="mr-1 sm:mr-2 h-4 w-4 md:h-5 md:w-5" />
                   <span className="truncate">{t('home.callNow')}</span>
-                </Link>
+                </a>
               </Button>
             </div>
           </div>
