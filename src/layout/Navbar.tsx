@@ -17,7 +17,6 @@ const Navbar = () => {
     { key: 'services', href: '/services' },
     { key: 'symptoms', href: '/symptoms' },
     { key: 'gallery', href: '/gallery' },
-    { key: 'media-gallery', href: '/media-gallery', label: 'Media Gallery' },
     { key: 'blog', href: '/blog' },
     { key: 'reviews', href: '/reviews' },
     { key: 'contact', href: '/contact' },
@@ -56,7 +55,7 @@ const Navbar = () => {
                     : 'text-muted-foreground'
                 }`}
               >
-                {item.label || t(`nav.${item.key}`)}
+                {t(`nav.${item.key}`)}
               </Link>
             ))}
           </nav>
@@ -127,7 +126,7 @@ const Navbar = () => {
                       isActive(item.href) ? 'text-primary' : 'text-muted-foreground'
                     }`}
                   >
-                    {item.label || t(`nav.${item.key}`)}
+                    {t(`nav.${item.key}`)}
                   </Link>
                 ))}
                 
