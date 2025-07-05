@@ -1,8 +1,10 @@
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw, Video, Image as ImageIcon, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw, Video, Image as ImageIcon, Eye, ChevronLeft, ChevronRight, Expand, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBlog } from '@/hooks/useBlog';
 import { useGallery } from '@/hooks/useGallery';
@@ -11,6 +13,15 @@ const Home = () => {
   const { t, i18n } = useTranslation();
   const { blogPosts, loading: blogLoading, error: blogError, fetchBlogPosts } = useBlog();
   const { galleryItems, loading: galleryLoading } = useGallery();
+
+  // Media modal state
+  const [selectedMedia, setSelectedMedia] = useState<any>(null);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
+  // Scroll refs
+  const videoScrollRef = useRef<HTMLDivElement>(null);
+  const photoScrollRef = useRef<HTMLDivElement>(null);
 
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
@@ -84,6 +95,66 @@ const Home = () => {
     'Joint & Nerve Surgery'
   ];
 
+  // Helper functions
+  const getYouTubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+    
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    
+    return null;
+  };
+
+  const getYouTubeThumbnail = (url: string): string | null => {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  };
+
+  const getYouTubeEmbedUrl = (url: string, autoplay: boolean = false): string | null => {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://www.youtube.com/embed/${videoId}${autoplay ? '?autoplay=1' : ''}` : null;
+  };
+
+  const scrollContainer = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
+    if (ref.current) {
+      const scrollAmount = 320; // Adjust based on card width
+      const currentScroll = ref.current.scrollLeft;
+      const targetScroll = direction === 'left' 
+        ? currentScroll - scrollAmount 
+        : currentScroll + scrollAmount;
+      
+      ref.current.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const openMediaModal = (item: any, autoplay: boolean = false) => {
+    setSelectedMedia(item);
+    setIsVideoPlaying(autoplay);
+    setIsMediaModalOpen(true);
+  };
+
+  const closeMediaModal = () => {
+    setSelectedMedia(null);
+    setIsVideoPlaying(false);
+    setIsMediaModalOpen(false);
+  };
+
+  const startVideo = (item: any) => {
+    openMediaModal(item, true);
+  };
+
   const handleBlogRetry = () => {
     fetchBlogPosts();
   };
@@ -92,15 +163,8 @@ const Home = () => {
   const previewBlogPosts = blogPosts.slice(0, 3);
 
   // Filter gallery items by type and get featured items
-  const featuredVideos = galleryItems.filter(item => item.type === 'video').slice(0, 3);
-  const featuredPhotos = galleryItems.filter(item => item.type === 'photo').slice(0, 6);
-
-  // Helper function to get YouTube thumbnail
-  const getYouTubeThumbnail = (url: string): string | null => {
-    if (!url) return null;
-    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/)?.[1];
-    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
-  };
+  const featuredVideos = galleryItems.filter(item => item.type === 'video').slice(0, 6);
+  const featuredPhotos = galleryItems.filter(item => item.type === 'photo').slice(0, 8);
 
   return (
     <div className="min-h-screen w-full">
@@ -357,7 +421,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Media Gallery Section - Redesigned */}
+      {/* Media Gallery Section - Enhanced with Sliders */}
       <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
@@ -377,7 +441,7 @@ const Home = () => {
               </div>
             ) : (
               <div className="space-y-12">
-                {/* Featured Videos Section */}
+                {/* Featured Videos Section with Slider */}
                 {featuredVideos.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-6">
@@ -386,71 +450,124 @@ const Home = () => {
                         Featured Videos
                       </h3>
                       <Button asChild variant="outline">
-                        <Link to="/gallery">
+                        <Link to="/gallery" state={{ activeTab: 'videos' }}>
                           View All Videos
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {featuredVideos.map((video) => {
-                        const title = video[`title${langSuffix}`] || video.title_en;
-                        const description = video[`description${langSuffix}`] || video.description_en;
-                        const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
+                    
+                    {/* Video Slider Container */}
+                    <div className="relative overflow-hidden group">
+                      {/* Navigation Buttons */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        onClick={() => scrollContainer(videoScrollRef, 'left')}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        onClick={() => scrollContainer(videoScrollRef, 'right')}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                      
+                      {/* Scrollable Video Container */}
+                      <div 
+                        ref={videoScrollRef}
+                        className="flex overflow-x-scroll scrollbar-hide gap-6 pb-4"
+                        style={{ scrollSnapType: 'x mandatory' }}
+                      >
+                        {featuredVideos.map((video) => {
+                          const title = video[`title${langSuffix}`] || video.title_en;
+                          const description = video[`description${langSuffix}`] || video.description_en;
+                          const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
 
-                        return (
-                          <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                            <div className="relative aspect-video bg-gray-100">
-                              {thumbnailUrl ? (
-                                <img
-                                  src={thumbnailUrl}
-                                  alt={title}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                                  <Video className="h-12 w-12 text-gray-400" />
+                          return (
+                            <Card 
+                              key={video.id} 
+                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-lg transition-all duration-300 group/card cursor-pointer"
+                              style={{ scrollSnapAlign: 'start' }}
+                              onClick={() => openMediaModal(video, false)}
+                            >
+                              <div className="relative aspect-video bg-gray-100">
+                                {thumbnailUrl ? (
+                                  <img
+                                    src={thumbnailUrl}
+                                    alt={title}
+                                    className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                                    <Video className="h-12 w-12 text-gray-400" />
+                                  </div>
+                                )}
+                                
+                                {/* Play Button Overlay */}
+                                <div 
+                                  className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover/card:bg-opacity-50 transition-all duration-300"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    startVideo(video);
+                                  }}
+                                >
+                                  <div className="bg-white bg-opacity-90 rounded-full p-3 group-hover/card:scale-110 transition-transform duration-300">
+                                    <Play className="h-8 w-8 text-red-600" />
+                                  </div>
                                 </div>
-                              )}
-                              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all duration-300">
-                                <div className="bg-white bg-opacity-90 rounded-full p-3 group-hover:scale-110 transition-transform duration-300">
-                                  <Play className="h-8 w-8 text-red-600" />
+                                
+                                {/* Expand Button */}
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="absolute top-2 right-2 bg-white/90 hover:bg-white opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openMediaModal(video, false);
+                                  }}
+                                >
+                                  <Expand className="h-4 w-4" />
+                                </Button>
+                                
+                                {/* Type Badge */}
+                                <div className="absolute top-2 left-2">
+                                  <Badge variant="secondary" className="text-xs bg-white bg-opacity-90">
+                                    Video
+                                  </Badge>
                                 </div>
                               </div>
-                              <div className="absolute top-2 right-2">
-                                <Badge variant="secondary" className="text-xs bg-white bg-opacity-90">
-                                  Video
-                                </Badge>
-                              </div>
-                            </div>
-                            <CardHeader className="pb-3">
-                              <CardTitle className="text-lg line-clamp-2">{title}</CardTitle>
-                              {description && (
-                                <CardDescription className="line-clamp-2">{description}</CardDescription>
-                              )}
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center text-sm text-gray-500">
-                                  <Calendar className="h-4 w-4 mr-1" />
-                                  {new Date(video.created_at).toLocaleDateString()}
-                                </div>
-                                <Button variant="ghost" size="sm" asChild>
-                                  <Link to="/gallery">
+                              <CardHeader className="pb-3">
+                                <CardTitle className="text-lg line-clamp-2">{title}</CardTitle>
+                                {description && (
+                                  <CardDescription className="line-clamp-2">{description}</CardDescription>
+                                )}
+                              </CardHeader>
+                              <CardContent className="pt-0">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center text-sm text-gray-500">
+                                    <Calendar className="h-4 w-4 mr-1" />
+                                    {new Date(video.created_at).toLocaleDateString()}
+                                  </div>
+                                  <Button variant="ghost" size="sm">
                                     <Eye className="h-4 w-4 mr-1" />
                                     Watch
-                                  </Link>
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        );
-                      })}
+                                  </Button>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
 
-                {/* Featured Photos Section */}
+                {/* Featured Photos Section with Slider */}
                 {featuredPhotos.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-6">
@@ -459,57 +576,86 @@ const Home = () => {
                         Medical Center Photos
                       </h3>
                       <Button asChild variant="outline">
-                        <Link to="/gallery">
+                        <Link to="/gallery" state={{ activeTab: 'photos' }}>
                           View All Photos
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                      {featuredPhotos.map((photo) => {
-                        const title = photo[`title${langSuffix}`] || photo.title_en;
-                        const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
+                    
+                    {/* Photo Slider Container */}
+                    <div className="relative overflow-hidden group">
+                      {/* Navigation Buttons */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        onClick={() => scrollContainer(photoScrollRef, 'left')}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        onClick={() => scrollContainer(photoScrollRef, 'right')}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                      
+                      {/* Scrollable Photo Container */}
+                      <div 
+                        ref={photoScrollRef}
+                        className="flex overflow-x-scroll scrollbar-hide gap-4 pb-4"
+                        style={{ scrollSnapType: 'x mandatory' }}
+                      >
+                        {featuredPhotos.map((photo) => {
+                          const title = photo[`title${langSuffix}`] || photo.title_en;
+                          const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
 
-                        return (
-                          <Card key={photo.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                            <div className="relative aspect-square bg-gray-100">
-                              <img
-                                src={photo.thumbnail_url || photo.url}
-                                alt={altText}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                  <div className="bg-white rounded-full p-2">
-                                    <Eye className="h-4 w-4 text-gray-800" />
+                          return (
+                            <Card 
+                              key={photo.id} 
+                              className="flex-shrink-0 w-64 overflow-hidden hover:shadow-lg transition-all duration-300 group/card cursor-pointer"
+                              style={{ scrollSnapAlign: 'start' }}
+                              onClick={() => openMediaModal(photo, false)}
+                            >
+                              <div className="relative aspect-square bg-gray-100">
+                                <img
+                                  src={photo.thumbnail_url || photo.url}
+                                  alt={altText}
+                                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                                />
+                                
+                                {/* Hover Overlay */}
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                                  <div className="opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                                    <div className="bg-white rounded-full p-2">
+                                      <Eye className="h-4 w-4 text-gray-800" />
+                                    </div>
                                   </div>
                                 </div>
+                                
+                                {/* Expand Button */}
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="absolute top-2 right-2 bg-white/90 hover:bg-white opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openMediaModal(photo, false);
+                                  }}
+                                >
+                                  <Expand className="h-4 w-4" />
+                                </Button>
                               </div>
-                            </div>
-                          </Card>
-                        );
-                      })}
+                            </Card>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
-
-                {/* Call to Action */}
-                <div className="text-center">
-                  <Card className="bg-blue-50 border-blue-200 max-w-2xl mx-auto">
-                    <CardContent className="pt-8 pb-8">
-                      <h3 className="text-xl font-bold mb-3">Explore Our Complete Gallery</h3>
-                      <p className="text-gray-600 mb-6">
-                        See more videos, photos, and patient stories from our medical center.
-                      </p>
-                      <Button asChild size="lg">
-                        <Link to="/gallery">
-                          <Eye className="mr-2 h-5 w-5" />
-                          View Full Gallery
-                        </Link>
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
             )}
           </div>
