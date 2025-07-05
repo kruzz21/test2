@@ -102,48 +102,50 @@ Dr. Eryanılmaz is currently seeing patients at Afyon Kocatepe State Hospital, s
           </p>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content - Fixed alignment for large screens */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 max-w-7xl mx-auto">
-          {/* Doctor Photo */}
-          <div className="lg:col-span-1">
-            <Card className="h-full flex flex-col">
-              <CardContent className="p-6 flex-1 flex flex-col">
-                <img
-                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=533&q=80"
-                  alt="Dr. Gürkan Eryanılmaz"
-                  className="w-full aspect-[3/4] object-cover rounded-lg mb-4"
-                  style={{ objectPosition: 'center 20%' }}
-                />
-                <div className="text-center flex-1 flex flex-col justify-end">
-                  <h3 className="text-xl font-bold mb-2">Op. Dr. Gürkan Eryanılmaz</h3>
-                  <p className="text-gray-600 mb-4">Orthopedics & Traumatology Specialist</p>
-                  <div className="space-y-2">
-                    <Badge variant="secondary">25+ Years Experience</Badge>
-                    <br />
-                    <Badge variant="secondary">20,000+ Successful Surgeries</Badge>
+          {/* Doctor Photo - Full height container */}
+          <div className="lg:col-span-1 flex">
+            <Card className="h-full flex flex-col w-full">
+              <CardContent className="p-6 flex-1 flex flex-col h-full">
+                <div className="flex-1 flex flex-col">
+                  <img
+                    src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=533&q=80"
+                    alt="Dr. Gürkan Eryanılmaz"
+                    className="w-full aspect-[3/4] object-cover rounded-lg mb-4 flex-shrink-0"
+                    style={{ objectPosition: 'center 20%' }}
+                  />
+                  <div className="text-center flex-1 flex flex-col justify-end">
+                    <h3 className="text-xl font-bold mb-2">Op. Dr. Gürkan Eryanılmaz</h3>
+                    <p className="text-gray-600 mb-4">Orthopedics & Traumatology Specialist</p>
+                    <div className="space-y-2">
+                      <Badge variant="secondary">25+ Years Experience</Badge>
+                      <br />
+                      <Badge variant="secondary">20,000+ Successful Surgeries</Badge>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Biography & Mission */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
+          {/* Biography & Mission - Full height container */}
+          <div className="lg:col-span-2 flex flex-col space-y-6 h-full">
+            <Card className="flex-1">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Award className="h-6 w-6 mr-2" />
                   {t('about.biography')}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="prose max-w-none">
-                <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+              <CardContent className="prose max-w-none flex-1">
+                <div className="text-gray-700 leading-relaxed whitespace-pre-line h-full">
                   {getBiographyContent()}
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="flex-shrink-0">
               <CardHeader>
                 <CardTitle>{t('about.mission')}</CardTitle>
               </CardHeader>
