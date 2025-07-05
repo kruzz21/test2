@@ -394,13 +394,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Media Gallery Section - Enhanced with Sliders */}
+      {/* Gallery and Media Section - Enhanced with Improved Design */}
       <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8 md:mb-12">
               <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4">
-                {t('home.gallery.title')}
+                Gallery and Media
               </h2>
               <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
                 {t('home.gallery.subtitle')}
@@ -413,11 +413,11 @@ const Home = () => {
                 <p className="text-gray-600">Loading media gallery...</p>
               </div>
             ) : (
-              <div className="space-y-12">
-                {/* Featured Videos Section with Slider */}
+              <div className="space-y-16">
+                {/* Featured Videos Section with Improved Slider */}
                 {featuredVideos.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-8">
                       <h3 className="text-xl md:text-2xl font-bold flex items-center">
                         <Video className="h-6 w-6 mr-2 text-red-600" />
                         Featured Videos
@@ -430,31 +430,37 @@ const Home = () => {
                       </Button>
                     </div>
                     
-                    {/* Video Slider Container */}
-                    <div className="relative overflow-hidden group">
-                      {/* Navigation Buttons */}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        onClick={() => scrollContainer(videoScrollRef, 'left')}
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        onClick={() => scrollContainer(videoScrollRef, 'right')}
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+                    {/* Video Slider Container with External Navigation */}
+                    <div className="relative">
+                      {/* External Navigation Buttons */}
+                      <div className="flex justify-between items-center mb-6">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(videoScrollRef, 'left')}
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(videoScrollRef, 'right')}
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </Button>
+                      </div>
                       
                       {/* Scrollable Video Container */}
                       <div 
                         ref={videoScrollRef}
-                        className="flex overflow-x-scroll scrollbar-hide gap-6 pb-4"
-                        style={{ scrollSnapType: 'x mandatory' }}
+                        className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide"
+                        style={{ 
+                          scrollSnapType: 'x mandatory',
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none'
+                        }}
                       >
                         {featuredVideos.map((video) => {
                           const title = video[`title${langSuffix}`] || video.title_en;
@@ -464,7 +470,7 @@ const Home = () => {
                           return (
                             <Card 
                               key={video.id} 
-                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-lg transition-all duration-300 group/card cursor-pointer"
+                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
                               style={{ scrollSnapAlign: 'start' }}
                               onClick={() => openMediaModal(video, false)}
                             >
@@ -483,41 +489,28 @@ const Home = () => {
                                 
                                 {/* Play Button Overlay */}
                                 <div 
-                                  className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover/card:bg-opacity-50 transition-all duration-300"
+                                  className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover/card:bg-opacity-40 transition-all duration-300"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     startVideo(video);
                                   }}
                                 >
-                                  <div className="bg-white bg-opacity-90 rounded-full p-3 group-hover/card:scale-110 transition-transform duration-300">
+                                  <div className="bg-white bg-opacity-95 rounded-full p-4 group-hover/card:scale-110 transition-transform duration-300 shadow-lg">
                                     <Play className="h-8 w-8 text-red-600" />
                                   </div>
                                 </div>
                                 
-                                {/* Expand Button */}
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  className="absolute top-2 right-2 bg-white/90 hover:bg-white opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    openMediaModal(video, false);
-                                  }}
-                                >
-                                  <Expand className="h-4 w-4" />
-                                </Button>
-                                
                                 {/* Type Badge */}
-                                <div className="absolute top-2 left-2">
-                                  <Badge variant="secondary" className="text-xs bg-white bg-opacity-90">
+                                <div className="absolute top-3 left-3">
+                                  <Badge variant="secondary" className="text-xs bg-white/90 text-gray-800">
                                     Video
                                   </Badge>
                                 </div>
                               </div>
                               <CardHeader className="pb-3">
-                                <CardTitle className="text-lg line-clamp-2">{title}</CardTitle>
+                                <CardTitle className="text-lg line-clamp-2 text-gray-900">{title}</CardTitle>
                                 {description && (
-                                  <CardDescription className="line-clamp-2">{description}</CardDescription>
+                                  <CardDescription className="line-clamp-2 text-gray-600">{description}</CardDescription>
                                 )}
                               </CardHeader>
                               <CardContent className="pt-0">
@@ -526,7 +519,7 @@ const Home = () => {
                                     <Calendar className="h-4 w-4 mr-1" />
                                     {new Date(video.created_at).toLocaleDateString()}
                                   </div>
-                                  <Button variant="ghost" size="sm">
+                                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
                                     <Eye className="h-4 w-4 mr-1" />
                                     Watch
                                   </Button>
@@ -540,10 +533,10 @@ const Home = () => {
                   </div>
                 )}
 
-                {/* Featured Photos Section with Slider */}
+                {/* Featured Photos Section with Improved Slider */}
                 {featuredPhotos.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-8">
                       <h3 className="text-xl md:text-2xl font-bold flex items-center">
                         <ImageIcon className="h-6 w-6 mr-2 text-blue-600" />
                         Medical Center Photos
@@ -556,31 +549,37 @@ const Home = () => {
                       </Button>
                     </div>
                     
-                    {/* Photo Slider Container */}
-                    <div className="relative overflow-hidden group">
-                      {/* Navigation Buttons */}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        onClick={() => scrollContainer(photoScrollRef, 'left')}
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        onClick={() => scrollContainer(photoScrollRef, 'right')}
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+                    {/* Photo Slider Container with External Navigation */}
+                    <div className="relative">
+                      {/* External Navigation Buttons */}
+                      <div className="flex justify-between items-center mb-6">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(photoScrollRef, 'left')}
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white hover:bg-gray-50 shadow-md border-gray-200"
+                          onClick={() => scrollContainer(photoScrollRef, 'right')}
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </Button>
+                      </div>
                       
                       {/* Scrollable Photo Container */}
                       <div 
                         ref={photoScrollRef}
-                        className="flex overflow-x-scroll scrollbar-hide gap-4 pb-4"
-                        style={{ scrollSnapType: 'x mandatory' }}
+                        className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
+                        style={{ 
+                          scrollSnapType: 'x mandatory',
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none'
+                        }}
                       >
                         {featuredPhotos.map((photo) => {
                           const title = photo[`title${langSuffix}`] || photo.title_en;
@@ -589,7 +588,7 @@ const Home = () => {
                           return (
                             <Card 
                               key={photo.id} 
-                              className="flex-shrink-0 w-64 overflow-hidden hover:shadow-lg transition-all duration-300 group/card cursor-pointer"
+                              className="flex-shrink-0 w-64 overflow-hidden hover:shadow-xl transition-all duration-300 group/card cursor-pointer border-gray-200"
                               style={{ scrollSnapAlign: 'start' }}
                               onClick={() => openMediaModal(photo, false)}
                             >
@@ -603,25 +602,15 @@ const Home = () => {
                                 {/* Hover Overlay */}
                                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                                   <div className="opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
-                                    <div className="bg-white rounded-full p-2">
-                                      <Eye className="h-4 w-4 text-gray-800" />
+                                    <div className="bg-white rounded-full p-3 shadow-lg">
+                                      <Eye className="h-5 w-5 text-gray-800" />
                                     </div>
                                   </div>
                                 </div>
-                                
-                                {/* Expand Button */}
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  className="absolute top-2 right-2 bg-white/90 hover:bg-white opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    openMediaModal(photo, false);
-                                  }}
-                                >
-                                  <Expand className="h-4 w-4" />
-                                </Button>
                               </div>
+                              <CardContent className="p-4">
+                                <h4 className="font-medium text-sm line-clamp-2 text-gray-900">{title}</h4>
+                              </CardContent>
                             </Card>
                           );
                         })}
@@ -774,6 +763,114 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Media Modal */}
+      <Dialog open={isMediaModalOpen} onOpenChange={setIsMediaModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedMedia ? (selectedMedia[`title${langSuffix}`] || selectedMedia.title_en) : 'Media Item'}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedMedia && (
+            <div className="space-y-6">
+              {/* Media Display */}
+              <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                {selectedMedia.type === 'photo' ? (
+                  <img
+                    src={selectedMedia.url}
+                    alt={selectedMedia[`alt_text${langSuffix}`] || selectedMedia.alt_text_en || selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  (() => {
+                    if (isVideoPlaying) {
+                      const embedUrl = getYouTubeEmbedUrl(selectedMedia.url, true);
+                      if (embedUrl) {
+                        return (
+                          <iframe
+                            src={embedUrl}
+                            title={selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}
+                            className="w-full h-full"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        );
+                      }
+                    }
+                    
+                    // Show thumbnail with play button
+                    const thumbnailUrl = selectedMedia.thumbnail_url || getYouTubeThumbnail(selectedMedia.url);
+                    return (
+                      <div className="relative w-full h-full">
+                        {thumbnailUrl ? (
+                          <img
+                            src={thumbnailUrl}
+                            alt={selectedMedia[`alt_text${langSuffix}`] || selectedMedia.alt_text_en || selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                            <Video className="h-16 w-16 text-gray-400" />
+                          </div>
+                        )}
+                        <div 
+                          className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center cursor-pointer hover:bg-opacity-50 transition-all duration-300"
+                          onClick={() => setIsVideoPlaying(true)}
+                        >
+                          <div className="bg-white bg-opacity-90 rounded-full p-4 hover:scale-110 transition-transform duration-300">
+                            <Play className="h-12 w-12 text-red-600" />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()
+                )}
+              </div>
+
+              {/* Item Details */}
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-2xl font-bold mb-2">{selectedMedia[`title${langSuffix}`] || selectedMedia.title_en}</h2>
+                  {(selectedMedia[`description${langSuffix}`] || selectedMedia.description_en) && (
+                    <p className="text-gray-700 leading-relaxed">{selectedMedia[`description${langSuffix}`] || selectedMedia.description_en}</p>
+                  )}
+                </div>
+
+                {/* Metadata Grid */}
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium text-gray-600">Type:</span>
+                    <span className="ml-2 capitalize">{selectedMedia.type}</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-600">Created:</span>
+                    <span className="ml-2 flex items-center">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      {new Date(selectedMedia.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Categories */}
+                {selectedMedia.categories_en && (
+                  <div>
+                    <span className="font-medium text-gray-600 text-sm">Categories:</span>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {selectedMedia.categories_en.split(',').map((category: string, index: number) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {category.trim()}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
