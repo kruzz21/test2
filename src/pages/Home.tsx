@@ -660,7 +660,7 @@ const Home = () => {
                 <a href="tel:+994553977874" className="flex items-center justify-center">
                   <Phone className="mr-1 sm:mr-2 h-4 w-4 md:h-5 md:w-5" />
                   <span className="truncate">{t('home.callNow')}</span>
-                </a>
+                </Link>
               </Button>
             </div>
           </div>
