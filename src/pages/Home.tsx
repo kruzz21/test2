@@ -395,10 +395,10 @@ const Home = () => {
       </section>
 
       {/* Gallery and Media Section - Enhanced with Premium Design */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50 w-full">
+      <section className="py-20 md:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50 w-full overflow-hidden">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12 md:mb-16">
+            <div className="text-center mb-16 md:mb-20">
               <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
                 Gallery and Media
               </h2>
@@ -417,11 +417,11 @@ const Home = () => {
                 <p className="text-gray-600 text-lg">Loading media gallery...</p>
               </div>
             ) : (
-              <div className="space-y-20">
+              <div className="space-y-24">
                 {/* Featured Videos Section with Premium Design */}
                 {featuredVideos.length > 0 && (
                   <div className="relative">
-                    <div className="flex items-center justify-between mb-10">
+                    <div className="flex items-center justify-between mb-12">
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
                           <Video className="h-6 w-6 text-white" />
@@ -440,12 +440,12 @@ const Home = () => {
                     </div>
                     
                     {/* Video Slider Container with Premium Navigation */}
-                    <div className="relative">
+                    <div className="relative px-4 py-8">
                       {/* Navigation Buttons - Positioned in the middle */}
                       <Button
                         variant="outline"
                         size="icon"
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        className="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-14 h-14 rounded-full"
                         onClick={() => scrollContainer(videoScrollRef, 'left')}
                       >
                         <ChevronLeft className="h-6 w-6 text-gray-700" />
@@ -453,7 +453,7 @@ const Home = () => {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        className="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-14 h-14 rounded-full"
                         onClick={() => scrollContainer(videoScrollRef, 'right')}
                       >
                         <ChevronRight className="h-6 w-6 text-gray-700" />
@@ -462,7 +462,7 @@ const Home = () => {
                       {/* Scrollable Video Container */}
                       <div 
                         ref={videoScrollRef}
-                        className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide px-16"
+                        className="flex overflow-x-auto gap-6 pb-8 pt-4 scrollbar-hide px-20"
                         style={{ 
                           scrollSnapType: 'x mandatory',
                           scrollbarWidth: 'none',
@@ -477,7 +477,7 @@ const Home = () => {
                           return (
                             <Card 
                               key={video.id} 
-                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-2"
+                              className="flex-shrink-0 w-80 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-3 hover:scale-105"
                               style={{ scrollSnapAlign: 'start' }}
                               onClick={() => openMediaModal(video, false)}
                             >
@@ -551,7 +551,7 @@ const Home = () => {
                 {/* Featured Photos Section with Premium Design */}
                 {featuredPhotos.length > 0 && (
                   <div className="relative">
-                    <div className="flex items-center justify-between mb-10">
+                    <div className="flex items-center justify-between mb-12">
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
                           <ImageIcon className="h-6 w-6 text-white" />
@@ -570,12 +570,12 @@ const Home = () => {
                     </div>
                     
                     {/* Photo Slider Container with Premium Navigation */}
-                    <div className="relative">
+                    <div className="relative px-4 py-8">
                       {/* Navigation Buttons - Positioned in the middle */}
                       <Button
                         variant="outline"
                         size="icon"
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        className="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-14 h-14 rounded-full"
                         onClick={() => scrollContainer(photoScrollRef, 'left')}
                       >
                         <ChevronLeft className="h-6 w-6 text-gray-700" />
@@ -583,7 +583,7 @@ const Home = () => {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-12 h-12 rounded-full"
+                        className="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/95 backdrop-blur-sm hover:bg-white shadow-xl border-gray-200 hover:shadow-2xl transition-all duration-300 w-14 h-14 rounded-full"
                         onClick={() => scrollContainer(photoScrollRef, 'right')}
                       >
                         <ChevronRight className="h-6 w-6 text-gray-700" />
@@ -592,7 +592,7 @@ const Home = () => {
                       {/* Scrollable Photo Container */}
                       <div 
                         ref={photoScrollRef}
-                        className="flex overflow-x-auto gap-5 pb-6 scrollbar-hide px-16"
+                        className="flex overflow-x-auto gap-5 pb-8 pt-4 scrollbar-hide px-20"
                         style={{ 
                           scrollSnapType: 'x mandatory',
                           scrollbarWidth: 'none',
@@ -606,7 +606,7 @@ const Home = () => {
                           return (
                             <Card 
                               key={photo.id} 
-                              className="flex-shrink-0 w-72 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-2"
+                              className="flex-shrink-0 w-72 overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer bg-white/80 backdrop-blur-sm border-gray-200 hover:border-gray-300 transform hover:-translate-y-3 hover:scale-105"
                               style={{ scrollSnapAlign: 'start' }}
                               onClick={() => openMediaModal(photo, false)}
                             >
