@@ -31,6 +31,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlayingMainVideo, setIsPlayingMainVideo] = useState(false);
 
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
@@ -53,6 +54,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
     if (currentItems.length > 0) {
       setSelectedItem(currentItems[0]);
       setCurrentIndex(0);
+      setIsPlayingMainVideo(false); // Reset video play state when switching tabs
     }
   }, [activeTab]);
 
@@ -81,9 +83,9 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
   };
 
   // Helper function to get YouTube embed URL
-  const getYouTubeEmbedUrl = (url: string): string | null => {
+  const getYouTubeEmbedUrl = (url: string, autoplay: boolean = false): string | null => {
     const videoId = getYouTubeVideoId(url);
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    return videoId ? `https://www.youtube.com/embed/${videoId}${autoplay ? '?autoplay=1' : ''}` : null;
   };
 
   // Helper function to get YouTube thumbnail URL
@@ -96,6 +98,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
   const handleItemSelect = (item: any, index: number) => {
     setSelectedItem(item);
     setCurrentIndex(index);
+    setIsPlayingMainVideo(false); // Reset video play state when selecting new item
   };
 
   // Handle modal navigation
@@ -138,7 +141,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
   }, [isModalOpen, navigateModal]);
 
   // Render media preview
-  const renderMediaPreview = (item: any, isModal: boolean = false) => {
+  const renderMediaPreview = (item: any, isModal: boolean = false, shouldAutoplay: boolean = false) => {
     if (!item) return null;
 
     const title = item[`title${langSuffix}`] || item.title_en;
@@ -153,10 +156,10 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
         />
       );
     } else if (item.type === 'video') {
-      const embedUrl = getYouTubeEmbedUrl(item.url);
+      const embedUrl = getYouTubeEmbedUrl(item.url, shouldAutoplay);
       const thumbnailUrl = item.thumbnail_url || getYouTubeThumbnail(item.url);
       
-      if (isModal && embedUrl) {
+      if (shouldAutoplay && embedUrl) {
         return (
           <iframe
             src={embedUrl}
@@ -181,8 +184,23 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
                 <Video className="h-16 w-16 text-gray-400" />
               </div>
             )}
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
-              <div className="bg-white bg-opacity-90 rounded-full p-3">
+            <div 
+              className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg cursor-pointer hover:bg-opacity-50 transition-all duration-300"
+              onClick={() => {
+                if (isModal) {
+                  // In modal, clicking play should start the video
+                  const newEmbedUrl = getYouTubeEmbedUrl(item.url, true);
+                  if (newEmbedUrl) {
+                    // Force re-render with autoplay
+                    setSelectedItem({...item, _forceAutoplay: true});
+                  }
+                } else {
+                  // In main preview, set playing state
+                  setIsPlayingMainVideo(true);
+                }
+              }}
+            >
+              <div className="bg-white bg-opacity-90 rounded-full p-3 hover:scale-110 transition-transform duration-300">
                 <Play className="h-8 w-8 text-red-600" />
               </div>
             </div>
@@ -299,6 +317,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
             onExpandClick={() => setIsModalOpen(true)}
             renderMediaPreview={renderMediaPreview}
             renderQueueItem={renderQueueItem}
+            isPlayingMainVideo={isPlayingMainVideo}
           />
         </TabsContent>
 
@@ -311,6 +330,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
             onExpandClick={() => setIsModalOpen(true)}
             renderMediaPreview={renderMediaPreview}
             renderQueueItem={renderQueueItem}
+            isPlayingMainVideo={isPlayingMainVideo}
           />
         </TabsContent>
       </Tabs>
@@ -319,7 +339,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-6xl max-h-[90vh] p-0 bg-black">
           <DialogHeader>
-            <DialogTitle className="sr-only">
+            <DialogTitle>
               {selectedItem ? (selectedItem[`title${langSuffix}`] || selectedItem.title_en) : 'Media Gallery Item'}
             </DialogTitle>
           </DialogHeader>
@@ -358,7 +378,7 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
 
             {/* Media content */}
             <div className="w-full h-full flex items-center justify-center p-4">
-              {selectedItem && renderMediaPreview(selectedItem, true)}
+              {selectedItem && renderMediaPreview(selectedItem, true, true)}
             </div>
 
             {/* Media info */}
@@ -392,8 +412,9 @@ interface MediaContentProps {
   currentIndex: number;
   onItemSelect: (item: any, index: number) => void;
   onExpandClick: () => void;
-  renderMediaPreview: (item: any, isModal?: boolean) => React.ReactNode;
+  renderMediaPreview: (item: any, isModal?: boolean, shouldAutoplay?: boolean) => React.ReactNode;
   renderQueueItem: (item: any, index: number, isSelected: boolean) => React.ReactNode;
+  isPlayingMainVideo: boolean;
 }
 
 const MediaContent = ({
@@ -403,7 +424,8 @@ const MediaContent = ({
   onItemSelect,
   onExpandClick,
   renderMediaPreview,
-  renderQueueItem
+  renderQueueItem,
+  isPlayingMainVideo
 }: MediaContentProps) => {
   if (items.length === 0) {
     return (
@@ -432,7 +454,7 @@ const MediaContent = ({
             <div className="relative aspect-video bg-gray-100">
               {selectedItem ? (
                 <>
-                  {renderMediaPreview(selectedItem)}
+                  {renderMediaPreview(selectedItem, false, isPlayingMainVideo)}
                   {/* Expand button */}
                   <Button
                     variant="ghost"

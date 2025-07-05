@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Play, RefreshCw, X, Calendar, Eye } from 'lucide-react';
+import { Play, RefreshCw, Calendar, Eye } from 'lucide-react';
 import { useGallery } from '@/hooks/useGallery';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -16,6 +16,7 @@ const Gallery = () => {
   // State for detail popup
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
+  const [isPlayingDetailVideo, setIsPlayingDetailVideo] = useState(false);
 
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
@@ -44,9 +45,9 @@ const Gallery = () => {
   };
 
   // Helper function to get YouTube embed URL
-  const getYouTubeEmbedUrl = (url: string): string | null => {
+  const getYouTubeEmbedUrl = (url: string, autoplay: boolean = false): string | null => {
     const videoId = getYouTubeVideoId(url);
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    return videoId ? `https://www.youtube.com/embed/${videoId}${autoplay ? '?autoplay=1' : ''}` : null;
   };
 
   // Helper function to get YouTube thumbnail URL
@@ -61,11 +62,13 @@ const Gallery = () => {
 
   const openDetailDialog = (item: any) => {
     setSelectedItem(item);
+    setIsPlayingDetailVideo(false); // Reset video play state when opening dialog
     setIsDetailDialogOpen(true);
   };
 
   const closeDetailDialog = () => {
     setSelectedItem(null);
+    setIsPlayingDetailVideo(false); // Reset video play state when closing dialog
     setIsDetailDialogOpen(false);
   };
 
@@ -159,29 +162,47 @@ const Gallery = () => {
             />
           ) : (
             (() => {
-              const embedUrl = getYouTubeEmbedUrl(selectedItem.url);
-              if (embedUrl) {
-                return (
-                  <iframe
-                    src={embedUrl}
-                    title={title}
-                    className="w-full h-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                );
-              } else {
-                return (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                    <div className="text-center">
-                      <Play className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600">Unable to load video</p>
-                      <p className="text-sm text-gray-500">Invalid YouTube URL</p>
+              if (isPlayingDetailVideo) {
+                const embedUrl = getYouTubeEmbedUrl(selectedItem.url, true);
+                if (embedUrl) {
+                  return (
+                    <iframe
+                      src={embedUrl}
+                      title={title}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  );
+                }
+              }
+              
+              // Show thumbnail with play button
+              const thumbnailUrl = selectedItem.thumbnail_url || getYouTubeThumbnail(selectedItem.url);
+              return (
+                <div className="relative w-full h-full">
+                  {thumbnailUrl ? (
+                    <img
+                      src={thumbnailUrl}
+                      alt={altText}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                      <Play className="h-16 w-16 text-gray-400" />
+                    </div>
+                  )}
+                  <div 
+                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center cursor-pointer hover:bg-opacity-50 transition-all duration-300"
+                    onClick={() => setIsPlayingDetailVideo(true)}
+                  >
+                    <div className="bg-white bg-opacity-90 rounded-full p-4 hover:scale-110 transition-transform duration-300">
+                      <Play className="h-12 w-12 text-red-600" />
                     </div>
                   </div>
-                );
-              }
+                </div>
+              );
             })()
           )}
         </div>
@@ -388,16 +409,8 @@ const Gallery = () => {
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="flex items-center justify-between">
-                <span>{selectedItem ? (selectedItem[`title${langSuffix}`] || selectedItem.title_en) : 'Gallery Item'}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={closeDetailDialog}
-                  className="h-6 w-6 p-0"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+              <DialogTitle>
+                {selectedItem ? (selectedItem[`title${langSuffix}`] || selectedItem.title_en) : 'Gallery Item'}
               </DialogTitle>
             </DialogHeader>
             {renderDetailContent()}
