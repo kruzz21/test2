@@ -98,7 +98,7 @@ const Home = () => {
         <div 
           className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-16 md:py-32 w-full"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
+            backgroundImage: 'url(https://cdn.discordapp.com/attachments/1114334300532383895/1391141966820933692/xbb.png?ex=686ad16b&is=68697feb&hm=30da3f194bfe41eebedcfbee8eee29958ac5619038a01e5c0562c2adcc5d5247&)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundBlendMode: 'overlay'
