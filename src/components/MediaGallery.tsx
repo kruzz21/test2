@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
@@ -318,6 +318,11 @@ const MediaGallery = ({ className = '' }: MediaGalleryProps) => {
       {/* Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-6xl max-h-[90vh] p-0 bg-black">
+          <DialogHeader>
+            <DialogTitle className="sr-only">
+              {selectedItem ? (selectedItem[`title${langSuffix}`] || selectedItem.title_en) : 'Media Gallery Item'}
+            </DialogTitle>
+          </DialogHeader>
           <div className="relative w-full h-[80vh]">
             {/* Close button */}
             <Button
