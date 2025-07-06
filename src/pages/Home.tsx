@@ -144,19 +144,19 @@ const Home = () => {
       {/* Hero Section with Integrated Cards */}
       <section className="relative w-full">
         {/* Main Hero Content */}
-        <div className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-16 md:py-32 w-full overflow-hidden">
-          {/* Background Image */}
-          <img
-            src="https://media.discordapp.net/attachments/1114334300532383895/1391438925628968960/herobg.png?ex=686be5fb&is=686a947b&hm=747fc333bd251b96ac57ebf969e7a32d4969d91e0eb4aa10a7a8396a97a1ce3e&=&format=webp&quality=lossless&width=1232&height=528"
-            alt="Medical background"
-            className="absolute inset-0 w-full h-full object-cover object-right z-0"
-            style={{ mixBlendMode: 'overlay' }}
-          />
-          
+        <div 
+          className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-16 md:py-32 w-full"
+          style={{
+            backgroundImage: 'url(https://media.discordapp.net/attachments/1114334300532383895/1391438925628968960/herobg.png?ex=686be5fb&is=686a947b&hm=747fc333bd251b96ac57ebf969e7a32d4969d91e0eb4aa10a7a8396a97a1ce3e&=&format=webp&quality=lossless&width=1232&height=528)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'right center',
+            backgroundBlendMode: 'overlay'
+          }}
+        >
           {/* Transparent black overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           
-          <div className="relative z-20 w-full px-5 md:px-8">
+          <div className="relative z-10 w-full px-5 md:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">
                 {t('hero.title')}
