@@ -149,7 +149,7 @@ const Home = () => {
           style={{
             backgroundImage: 'url(https://media.discordapp.net/attachments/1114334300532383895/1391438925628968960/herobg.png?ex=686be5fb&is=686a947b&hm=747fc333bd251b96ac57ebf969e7a32d4969d91e0eb4aa10a7a8396a97a1ce3e&=&format=webp&quality=lossless&width=1232&height=528)',
             backgroundSize: 'cover',
-            backgroundPosition: 'right left',
+            backgroundPosition: 'right bottom',
             backgroundBlendMode: 'overlay'
           }}
         >
