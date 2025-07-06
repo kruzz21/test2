@@ -768,15 +768,12 @@ const Home = () => {
           className="max-w-5xl border-0 bg-transparent shadow-none p-0"
           onClick={closePhotoModal}
         >
+          <DialogHeader className="sr-only">
+            <DialogTitle>
+              {selectedPhoto ? (selectedPhoto[`title${langSuffix}`] || selectedPhoto.title_en) : 'Photo Gallery'}
+            </DialogTitle>
+          </DialogHeader>
           <div className="relative bg-white rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            {/* Close button */}
-            <button
-              onClick={closePhotoModal}
-              className="absolute top-4 right-4 z-10 w-8 h-8 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full flex items-center justify-center text-white transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-
             {/* Navigation arrows */}
             {photos.length > 1 && (
               <>
