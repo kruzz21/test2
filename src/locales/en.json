@@ -3,7 +3,6 @@
     "home": "Home",
     "about": "About",
     "services": "Services",
-    "symptoms": "Symptoms",
     "gallery": "Gallery",
     "blog": "Blog",
     "reviews": "Reviews",
@@ -53,10 +52,6 @@
       "title": "Patient Stories & Moments",
       "subtitle": "See real recovery stories and shared moments from patients.",
       "button": "View Full Gallery"
-    },
-    "symptoms": {
-      "title": "Symptoms & Treatments",
-      "button": "Learn More"
     },
     "blog": {
       "title": "Latest from the Blog",
@@ -120,14 +115,6 @@
     "consultationDescription": "Contact Dr. Eryanılmaz to discuss your orthopedic needs and treatment options.",
     "scheduleAppointment": "Schedule Appointment",
     "callNow": "Call Now"
-  },
-  "symptoms": {
-    "title": "Symptoms & Conditions",
-    "subtitle": "Learn about common orthopedic conditions and their treatments",
-    "readMore": "Read More",
-    "dontSeeCondition": "Don't See Your Condition?",
-    "conditionDescription": "Contact Dr. Eryanılmaz for a comprehensive evaluation of your specific orthopedic concerns.",
-    "scheduleConsultation": "Schedule Consultation"
   },
   "gallery": {
     "title": "Gallery",

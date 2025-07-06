@@ -13,7 +13,6 @@ export type FAQ = Database['public']['Tables']['faqs']['Row'];
 export type FAQInsert = Database['public']['Tables']['faqs']['Insert'];
 export type FAQSubmission = Database['public']['Tables']['faq_submissions']['Row'];
 export type FAQSubmissionInsert = Database['public']['Tables']['faq_submissions']['Insert'];
-export type Symptom = Database['public']['Tables']['symptoms']['Row'];
 export type GalleryItem = Database['public']['Tables']['gallery_items']['Row'];
 export type GalleryItemInsert = Database['public']['Tables']['gallery_items']['Insert'];
 export type GalleryItemUpdate = Database['public']['Tables']['gallery_items']['Update'];
@@ -417,30 +416,6 @@ export const faqSubmissionsApi = {
       console.error('Error in approveAndCreateFAQ:', error);
       throw error;
     }
-  }
-};
-
-// Symptoms API
-export const symptomsApi = {
-  async getAll() {
-    const { data, error } = await supabase
-      .from('symptoms')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
-  },
-
-  async getById(id: string) {
-    const { data, error } = await supabase
-      .from('symptoms')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) throw error;
-    return data;
   }
 };
 
