@@ -16,8 +16,13 @@ const Home = () => {
 
   // Media modal state
   const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(0);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number>(0);
+
+  // Scroll refs for carousels
+  const photoScrollRef = useRef<HTMLDivElement>(null);
 
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
@@ -88,14 +93,49 @@ const Home = () => {
     return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
   };
 
-  const openPhotoModal = (photo: any) => {
+  const getYouTubeThumbnail = (url: string): string | null => {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  };
+
+  const openPhotoModal = (photo: any, index: number) => {
     setSelectedPhoto(photo);
+    setSelectedPhotoIndex(index);
     setIsPhotoModalOpen(true);
   };
 
   const closePhotoModal = () => {
     setSelectedPhoto(null);
     setIsPhotoModalOpen(false);
+  };
+
+  const navigatePhoto = (direction: 'prev' | 'next') => {
+    const newIndex = direction === 'prev' 
+      ? (selectedPhotoIndex - 1 + photos.length) % photos.length
+      : (selectedPhotoIndex + 1) % photos.length;
+    
+    setSelectedPhotoIndex(newIndex);
+    setSelectedPhoto(photos[newIndex]);
+  };
+
+  const scrollPhotos = (direction: 'left' | 'right') => {
+    if (photoScrollRef.current) {
+      const scrollAmount = 200;
+      const currentScroll = photoScrollRef.current.scrollLeft;
+      const targetScroll = direction === 'left' 
+        ? currentScroll - scrollAmount 
+        : currentScroll + scrollAmount;
+      
+      photoScrollRef.current.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const handleVideoSelect = (video: any, index: number) => {
+    setSelectedVideoId(video.id);
+    setSelectedVideoIndex(index);
   };
 
   const handleBlogRetry = () => {
@@ -113,6 +153,10 @@ const Home = () => {
   const currentVideo = selectedVideoId 
     ? videos.find(v => v.id === selectedVideoId) 
     : videos[0];
+
+  const currentVideoIndex = selectedVideoId 
+    ? videos.findIndex(v => v.id === selectedVideoId)
+    : 0;
 
   return (
     <div className="min-h-screen w-full">
@@ -381,7 +425,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Gallery and Media Section - Redesigned */}
+      {/* Gallery and Media Section - Enhanced */}
       <section className="py-16 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
@@ -402,56 +446,101 @@ const Home = () => {
               </div>
             ) : (
               <div className="space-y-16">
-                {/* Videos Section - 2 Column Layout */}
+                {/* Videos Section - Enhanced 2 Column Layout */}
                 {videos.length > 0 && (
                   <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      {/* Left: Video Player */}
-                      <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                        {currentVideo && getYouTubeEmbedUrl(currentVideo.url) ? (
-                          <iframe
-                            src={getYouTubeEmbedUrl(currentVideo.url) || ''}
-                            title={currentVideo[`title${langSuffix}`] || currentVideo.title_en}
-                            className="w-full h-full"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                            <Video className="h-16 w-16 text-gray-400" />
-                          </div>
-                        )}
+                    {/* Video Counter */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+                          <Video className="h-4 w-4 text-white" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900">Featured Videos</h3>
+                      </div>
+                      <span className="text-sm text-gray-500 font-medium">
+                        {currentVideoIndex + 1}/{videos.length}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      {/* Left: Large Video Player */}
+                      <div className="lg:col-span-2">
+                        <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                          {currentVideo && getYouTubeEmbedUrl(currentVideo.url) ? (
+                            <iframe
+                              src={getYouTubeEmbedUrl(currentVideo.url) || ''}
+                              title={currentVideo[`title${langSuffix}`] || currentVideo.title_en}
+                              className="w-full h-full"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                              <Video className="h-16 w-16 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Right: Video List */}
-                      <div className="space-y-1 max-h-96 overflow-y-auto">
-                        {videos.map((video) => {
-                          const title = video[`title${langSuffix}`] || video.title_en;
-                          const description = video[`description${langSuffix}`] || video.description_en;
-                          const isActive = selectedVideoId === video.id || (!selectedVideoId && video === videos[0]);
+                      {/* Right: Thin Video List with Thumbnails */}
+                      <div className="lg:col-span-1">
+                        <div 
+                          className="space-y-2 max-h-96 overflow-y-auto pr-2"
+                          style={{ 
+                            scrollbarWidth: 'thin',
+                            scrollbarColor: 'transparent transparent'
+                          }}
+                        >
+                          {videos.map((video, index) => {
+                            const title = video[`title${langSuffix}`] || video.title_en;
+                            const description = video[`description${langSuffix}`] || video.description_en;
+                            const isActive = selectedVideoId === video.id || (!selectedVideoId && video === videos[0]);
+                            const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
 
-                          return (
-                            <div
-                              key={video.id}
-                              className={`p-3 cursor-pointer transition-colors ${
-                                isActive ? 'bg-blue-50 border-l-4 border-blue-600' : 'hover:bg-gray-50'
-                              }`}
-                              onClick={() => setSelectedVideoId(video.id)}
-                            >
-                              <h4 className={`font-medium text-sm leading-tight ${
-                                isActive ? 'text-blue-900' : 'text-gray-900'
-                              }`}>
-                                {title}
-                              </h4>
-                              {description && (
-                                <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                                  {description}
-                                </p>
-                              )}
-                            </div>
-                          );
-                        })}
+                            return (
+                              <div
+                                key={video.id}
+                                className={`flex space-x-3 p-2 cursor-pointer transition-colors rounded-lg ${
+                                  isActive ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'
+                                }`}
+                                onClick={() => handleVideoSelect(video, index)}
+                              >
+                                {/* Video Thumbnail */}
+                                <div className="flex-shrink-0 w-20 h-12 bg-gray-200 rounded overflow-hidden relative">
+                                  {thumbnailUrl ? (
+                                    <img
+                                      src={thumbnailUrl}
+                                      alt={title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <Video className="h-4 w-4 text-gray-400" />
+                                    </div>
+                                  )}
+                                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                    <Play className="h-3 w-3 text-white" />
+                                  </div>
+                                </div>
+
+                                {/* Video Info */}
+                                <div className="flex-1 min-w-0">
+                                  <h4 className={`text-xs font-medium leading-tight line-clamp-2 ${
+                                    isActive ? 'text-blue-900' : 'text-gray-900'
+                                  }`}>
+                                    {title}
+                                  </h4>
+                                  {description && (
+                                    <p className="text-xs text-gray-500 mt-1 line-clamp-1">
+                                      {description}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -459,18 +548,54 @@ const Home = () => {
 
                 {/* Divider */}
                 {videos.length > 0 && photos.length > 0 && (
-                  <div className="border-t border-gray-200">
-                    <div className="pt-8">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-6">Medical Center Photos</h3>
+                  <div className="border-t border-gray-200 pt-8">
+                    {/* Photos Header with Navigation */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                          <ImageIcon className="h-4 w-4 text-white" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900">Medical Center Photos</h3>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-gray-500 font-medium">
+                          {photos.length} photos
+                        </span>
+                        <div className="flex space-x-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => scrollPhotos('left')}
+                            className="w-8 h-8 p-0"
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => scrollPhotos('right')}
+                            className="w-8 h-8 p-0"
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {/* Photos Section - Horizontal Scroll */}
                 {photos.length > 0 && (
-                  <div className="overflow-x-auto">
-                    <div className="flex space-x-4 pb-4">
-                      {photos.map((photo) => {
+                  <div className="relative">
+                    <div 
+                      ref={photoScrollRef}
+                      className="flex space-x-4 overflow-x-auto pb-4"
+                      style={{ 
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: 'transparent transparent'
+                      }}
+                    >
+                      {photos.map((photo, index) => {
                         const title = photo[`title${langSuffix}`] || photo.title_en;
                         const altText = photo[`alt_text${langSuffix}`] || photo.alt_text_en || title;
 
@@ -478,12 +603,12 @@ const Home = () => {
                           <div
                             key={photo.id}
                             className="flex-shrink-0 w-48 h-32 cursor-pointer group"
-                            onClick={() => openPhotoModal(photo)}
+                            onClick={() => openPhotoModal(photo, index)}
                           >
                             <img
                               src={photo.thumbnail_url || photo.url}
                               alt={altText}
-                              className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                              className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105 shadow-sm"
                             />
                           </div>
                         );
@@ -637,10 +762,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Minimalist Photo Modal */}
+      {/* Enhanced Photo Modal with Navigation */}
       <Dialog open={isPhotoModalOpen} onOpenChange={setIsPhotoModalOpen}>
         <DialogContent 
-          className="max-w-4xl border-0 bg-transparent shadow-none p-0"
+          className="max-w-5xl border-0 bg-transparent shadow-none p-0"
           onClick={closePhotoModal}
         >
           <div className="relative bg-white rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
@@ -651,6 +776,29 @@ const Home = () => {
             >
               <X className="h-4 w-4" />
             </button>
+
+            {/* Navigation arrows */}
+            {photos.length > 1 && (
+              <>
+                <button
+                  onClick={() => navigatePhoto('prev')}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full flex items-center justify-center text-white transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => navigatePhoto('next')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full flex items-center justify-center text-white transition-colors"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
+
+            {/* Photo counter */}
+            <div className="absolute top-4 left-4 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
+              {selectedPhotoIndex + 1}/{photos.length}
+            </div>
             
             {selectedPhoto && (
               <>
