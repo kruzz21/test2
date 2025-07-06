@@ -179,19 +179,23 @@ const Home = () => {
               <Card 
                 className="shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
                 style={{
-                  backgroundColor: '#2C2C2C'
+                  backgroundImage: 'url(https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=800)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundBlendMode: 'overlay',
+                  backgroundColor: 'rgba(59, 130, 246, 0.9)'
                 }}
               >
                 <CardContent className="p-5 md:p-8 relative z-10">
                   <div className="flex items-start space-x-4 md:space-x-6">
-                    <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg border border-white border-opacity-30">
                       <Phone className="h-5 w-5 md:h-8 md:w-8 text-white" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3">
                         {t('home.contactUs.title')}
                       </h3>
-                      <p className="text-sm md:text-base text-gray-300 mb-4 md:mb-6 leading-relaxed">
+                      <p className="text-sm md:text-base text-blue-100 mb-4 md:mb-6 leading-relaxed">
                         {t('home.contactUs.description')}
                       </p>
                       {/* Fixed button layout - always side by side */}
@@ -199,7 +203,7 @@ const Home = () => {
                         <Button 
                           asChild 
                           size="sm" 
-                          className="flex-1 bg-gray-600 hover:bg-gray-500 text-white text-xs sm:text-sm md:text-base px-2 sm:px-3 py-2 min-w-0"
+                          className="flex-1 bg-white bg-opacity-20 backdrop-blur-sm hover:bg-white hover:bg-opacity-30 text-white border border-white border-opacity-30 text-xs sm:text-sm md:text-base px-2 sm:px-3 py-2 min-w-0"
                         >
                           <a href="tel:+994553977874" className="flex items-center justify-center">
                             <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
@@ -210,7 +214,7 @@ const Home = () => {
                           asChild 
                           variant="outline" 
                           size="sm"
-                          className="flex-1 border-gray-500 text-gray-300 hover:bg-gray-600 hover:text-white text-xs sm:text-sm md:text-base px-2 sm:px-3 py-2 min-w-0"
+                          className="flex-1 bg-white bg-opacity-20 backdrop-blur-sm border-white border-opacity-30 text-white hover:bg-white hover:text-blue-600 text-xs sm:text-sm md:text-base px-2 sm:px-3 py-2 min-w-0"
                         >
                           <a 
                             href="https://wa.me/994553977874" 
@@ -232,25 +236,29 @@ const Home = () => {
               <Card 
                 className="shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
                 style={{
-                  backgroundColor: '#2C2C2C'
+                  backgroundImage: 'url(https://images.pexels.com/photos/4021779/pexels-photo-4021779.jpeg?auto=compress&cs=tinysrgb&w=800)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundBlendMode: 'overlay',
+                  backgroundColor: 'rgba(34, 197, 94, 0.9)'
                 }}
               >
                 <CardContent className="p-5 md:p-8 relative z-10">
                   <div className="flex items-start space-x-4 md:space-x-6">
-                    <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg border border-white border-opacity-30">
                       <Calendar className="h-5 w-5 md:h-8 md:w-8 text-white" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3">
                         {t('home.appointment.title')}
                       </h3>
-                      <p className="text-sm md:text-base text-gray-300 mb-4 md:mb-6 leading-relaxed">
+                      <p className="text-sm md:text-base text-green-100 mb-4 md:mb-6 leading-relaxed">
                         {t('home.appointment.description')}
                       </p>
                       <Button 
                         asChild 
                         size="sm" 
-                        className="w-full bg-gray-600 hover:bg-gray-500 text-white text-sm md:text-base"
+                        className="w-full bg-white bg-opacity-20 backdrop-blur-sm hover:bg-white hover:bg-opacity-30 text-white border border-white border-opacity-30 text-sm md:text-base"
                       >
                         <Link to="/contact">
                           <Calendar className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
