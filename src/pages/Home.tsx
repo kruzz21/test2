@@ -167,12 +167,6 @@ const Home = () => {
               <p className="text-base md:text-xl mb-6 md:mb-8 text-blue-200 max-w-2xl mx-auto leading-relaxed">
                 {t('hero.description')}
               </p>
-              <Button asChild size="lg" className="bg-white text-blue-900 hover:bg-blue-50 text-base md:text-lg px-6 md:px-8 py-3 md:py-4">
-                <Link to="/contact">
-                  {t('hero.cta')}
-                  <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
-                </Link>
-              </Button>
             </div>
           </div>
         </div>
@@ -182,8 +176,18 @@ const Home = () => {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
               {/* Contact Us Card */}
-              <Card className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-5 md:p-8">
+              <Card 
+                className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+                style={{
+                  backgroundImage: 'url(https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundBlendMode: 'overlay',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                }}
+              >
+                <div className="absolute inset-0 bg-white bg-opacity-95"></div>
+                <CardContent className="p-5 md:p-8 relative z-10">
                   <div className="flex items-start space-x-4 md:space-x-6">
                     <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                       <Phone className="h-5 w-5 md:h-8 md:w-8 text-white" />
@@ -230,8 +234,18 @@ const Home = () => {
               </Card>
 
               {/* Book Appointment Card */}
-              <Card className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-5 md:p-8">
+              <Card 
+                className="bg-white shadow-xl border-0 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+                style={{
+                  backgroundImage: 'url(https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundBlendMode: 'overlay',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                }}
+              >
+                <div className="absolute inset-0 bg-white bg-opacity-95"></div>
+                <CardContent className="p-5 md:p-8 relative z-10">
                   <div className="flex items-start space-x-4 md:space-x-6">
                     <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                       <Calendar className="h-5 w-5 md:h-8 md:w-8 text-white" />
