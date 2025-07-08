@@ -77,7 +77,7 @@ const AreasOfExpertise = () => {
             const IconComponent = area.icon;
             
             return (
-              <Card key={area.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 shadow-lg">
+              <Card key={area.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 shadow-lg flex flex-col">
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={area.image}
@@ -96,12 +96,12 @@ const AreasOfExpertise = () => {
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="pt-0">
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                <CardContent className="pt-0 flex-1 flex flex-col">
+                  <p className="text-gray-600 mb-auto leading-relaxed">
                     {area.description}
                   </p>
                   
-                  <Button asChild className="w-full group-hover:bg-blue-700 transition-colors">
+                  <Button asChild className="w-full group-hover:bg-blue-700 transition-colors mt-6">
                     <Link to={`/expertise/${area.id}`}>
                       {t('expertise.viewDetails')}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

@@ -202,7 +202,7 @@ const ExpertiseDetail = () => {
                   <Calendar className="mr-2 h-5 w-5" />
                   {t('expertise.contactNow')}
                 </Link>
-              </Button>
+                className="border-white text-white bg-white/20 hover:bg-white hover:text-blue-600 text-lg px-8 py-3"
               <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
                 <a href="tel:+994553977874">
                   <Phone className="mr-2 h-5 w-5" />
