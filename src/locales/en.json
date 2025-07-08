@@ -2,13 +2,140 @@
   "nav": {
     "home": "Home",
     "about": "About",
-    "services": "Services",
+    "expertise": "Areas of Expertise",
     "gallery": "Gallery",
     "blog": "Blog",
     "reviews": "Reviews",
     "contact": "Contact",
     "faq": "FAQ",
     "appointment": "Book Appointment"
+  },
+  "expertise": {
+    "title": "Areas of Expertise",
+    "subtitle": "Explore specialized orthopedic treatments performed by Op. Dr. Gürkan Eryanılmaz.",
+    "viewDetails": "View Details",
+    "procedures": "Procedures",
+    "proceduresDescription": "Comprehensive treatments and surgical procedures available in this specialty area.",
+    "notSureTitle": "Not sure where to start?",
+    "notSureDescription": "Book a consultation now and let Dr. Eryanılmaz guide you to the best treatment option for your condition.",
+    "bookConsultation": "Book a Consultation Now",
+    "bookAppointmentTitle": "Book an Appointment",
+    "bookAppointmentDescription": "Get expert advice on your condition from Dr. Eryanılmaz.",
+    "contactNow": "Contact Now",
+    "callDirectly": "Call Directly",
+    "backToExpertise": "Back to Areas of Expertise",
+    "notFound": "Expertise Area Not Found",
+    "notFoundDescription": "The expertise area you're looking for doesn't exist or has been moved.",
+    "arthroscopic": {
+      "title": "Arthroscopic Surgery",
+      "description": "Minimally invasive joint surgery using advanced arthroscopic techniques for faster recovery and better outcomes.",
+      "detailDescription": "Advanced minimally invasive surgical techniques using arthroscopy to diagnose and treat joint problems with smaller incisions, reduced pain, and faster recovery times.",
+      "procedures": {
+        "kneeArthroscopy": "Knee Arthroscopy",
+        "kneeArthroscopyDesc": "Minimally invasive knee surgery for meniscus tears, ligament injuries, and cartilage problems",
+        "shoulderArthroscopy": "Shoulder Arthroscopy", 
+        "shoulderArthroscopyDesc": "Advanced shoulder surgery for rotator cuff tears, impingement, and instability",
+        "elbowArthroscopy": "Elbow Arthroscopy",
+        "elbowArthroscopyDesc": "Precise elbow surgery for tennis elbow, loose bodies, and joint stiffness",
+        "meniscusRepair": "Meniscus Tear Repair",
+        "meniscusRepairDesc": "Surgical repair of torn meniscus to restore knee function and prevent arthritis",
+        "aclReconstruction": "ACL Reconstruction",
+        "aclReconstructionDesc": "Complete reconstruction of torn anterior cruciate ligament for sports return",
+        "rotatorCuffRepair": "Rotator Cuff Tear Repair",
+        "rotatorCuffRepairDesc": "Arthroscopic repair of rotator cuff tears to restore shoulder strength and mobility",
+        "bankartRepair": "Bankart Lesion Repair",
+        "bankartRepairDesc": "Surgical repair of shoulder instability and recurrent dislocations",
+        "subacromialDecompression": "Subacromial Decompression",
+        "subacromialDecompressionDesc": "Treatment for shoulder impingement syndrome and pain relief",
+        "hipImpingement": "Hip Impingement Treatment",
+        "hipImpingementDesc": "Arthroscopic treatment of femoroacetabular impingement (FAI)",
+        "advancedShoulder": "Advanced Shoulder Arthroscopy",
+        "advancedShoulderDesc": "Complex shoulder procedures including SLAP repairs and capsular releases"
+      }
+    },
+    "jointReplacement": {
+      "title": "Joint Replacement Surgery",
+      "description": "Complete joint replacement procedures for hip, knee, and shoulder using the latest prosthetic technologies.",
+      "detailDescription": "State-of-the-art joint replacement surgery using the most advanced prosthetic technologies to restore mobility and eliminate pain in severely damaged joints.",
+      "procedures": {
+        "totalKnee": "Total Knee Replacement",
+        "totalKneeDesc": "Complete knee joint replacement for severe arthritis and joint damage",
+        "hipReplacement": "Hip Replacement",
+        "hipReplacementDesc": "Total hip replacement surgery for arthritis, fractures, and joint deterioration",
+        "shoulderReplacement": "Shoulder Replacement",
+        "shoulderReplacementDesc": "Complete shoulder joint replacement for severe arthritis and rotator cuff arthropathy",
+        "femoralHead": "Femoral Head Prosthesis",
+        "femoralHeadDesc": "Partial hip replacement focusing on the femoral head component",
+        "shoulderArthroplasty": "Shoulder Arthroplasty",
+        "shoulderArthroplastyDesc": "Advanced shoulder replacement techniques including reverse total shoulder arthroplasty"
+      }
+    },
+    "trauma": {
+      "title": "Trauma & Fracture Surgery",
+      "description": "Emergency orthopedic care and complex fracture repair with state-of-the-art surgical techniques.",
+      "detailDescription": "Comprehensive trauma care and fracture surgery using advanced fixation techniques to restore bone integrity and joint function after injuries.",
+      "procedures": {
+        "ankleFractures": "Ankle Fractures",
+        "ankleFracturesDesc": "Surgical repair of complex ankle fractures and malleolar injuries",
+        "hipFractures": "Hip Fracture Surgery",
+        "hipFracturesDesc": "Emergency treatment of hip fractures including femoral neck and intertrochanteric fractures",
+        "elbowFractures": "Elbow Fractures",
+        "elbowFracturesDesc": "Complex elbow fracture repair including olecranon and radial head fractures",
+        "jointDislocations": "Joint Dislocations and Repairs",
+        "jointDislocationsDesc": "Treatment of joint dislocations and associated ligament injuries",
+        "footAnkleSurgeries": "Foot & Ankle Surgeries",
+        "footAnkleSurgeriesDesc": "Comprehensive foot and ankle trauma surgery and reconstruction",
+        "cartilageInjuries": "Cartilage and Femur Injuries",
+        "cartilageInjuriesDesc": "Treatment of cartilage damage and complex femur fractures"
+      }
+    },
+    "pediatric": {
+      "title": "Pediatric Orthopedics",
+      "description": "Specialized care for children's orthopedic conditions including hip dysplasia and developmental disorders.",
+      "detailDescription": "Specialized orthopedic care for children, focusing on growth-related conditions, congenital deformities, and pediatric trauma with age-appropriate treatment approaches.",
+      "procedures": {
+        "congenitalDeformity": "Congenital Deformity Correction",
+        "congenitalDeformityDesc": "Surgical correction of birth defects affecting bones and joints",
+        "hipDislocation": "Pediatric Hip Dislocation Treatment",
+        "hipDislocationDesc": "Treatment of developmental dysplasia of the hip (DDH) in children",
+        "clubfootCorrection": "Clubfoot Correction",
+        "clubfootCorrection": "Comprehensive treatment of clubfoot deformity in infants and children",
+        "shoulderDislocation": "Pediatric Shoulder Dislocation",
+        "shoulderDislocationDesc": "Treatment of shoulder instability and dislocations in young patients",
+        "jointSurgeries": "Pediatric Joint Surgeries",
+        "jointSurgeriesDesc": "Age-appropriate joint surgeries preserving growth plates and future development"
+      }
+    },
+    "sports": {
+      "title": "Sports Injuries & Rehabilitation",
+      "description": "Comprehensive treatment for athletic injuries with focus on safe return to sport activities.",
+      "detailDescription": "Specialized treatment of sports-related injuries with emphasis on rapid recovery, performance restoration, and injury prevention for athletes of all levels.",
+      "procedures": {
+        "muscleLigamentInjuries": "Muscle, Ligament, and Joint Injuries",
+        "muscleLigamentInjuriesDesc": "Comprehensive treatment of acute and chronic sports injuries",
+        "athleteRehabilitation": "Rehabilitation for Athletes",
+        "athleteRehabilitationDesc": "Sport-specific rehabilitation programs for safe return to competition",
+        "overuseInjuries": "Overuse Injuries and Tendonitis",
+        "overuseInjuriesDesc": "Treatment of repetitive stress injuries and chronic tendon problems",
+        "achillesTendon": "Achilles Tendon Conditions",
+        "achillesTendonDesc": "Surgical and non-surgical treatment of Achilles tendon injuries and ruptures"
+      }
+    },
+    "jointNerve": {
+      "title": "Joint & Nerve Conditions",
+      "description": "Advanced procedures for joint problems and nerve compression syndromes.",
+      "detailDescription": "Specialized treatment of joint disorders, nerve compression syndromes, and chronic pain conditions using both surgical and non-surgical approaches.",
+      "procedures": {
+        "carpalTunnel": "Carpal Tunnel Syndrome",
+        "carpalTunnelDesc": "Surgical release of median nerve compression in the wrist",
+        "nerveDecompression": "Nerve Decompression Surgeries",
+        "nerveDecompressionDesc": "Treatment of various nerve compression syndromes throughout the body",
+        "jointDisorders": "Joint Disorders and Alignment Issues",
+        "jointDisordersDesc": "Correction of joint deformities and alignment problems",
+        "intraArticularInjections": "Intra-articular Injections",
+        "intraArticularInjectionsDesc": "Therapeutic injections for joint pain and inflammation management"
+      }
+    }
   },
   "home": {
     "title": "Dr. Gürkan Eryanılmaz",
