@@ -203,7 +203,7 @@ const ExpertiseDetail = () => {
                   {t('expertise.contactNow')}
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
+              <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border border-blue-200 text-lg px-8 py-3">
                 <a href="tel:+994553977874">
                   <Phone className="mr-2 h-5 w-5" />
                   {t('expertise.callDirectly')}
