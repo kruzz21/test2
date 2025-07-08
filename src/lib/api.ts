@@ -82,22 +82,29 @@ export const appointmentsApi = {
 
 // Blog API
 export const blogApi = {
-  async getPublished() {
+  async getPublished(searchTerm?: string) {
     try {
-      console.log('blogApi.getPublished: Starting fetch...');
+      console.log('blogApi.getPublished: Starting fetch...', searchTerm ? `with search: ${searchTerm}` : '');
       
-      const { data, error } = await supabase
+      let query = supabase
         .from('blog_posts')
         .select('*')
-        .eq('published', true)
-        .order('created_at', { ascending: false });
+        .eq('published', true);
+
+      // Add search functionality if searchTerm is provided
+      if (searchTerm && searchTerm.trim()) {
+        const trimmedSearch = searchTerm.trim();
+        query = query.or(`title_en.ilike.%${trimmedSearch}%,title_tr.ilike.%${trimmedSearch}%,title_az.ilike.%${trimmedSearch}%,excerpt_en.ilike.%${trimmedSearch}%,excerpt_tr.ilike.%${trimmedSearch}%,excerpt_az.ilike.%${trimmedSearch}%,content_en.ilike.%${trimmedSearch}%,content_tr.ilike.%${trimmedSearch}%,content_az.ilike.%${trimmedSearch}%`);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
       
       if (error) {
         console.error('blogApi.getPublished: Supabase error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
       
-      console.log('blogApi.getPublished: Success, fetched', data?.length || 0, 'posts');
+      console.log('blogApi.getPublished: Success, fetched', data?.length || 0, 'posts', searchTerm ? `(filtered by: ${searchTerm})` : '');
       return data || [];
     } catch (error) {
       console.error('blogApi.getPublished: Unexpected error:', error);

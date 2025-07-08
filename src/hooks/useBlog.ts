@@ -7,13 +7,13 @@ export const useBlog = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchBlogPosts = async () => {
+  const fetchBlogPosts = async (searchTerm?: string) => {
     try {
       setLoading(true);
       setError(null); // Clear any previous errors
-      console.log('Fetching blog posts...');
+      console.log('Fetching blog posts...', searchTerm ? `with search term: ${searchTerm}` : '');
       
-      const data = await blogApi.getPublished();
+      const data = await blogApi.getPublished(searchTerm);
       console.log('Blog posts fetched successfully:', data);
       
       setBlogPosts(data || []);

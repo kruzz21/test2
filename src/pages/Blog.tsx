@@ -12,12 +12,18 @@ import { Toaster } from '@/components/ui/toaster';
 const Blog = () => {
   const { t, i18n } = useTranslation();
   const { blogPosts, loading, error, fetchBlogPosts } = useBlog();
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   const handleRetry = () => {
-    fetchBlogPosts();
+    fetchBlogPosts(searchTerm);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    fetchBlogPosts(value);
   };
 
   // Get featured post (first post) and remaining posts
@@ -156,6 +162,8 @@ const Blog = () => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input 
                       placeholder="Search articles..." 
+                      value={searchTerm}
+                      onChange={(e) => handleSearchChange(e.target.value)}
                       className="pl-10 bg-white border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
