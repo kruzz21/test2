@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calendar, CheckCircle } from 'lucide-react';
 import { ArrowLeft, Calendar, CheckCircle, Phone } from 'lucide-react';
 
 const ExpertiseDetail = () => {
