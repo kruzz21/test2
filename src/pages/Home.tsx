@@ -432,7 +432,7 @@ const Home = () => {
             {/* Section Header */}
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                Gallery and Media
+                {t('home.gallery.title')}
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 {t('home.gallery.subtitle')}
@@ -618,6 +618,16 @@ const Home = () => {
                 )}
               </div>
             )}
+
+            {/* View Full Gallery Button */}
+            <div className="text-center mt-12">
+              <Button asChild variant="outline" size="lg" className="text-base">
+                <Link to="/admin">
+                  {t('home.gallery.button')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
