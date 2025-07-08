@@ -127,7 +127,7 @@ const ExpertiseDetail = () => {
           <div className="max-w-4xl mx-auto text-center text-white">
             {/* Back Button */}
             <div className="mb-8">
-              <Button asChild className="bg-white text-blue-600 hover:bg-blue-100">
+              <Button asChild className="bg-white text-black-600 hover:bg-blue-100">
                 <Link to="/areas-of-expertise">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   {t('expertise.backToExpertise')}
