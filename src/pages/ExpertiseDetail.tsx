@@ -127,7 +127,7 @@ const ExpertiseDetail = () => {
           <div className="max-w-4xl mx-auto text-center text-white">
             {/* Back Button */}
             <div className="mb-8">
-              <Button asChild className="">
+              <Button asChild className="bg-white text-black-600 hover:bg-blue-100">
                 <Link to="/areas-of-expertise">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   {t('expertise.backToExpertise')}
@@ -203,7 +203,7 @@ const ExpertiseDetail = () => {
                   {t('expertise.contactNow')}
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3">
+              <Button asChild variant="outline" size="lg" className="">
                 <a href="tel:+994553977874">
                   <Phone className="mr-2 h-5 w-5" />
                   {t('expertise.callDirectly')}
