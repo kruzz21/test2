@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Calendar, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, CheckCircle, Phone } from 'lucide-react';
 
 const ExpertiseDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -127,7 +128,7 @@ const ExpertiseDetail = () => {
           <div className="max-w-4xl mx-auto text-center text-white">
             {/* Back Button */}
             <div className="mb-8">
-              <Button asChild variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
+              <Button asChild className="bg-white text-blue-600 hover:bg-blue-100">
                 <Link to="/areas-of-expertise">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   {t('expertise.backToExpertise')}
@@ -205,6 +206,7 @@ const ExpertiseDetail = () => {
               </Button>
               <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
                 <a href="tel:+994553977874">
+                  <Phone className="mr-2 h-5 w-5" />
                   {t('expertise.callDirectly')}
                 </a>
               </Button>
