@@ -10,7 +10,7 @@ import { useBlog } from '@/hooks/useBlog';
 import { useGallery } from '@/hooks/useGallery';
 
 const Home = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { blogPosts, loading: blogLoading, error: blogError, fetchBlogPosts } = useBlog();
   const { galleryItems, loading: galleryLoading } = useGallery();
 
@@ -23,9 +23,6 @@ const Home = () => {
 
   // Scroll refs for carousels
   const photoScrollRef = useRef<HTMLDivElement>(null);
-
-  // Get current language suffix for multilingual content
-  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   const surgicalStats = [
     { 
@@ -60,14 +57,9 @@ const Home = () => {
     },
   ];
 
-  const expertiseAreas = [
-    'Arthroscopic Surgery',
-    'Joint Replacement Surgery',
-    'Trauma & Fracture Surgery',
-    'Pediatric Orthopedics',
-    'Sports Injuries & Rehabilitation',
-    'Joint & Nerve Surgery'
-  ];
+  // Get current language suffix for multilingual content
+  const { i18n } = useTranslation();
+  const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
   // Helper functions
   const getYouTubeVideoId = (url: string): string | null => {
@@ -343,9 +335,9 @@ const Home = () => {
 
                 {/* Areas of Expertise */}
                 <div className="mb-6 md:mb-8">
-                  <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Areas of Expertise</h3>
+                  <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">{t('home.about.areasOfExpertise')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {expertiseAreas.map((area, index) => (
+                    {Object.values(t('home.about.expertiseItems', { returnObjects: true })).map((area, index) => (
                       <div key={index} className="flex items-center space-x-2">
                         <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         <span className="text-sm md:text-base text-gray-700">{area}</span>
@@ -384,7 +376,7 @@ const Home = () => {
                 {t('home.surgicalExperience.title')}
               </h2>
               <p className="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-                Over 25 years of proven excellence in orthopedic surgery with thousands of successful procedures
+                {t('home.surgicalExperience.subtitle')}
               </p>
             </div>
 
@@ -403,7 +395,7 @@ const Home = () => {
                           {stat.value}
                         </div>
                         <h3 className="text-sm md:text-lg font-semibold text-blue-100 leading-tight">
-                          {stat.title}
+                          {t(`home.surgicalExperience.stats.${stat.key}`)}
                         </h3>
                       </div>
                     </CardContent>
@@ -655,7 +647,7 @@ const Home = () => {
                 {t('home.blog.title')}
               </h2>
               <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Stay informed with the latest insights and medical updates
+                {t('home.blog.subtitle')}
               </p>
             </div>
 

@@ -90,7 +90,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-sm text-gray-400">
-            © 2025 Op. Dr. Gürkan Eryanılmaz. Tüm hakları saklıdır.
+            {t('home.footer.copyright')}
           </p>
         </div>
       </div>
