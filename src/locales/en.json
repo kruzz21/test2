@@ -3,7 +3,6 @@
     "home": "Home",
     "about": "About",
     "services": "Services",
-    "symptoms": "Symptoms",
     "gallery": "Gallery",
     "blog": "Blog",
     "reviews": "Reviews",
@@ -43,14 +42,31 @@
       "paragraph1": "Born and raised in İzmir, Turkey, Dr. Gürkan Eryanılmaz began his medical education at Ege University Faculty of Medicine in 1987 and graduated with honors in 1993. Motivated by a passion for musculoskeletal health, he pursued residency in orthopedic and traumatology surgery at İzmir Tepecik Training and Research Hospital from 1996 to 2000.",
       "paragraph2": "Since 2000, he has practiced as an orthopedic and traumatology specialist, performing thousands of surgeries including minimally invasive arthroscopic repairs and complex joint replacements. His meticulous approach and dedication to patient outcomes have earned him a reputation for excellence.",
       "paragraph3": "He served many years at Afyon Kocatepe State Hospital before joining Medera Hospital in Baku, where he expanded his expertise with international cases. Now back in Turkey, he continues his practice at Afyon Kocatepe State Hospital, offering personalized care informed by global experience.",
-      "button": "Learn More"
+      "button": "Learn More",
+      "areasOfExpertise": "Areas of Expertise",
+      "expertiseItems": {
+        "arthroscopicSurgery": "Arthroscopic Surgery",
+        "jointReplacementSurgery": "Joint Replacement Surgery",
+        "traumaFractureSurgery": "Trauma & Fracture Surgery",
+        "pediatricOrthopedics": "Pediatric Orthopedics",
+        "sportsInjuriesRehabilitation": "Sports Injuries & Rehabilitation",
+        "jointNerveSurgery": "Joint & Nerve Surgery"
+      }
     },
     "surgicalExperience": {
       "title": "Surgical Experience at a Glance",
-      "button": "25+ Years of Surgical Excellence"
+      "subtitle": "Over 25 years of proven excellence in orthopedic surgery with thousands of successful procedures",
+      "button": "25+ Years of Surgical Excellence",
+      "stats": {
+        "kneeReplacements": "Knee Replacements",
+        "fracturesSurgeries": "Fracture Surgeries",
+        "arthroscopies": "Arthroscopic Procedures",
+        "pediatricHip": "Pediatric Hip Surgeries",
+        "clubfootCorrections": "Clubfoot Corrections"
+      }
     },
     "galleryAndMedia": {
-      "title": "Gallery and Media",
+      "title": "Patient Stories & Moments",
       "subtitle": "See real recovery stories and shared moments from patients."
     },
     "featuredVideos": {
@@ -60,16 +76,16 @@
       "title": "Medical Center Photos",
       "counterPlural": "{{count}} photos"
     },
-    "symptoms": {
-      "title": "Symptoms & Treatments",
-      "button": "Learn More"
-    },
     "blog": {
       "title": "Latest from the Blog",
+      "subtitle": "Stay informed with the latest insights and medical updates",
       "button": "Visit Blog"
     },
     "common": {
       "counterFormat": "{{current}}/{{total}}"
+    },
+    "footer": {
+      "copyright": "© 2025 Op. Dr. Gürkan Eryanılmaz. All rights reserved."
     }
   },
   "hero": {
@@ -129,14 +145,6 @@
     "consultationDescription": "Contact Dr. Eryanılmaz to discuss your orthopedic needs and treatment options.",
     "scheduleAppointment": "Schedule Appointment",
     "callNow": "Call Now"
-  },
-  "symptoms": {
-    "title": "Symptoms & Conditions",
-    "subtitle": "Learn about common orthopedic conditions and their treatments",
-    "readMore": "Read More",
-    "dontSeeCondition": "Don't See Your Condition?",
-    "conditionDescription": "Contact Dr. Eryanılmaz for a comprehensive evaluation of your specific orthopedic concerns.",
-    "scheduleConsultation": "Schedule Consultation"
   },
   "gallery": {
     "title": "Gallery",

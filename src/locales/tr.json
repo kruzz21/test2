@@ -3,7 +3,6 @@
     "home": "",
     "about": "",
     "services": "",
-    "symptoms": "",
     "gallery": "",
     "blog": "",
     "reviews": "",
@@ -43,11 +42,28 @@
       "paragraph1": "",
       "paragraph2": "",
       "paragraph3": "",
-      "button": ""
+      "button": "",
+      "areasOfExpertise": "",
+      "expertiseItems": {
+        "arthroscopicSurgery": "",
+        "jointReplacementSurgery": "",
+        "traumaFractureSurgery": "",
+        "pediatricOrthopedics": "",
+        "sportsInjuriesRehabilitation": "",
+        "jointNerveSurgery": ""
+      }
     },
     "surgicalExperience": {
       "title": "",
-      "button": ""
+      "subtitle": "",
+      "button": "",
+      "stats": {
+        "kneeReplacements": "",
+        "fracturesSurgeries": "",
+        "arthroscopies": "",
+        "pediatricHip": "",
+        "clubfootCorrections": ""
+      }
     },
     "galleryAndMedia": {
       "title": "",
@@ -60,16 +76,16 @@
       "title": "",
       "counterPlural": ""
     },
-    "symptoms": {
-      "title": "",
-      "button": ""
-    },
     "blog": {
       "title": "",
+      "subtitle": "",
       "button": ""
     },
     "common": {
       "counterFormat": ""
+    },
+    "footer": {
+      "copyright": "© 2025 Op. Dr. Gürkan Eryanılmaz. Tüm hakları saklıdır."
     }
   },
   "hero": {
@@ -129,14 +145,6 @@
     "consultationDescription": "",
     "scheduleAppointment": "",
     "callNow": ""
-  },
-  "symptoms": {
-    "title": "",
-    "subtitle": "",
-    "readMore": "",
-    "dontSeeCondition": "",
-    "conditionDescription": "",
-    "scheduleConsultation": ""
   },
   "gallery": {
     "title": "",
