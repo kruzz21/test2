@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import './lib/i18n';
+import { useTheme } from './hooks/useTheme';
 import { adminAuth } from './lib/adminAuth';
 
 import Layout from './layout/Layout';
@@ -30,11 +31,17 @@ function ScrollToTop() {
 
 function App() {
   const { i18n } = useTranslation();
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     // Set document language
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
+
+  useEffect(() => {
+    // Update document class for theme
+    document.documentElement.className = resolvedTheme;
+  }, [resolvedTheme]);
 
   useEffect(() => {
     // Initialize admin authentication on app load

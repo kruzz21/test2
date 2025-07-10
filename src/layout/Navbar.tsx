@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Menu, Phone, MessageCircle, Languages } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -60,6 +61,9 @@ const Navbar = () => {
 
           {/* Desktop Actions - Changed from lg:flex to xl:flex */}
           <div className="hidden xl:flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <ThemeToggle variant="dropdown" size="sm" />
+            
             {/* Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -159,6 +163,8 @@ const Navbar = () => {
 
                   {/* Contact Actions Mobile */}
                   <div className="flex space-x-2">
+                    <ThemeToggle variant="button" size="sm" showLabel />
+                    
                     <Button variant="outline" size="sm" asChild className="flex-1">
                       <a href="tel:+994553977874" className="flex items-center justify-center">
                         <Phone className="h-4 w-4 mr-2" />
