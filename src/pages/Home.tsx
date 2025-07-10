@@ -362,7 +362,7 @@ const Home = () => {
       <section 
         className="py-16 md:py-20 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white w-full relative"
         style={{
-          backgroundImage: 'url(https://cdn.discordapp.com/attachments/1114334300532383895/1391141966820933692/xbb.png?ex=686ad16b&is=68697feb&hm=30da3f194bfe41eebedcfbee8eee29958ac5619038a01e5c0562c2adcc5d5247&)',
+          backgroundImage: 'url(https://lh3.google.com/u/0/d/1xrS4Xd_Es32CZiPhuD6bx5Z0NugISp2X=w2560-h1305-iv1?auditContext=forDisplay)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'overlay'
