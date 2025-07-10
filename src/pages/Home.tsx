@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw, Video, Image as ImageIcon, Eye, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ArrowRight, Award, Users, Calendar, Star, Activity, Heart, CheckCircle, Play, FileText, User, Phone, MessageCircle, RefreshCw, Video, Image as ImageIcon, Eye, ChevronLeft, ChevronRight, X, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBlog } from '@/hooks/useBlog';
 import { useGallery } from '@/hooks/useGallery';
@@ -166,14 +166,14 @@ const Home = () => {
         <div 
           className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-16 md:py-32 w-full"
           style={{
-            backgroundImage: 'url(https://lh3.google.com/u/0/d/1QQQgFnCrjogFkSXh4SwXCU1mDxsSxAsa=w2708-h2436-iv1?auditContext=forDisplay&=&format=webp&quality=lossless&width=1232&height=528)',
+            backgroundImage: 'url(https://media.discordapp.net/attachments/1114334300532383895/1391438925628968960/herobg.png?ex=686be5fb&is=686a947b&hm=747fc333bd251b96ac57ebf969e7a32d4969d91e0eb4aa10a7a8396a97a1ce3e&=&format=webp&quality=lossless&width=1232&height=528)',
             backgroundSize: 'cover',
             backgroundPosition: 'right bottom',
             backgroundBlendMode: 'overlay'
           }}
         >
           {/* Transparent black overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
           
           <div className="relative z-10 w-full px-5 md:px-8">
             <div className="max-w-4xl mx-auto text-center">
@@ -370,7 +370,7 @@ const Home = () => {
       <section 
         className="py-16 md:py-20 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white w-full relative"
         style={{
-          backgroundImage: 'url(https://lh3.google.com/u/0/d/1xrS4Xd_Es32CZiPhuD6bx5Z0NugISp2X=w2560-h1305-iv1?auditContext=forDisplay)',
+          backgroundImage: 'url(https://cdn.discordapp.com/attachments/1114334300532383895/1391141966820933692/xbb.png?ex=686ad16b&is=68697feb&hm=30da3f194bfe41eebedcfbee8eee29958ac5619038a01e5c0562c2adcc5d5247&)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'overlay'
@@ -429,14 +429,38 @@ const Home = () => {
       <section className="py-16 bg-white w-full">
         <div className="w-full px-5 md:px-8">
           <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
+            {/* Section Header with Social Media Icons */}
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                {t('home.gallery.title')}
+                {t('home.galleryAndMedia.title')}
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                {t('home.gallery.subtitle')}
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+                {t('home.galleryAndMedia.subtitle')}
               </p>
+              
+              {/* Social Media Icons */}
+              <div className="flex items-center justify-center space-x-4">
+                <a 
+                  href="https://instagram.com/uzmantravmatolojiortoped" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <Instagram className="h-4 w-4" />
+                  <span className="text-sm font-medium">@uzmantravmatolojiortoped</span>
+                </a>
+                <a 
+                  href="https://tiktok.com/@opdrgeryanilmaz" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className="text-black text-xs font-bold">TT</span>
+                  </div>
+                  <span className="text-sm font-medium">@opdrgeryanilmaz</span>
+                </a>
+              </div>
             </div>
 
             {galleryLoading ? (
@@ -455,10 +479,10 @@ const Home = () => {
                         <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
                           <Video className="h-4 w-4 text-white" />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900">Featured Videos</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{t('home.featuredVideos.title')}</h3>
                       </div>
                       <span className="text-sm text-gray-500 font-medium">
-                        {currentVideoIndex + 1}/{videos.length}
+                        {t('home.common.counterFormat', { current: currentVideoIndex + 1, total: videos.length })}
                       </span>
                     </div>
 
@@ -555,11 +579,11 @@ const Home = () => {
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                           <ImageIcon className="h-4 w-4 text-white" />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900">Medical Center Photos</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{t('home.medicalPhotos.title')}</h3>
                       </div>
                       <div className="flex items-center space-x-3">
                         <span className="text-sm text-gray-500 font-medium">
-                          {photos.length} photos
+                          {t('home.medicalPhotos.counterPlural', { count: photos.length })}
                         </span>
                         <div className="flex space-x-1">
                           <Button
@@ -618,16 +642,6 @@ const Home = () => {
                 )}
               </div>
             )}
-
-            {/* View Full Gallery Button */}
-            <div className="text-center mt-12">
-              <Button asChild variant="outline" size="lg" className="text-base">
-                <Link to="/admin">
-                  {t('home.gallery.button')}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </section>
@@ -784,28 +798,36 @@ const Home = () => {
             </DialogTitle>
           </DialogHeader>
           <div className="relative bg-white rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            {/* Navigation arrows */}
+            {/* Navigation arrows - improved visibility */}
             {photos.length > 1 && (
               <>
                 <button
                   onClick={() => navigatePhoto('prev')}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full flex items-center justify-center text-white transition-colors"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-black/50 hover:bg-black/70 rounded-lg flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm"
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronLeft className="h-6 w-6" />
                 </button>
                 <button
                   onClick={() => navigatePhoto('next')}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full flex items-center justify-center text-white transition-colors"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-black/50 hover:bg-black/70 rounded-lg flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm"
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-6 w-6" />
                 </button>
               </>
             )}
 
-            {/* Photo counter */}
-            <div className="absolute top-4 left-4 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
-              {selectedPhotoIndex + 1}/{photos.length}
+            {/* Photo counter - improved visibility */}
+            <div className="absolute top-4 left-4 z-10 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
+              {t('home.common.counterFormat', { current: selectedPhotoIndex + 1, total: photos.length })}
             </div>
+
+            {/* Close button - improved visibility */}
+            <button
+              onClick={closePhotoModal}
+              className="absolute top-4 right-4 z-20 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-lg flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm"
+            >
+              <X className="h-5 w-5" />
+            </button>
             
             {selectedPhoto && (
               <>
