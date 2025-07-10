@@ -90,28 +90,76 @@
     }
   },
   "about": {
-    "title": "",
-    "subtitle": "",
-    "specialistTitle": "",
-    "experienceYears": "",
-    "successfulSurgeries": "",
-    "biography": "",
-    "mission": "",
-    "careerTimeline": "",
-    "areasOfExpertise": "",
-    "regionsServed": "",
+    "title": "Dr. Gürkan Eryanılmaz Hakkında",
+    "subtitle": "Ortopedik Bakımda Mükemmelliğe Adanmış",
+    "specialistTitle": "Ortopedi ve Travmatoloji Uzmanı",
+    "experienceYears": "25+ Yıl Deneyim",
+    "successfulSurgeries": "20.000+ Başarılı Ameliyat",
+    "biography": "Biyografi",
+    "mission": "Misyon ve Vizyon",
+    "missionText": "En güncel cerrahi teknikleri ve tıbbi teknolojileri kullanarak, hastalarımın daha kaliteli ve ağrısız bir yaşama kavuşmasına katkı sağlamak için çalışıyorum. Hedefim; etik değerlerden ödün vermeden, ulaşılabilir ve güvenilir ortopedik bakım sunarak hastalarımın hayatında fark yaratmak.",
+    "careerTimeline": "Kariyer Zaman Çizelgesi",
+    "areasOfExpertise": "Uzmanlık Alanları",
+    "regionsServed": "Hizmet Verilen Bölgeler",
     "timeline": {
-      "born": "",
-      "egeUniversity": "",
-      "residency": "",
-      "izmirHospital": "",
-      "seniorSpecialist": "",
-      "afyonHospital": "",
-      "mederaHospital": ""
+      "born": "İzmir, Türkiye'de doğdu",
+      "egeUniversity": "Ege Üniversitesi Tıp Fakültesi",
+      "residency": "Ortopedi ve Travmatoloji İhtisası",
+      "izmirHospital": "İzmir Tepecik Eğitim ve Araştırma Hastanesi",
+      "seniorSpecialist": "Kıdemli Ortopedi ve Travmatoloji Uzmanı",
+      "afyonHospital": "Afyon Kocatepe Devlet Hastanesi",
+      "mederaHospital": "Medera Hastanesi, Bakü"
     },
     "locations": {
-      "turkey": "",
-      "azerbaijan": ""
+      "turkey": "Türkiye (Afyon)",
+      "azerbaijan": "Azerbaycan (Bakü, Balaken, Lenkaran)"
+    }
+  },
+  "expertise": {
+    "title": "Uzmanlık Alanları",
+    "subtitle": "Op. Dr. Gürkan Eryanılmaz tarafından gerçekleştirilen uzman ortopedik tedavileri keşfedin.",
+    "procedures": "Prosedürler",
+    "proceduresDescription": "Bu uzmanlık alanında mevcut kapsamlı tedaviler ve cerrahi prosedürler.",
+    "viewDetails": "Detayları Görüntüle",
+    "notFound": "Uzmanlık Alanı Bulunamadı",
+    "notFoundDescription": "Aradığınız uzmanlık alanı mevcut değil veya taşınmış.",
+    "backToExpertise": "Uzmanlık Alanlarına Geri Dön",
+    "bookAppointmentTitle": "Randevu Alın",
+    "bookAppointmentDescription": "Dr. Eryanılmaz'dan durumunuz hakkında uzman tavsiyesi alın.",
+    "contactNow": "Şimdi İletişime Geçin",
+    "callDirectly": "Doğrudan Arayın",
+    "notSureTitle": "Nereden başlayacağınızdan emin değil misiniz?",
+    "notSureDescription": "Şimdi bir konsültasyon rezervasyonu yapın ve Dr. Eryanılmaz'ın durumunuz için en iyi tedavi seçeneğine rehberlik etmesine izin verin.",
+    "bookConsultation": "Şimdi Konsültasyon Rezervasyonu Yapın",
+    "arthroscopic": {
+      "title": "Artroskopik Cerrahi",
+      "description": "Daha hızlı iyileşme ve daha iyi sonuçlar için gelişmiş artroskopik teknikler kullanarak minimal invaziv eklem cerrahisi.",
+      "detailDescription": "Daha küçük kesiler, azaltılmış ağrı ve daha hızlı iyileşme süreleri ile eklem problemlerini teşhis etmek ve tedavi etmek için artroskopi kullanan gelişmiş minimal invaziv cerrahi teknikler."
+    },
+    "jointReplacement": {
+      "title": "Eklem Protezi Cerrahisi",
+      "description": "En son protez teknolojilerini kullanarak kalça, diz ve omuz için tam eklem protezi prosedürleri.",
+      "detailDescription": "Ciddi hasar görmüş eklemlerde hareketliliği restore etmek ve ağrıyı ortadan kaldırmak için en gelişmiş protez teknolojilerini kullanan son teknoloji eklem protezi cerrahisi."
+    },
+    "trauma": {
+      "title": "Travma ve Kırık Cerrahisi",
+      "description": "Son teknoloji cerrahi tekniklerle acil ortopedik bakım ve karmaşık kırık onarımı.",
+      "detailDescription": "Yaralanmalar sonrası kemik bütünlüğünü ve eklem fonksiyonunu restore etmek için gelişmiş fiksasyon teknikleri kullanan kapsamlı travma bakımı ve kırık cerrahisi."
+    },
+    "pediatric": {
+      "title": "Pediatrik Ortopedi",
+      "description": "Kalça displazisi ve gelişimsel bozukluklar dahil çocukların ortopedik durumları için özel bakım.",
+      "detailDescription": "Büyüme ile ilgili durumlar, konjenital deformiteler ve yaşa uygun tedavi yaklaşımları ile pediatrik travmaya odaklanan çocuklar için özel ortopedik bakım."
+    },
+    "sports": {
+      "title": "Spor Yaralanmaları ve Rehabilitasyon",
+      "description": "Spor aktivitelerine güvenli dönüşe odaklanarak atletik yaralanmalar için kapsamlı tedavi.",
+      "detailDescription": "Hızlı iyileşme, performans restorasyonu ve her seviyedeki sporcular için yaralanma önleme vurgusu ile spor ile ilgili yaralanmaların özel tedavisi."
+    },
+    "jointNerve": {
+      "title": "Eklem ve Sinir Durumları",
+      "description": "Eklem problemleri ve sinir sıkışma sendromları için gelişmiş prosedürler.",
+      "detailDescription": "Hem cerrahi hem de cerrahi olmayan yaklaşımlar kullanarak eklem bozuklukları, sinir sıkışma sendromları ve kronik ağrı durumlarının özel tedavisi."
     }
   },
   "hero": {

@@ -1,1 +1,115 @@
-{}
+{
+  "nav": {
+    "home": "Ana Səhifə",
+    "about": "Haqqında",
+    "services": "Xidmətlər",
+    "gallery": "Qalereya",
+    "blog": "Bloq",
+    "reviews": "Rəylər",
+    "contact": "Əlaqə",
+    "faq": "Tez-tez Verilən Suallar",
+    "appointment": "Randevu Al",
+    "expertise": "İxtisas Sahələri"
+  },
+  "about": {
+    "title": "Dr. Gürkan Eryanılmaz Haqqında",
+    "subtitle": "Ortopedik Qayğıda Mükəmməlliyə Həsr Olunmuş",
+    "specialistTitle": "Ortopediya və Travmatologiya Mütəxəssisi",
+    "experienceYears": "25+ İl Təcrübə",
+    "successfulSurgeries": "20.000+ Uğurlu Əməliyyat",
+    "biography": "Bioqrafiya",
+    "mission": "Missiya və Vizyon",
+    "missionText": "Ən müasir cərrahi texnikalardan və tibbi texnologiyalardan istifadə edərək pasiyentlərimin həyat keyfiyyətini və hərəkət qabiliyyətini artırmağa çalışıram. Məqsədim – vicdanlı, etibarlı və əlçatan ortopedik xidmət göstərməklə insanların sağlamlığına həqiqi töhfə verməkdir.",
+    "careerTimeline": "Karyera Zaman Cədvəli",
+    "areasOfExpertise": "İxtisas Sahələri",
+    "regionsServed": "Xidmət Göstərilən Bölgələr",
+    "timeline": {
+      "born": "İzmir, Türkiyədə anadan olub",
+      "egeUniversity": "Ege Universiteti Tibb Fakültəsi",
+      "residency": "Ortopediya və Travmatologiya İxtisaslaşması",
+      "izmirHospital": "İzmir Tepecik Tədris və Araşdırma Xəstəxanası",
+      "seniorSpecialist": "Baş Ortopediya və Travmatologiya Mütəxəssisi",
+      "afyonHospital": "Afyon Kocatepe Dövlət Xəstəxanası",
+      "mederaHospital": "Medera Xəstəxanası, Bakı"
+    },
+    "locations": {
+      "turkey": "Türkiyə (Afyon)",
+      "azerbaijan": "Azərbaycan (Bakı, Balakən, Lənkəran)"
+    }
+  },
+  "expertise": {
+    "title": "İxtisas Sahələri",
+    "subtitle": "Op. Dr. Gürkan Eryanılmaz tərəfindən həyata keçirilən ixtisaslaşmış ortopedik müalicələri kəşf edin.",
+    "procedures": "Prosedurlar",
+    "proceduresDescription": "Bu ixtisas sahəsində mövcud olan hərtərəfli müalicələr və cərrahi prosedurlar.",
+    "viewDetails": "Təfərrüatları Göstər",
+    "notFound": "İxtisas Sahəsi Tapılmadı",
+    "notFoundDescription": "Axtardığınız ixtisas sahəsi mövcud deyil və ya köçürülüb.",
+    "backToExpertise": "İxtisas Sahələrinə Qayıt",
+    "bookAppointmentTitle": "Randevu Alın",
+    "bookAppointmentDescription": "Dr. Eryanılmaz-dan vəziyyətiniz haqqında mütəxəssis məsləhəti alın.",
+    "contactNow": "İndi Əlaqə Saxlayın",
+    "callDirectly": "Birbaşa Zəng Edin",
+    "notSureTitle": "Haradan başlayacağınızı bilmirsiniz?",
+    "notSureDescription": "İndi konsultasiya rezerv edin və Dr. Eryanılmaz-ın vəziyyətiniz üçün ən yaxşı müalicə variantına rəhbərlik etməsinə icazə verin.",
+    "bookConsultation": "İndi Konsultasiya Rezerv Edin",
+    "arthroscopic": {
+      "title": "Artroskopik Cərrahi",
+      "description": "Daha sürətli sağalma və daha yaxşı nəticələr üçün qabaqcıl artroskopik texnikalardan istifadə edərək minimal invaziv oynaq cərrahiyyəsi.",
+      "detailDescription": "Daha kiçik kəsiklər, azaldılmış ağrı və daha sürətli sağalma müddətləri ilə oynaq problemlərini diaqnoz etmək və müalicə etmək üçün artroskopiyadan istifadə edən qabaqcıl minimal invaziv cərrahi texnikalar."
+    },
+    "jointReplacement": {
+      "title": "Oynaq Əvəzetmə Cərrahiyyəsi",
+      "description": "Ən son protez texnologiyalarından istifadə edərək omba, diz və çiyin üçün tam oynaq əvəzetmə prosedurları.",
+      "detailDescription": "Ciddi zədələnmiş oynaqlarda hərəkətliliyi bərpa etmək və ağrını aradan qaldırmaq üçün ən qabaqcıl protez texnologiyalarından istifadə edən ən müasir oynaq əvəzetmə cərrahiyyəsi."
+    },
+    "trauma": {
+      "title": "Travma və Sınıq Cərrahiyyəsi",
+      "description": "Ən müasir cərrahi texnikalarla təcili ortopedik qayğı və mürəkkəb sınıq təmiri.",
+      "detailDescription": "Yaralanmalardan sonra sümük bütövlüyünü və oynaq funksiyasını bərpa etmək üçün qabaqcıl fiksasiya texnikalarından istifadə edən hərtərəfli travma qayğısı və sınıq cərrahiyyəsi."
+    },
+    "pediatric": {
+      "title": "Pediatrik Ortopediya",
+      "description": "Omba displaziyası və inkişaf pozğunluqları daxil olmaqla uşaqların ortopedik vəziyyətləri üçün ixtisaslaşmış qayğı.",
+      "detailDescription": "Böyümə ilə əlaqəli vəziyyətlər, anadangəlmə deformasiyalar və yaşa uyğun müalicə yanaşmaları ilə pediatrik travmaya diqqət yetirən uşaqlar üçün ixtisaslaşmış ortopedik qayğı."
+    },
+    "sports": {
+      "title": "İdman Yaralanmaları və Reabilitasiya",
+      "description": "İdman fəaliyyətlərinə təhlükəsiz qayıdışa diqqət yetirərək atletik yaralanmalar üçün hərtərəfli müalicə.",
+      "detailDescription": "Sürətli sağalma, performansın bərpası və bütün səviyyələrdəki idmançılar üçün yaralanmaların qarşısının alınması vurğusu ilə idmanla əlaqəli yaralanmaların ixtisaslaşmış müalicəsi."
+    },
+    "jointNerve": {
+      "title": "Oynaq və Sinir Vəziyyətləri",
+      "description": "Oynaq problemləri və sinir sıxılması sindromları üçün qabaqcıl prosedurlar.",
+      "detailDescription": "Həm cərrahi, həm də qeyri-cərrahi yanaşmalardan istifadə edərək oynaq pozğunluqları, sinir sıxılması sindromları və xroniki ağrı vəziyyətlərinin ixtisaslaşmış müalicəsi."
+    }
+  },
+  "common": {
+    "loading": "Yüklənir...",
+    "error": "Xəta",
+    "success": "Uğur",
+    "back": "Geri",
+    "next": "Növbəti",
+    "previous": "Əvvəlki",
+    "save": "Saxla",
+    "cancel": "Ləğv et",
+    "delete": "Sil",
+    "edit": "Redaktə et",
+    "create": "Yarat",
+    "update": "Yenilə",
+    "submit": "Təqdim et",
+    "close": "Bağla",
+    "open": "Aç",
+    "yes": "Bəli",
+    "no": "Xeyr",
+    "confirm": "Təsdiq et",
+    "search": "Axtar",
+    "filter": "Filtr",
+    "sort": "Sırala",
+    "view": "Bax",
+    "download": "Yüklə",
+    "upload": "Yüklə",
+    "required": "Tələb olunur",
+    "optional": "İstəyə bağlı"
+  }
+}
