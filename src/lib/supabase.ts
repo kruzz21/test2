@@ -7,7 +7,56 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  }
+});
+
+// Global error handler for Supabase auth errors
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log('Auth state changed:', event, session?.user?.id);
+  
+  if (event === 'TOKEN_REFRESHED') {
+    console.log('Token refreshed successfully');
+  }
+  
+  if (event === 'SIGNED_OUT') {
+    console.log('User signed out');
+    // Clear any cached data or perform cleanup
+    localStorage.removeItem('supabase.auth.token');
+  }
+});
+
+// Helper function to handle auth errors
+export const handleAuthError = (error: any) => {
+  console.error('Supabase auth error:', error);
+  
+  // Check for refresh token errors
+  if (error?.message?.includes('refresh_token_not_found') || 
+      error?.message?.includes('Invalid Refresh Token') ||
+      error?.message?.includes('Refresh Token Not Found')) {
+    
+    console.log('Refresh token error detected, clearing session...');
+    
+    // Clear the session
+    supabase.auth.signOut().catch(console.error);
+    
+    // Clear local storage
+    localStorage.removeItem('supabase.auth.token');
+    localStorage.removeItem('sb-' + supabaseUrl.split('//')[1].split('.')[0] + '-auth-token');
+    
+    // Reload the page to reset the application state
+    window.location.reload();
+    
+    return true; // Indicates the error was handled
+  }
+  
+  return false; // Error was not handled
+};
 
 export type Database = {
   public: {

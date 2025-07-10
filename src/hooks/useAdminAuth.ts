@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { adminAuth, type AdminSession } from '@/lib/adminAuth';
+import { handleAuthError } from '@/lib/supabase';
 
 export const useAdminAuth = () => {
   const [session, setSession] = useState<AdminSession | null>(null);
@@ -34,6 +35,10 @@ export const useAdminAuth = () => {
         }
       } catch (error) {
         console.error('💥 useAdminAuth: Auth check failed:', error);
+        // Handle auth errors
+        if (!handleAuthError(error)) {
+          console.error('Unhandled auth error:', error);
+        }
         setSession(null);
         setIsAuthenticated(false);
       } finally {
@@ -58,6 +63,10 @@ export const useAdminAuth = () => {
       return newSession;
     } catch (error) {
       console.error('❌ useAdminAuth: Login failed:', error);
+      // Handle auth errors
+      if (!handleAuthError(error)) {
+        console.error('Unhandled login error:', error);
+      }
       setSession(null);
       setIsAuthenticated(false);
       throw error;
@@ -71,6 +80,8 @@ export const useAdminAuth = () => {
       console.log('✅ useAdminAuth: Logout successful, clearing state');
     } finally {
       setSession(null);
+      // Handle auth errors during logout
+      handleAuthError(error);
       setIsAuthenticated(false);
     }
   };

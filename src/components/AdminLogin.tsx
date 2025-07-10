@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Lock, User, AlertCircle } from 'lucide-react';
 import { adminAuth } from '@/lib/adminAuth';
+import { toast } from '@/hooks/use-toast';
 
 interface AdminLoginProps {
   onLoginSuccess: () => void;
@@ -37,10 +38,30 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
       setError('');
       
       await adminAuth.login(formData.email, formData.password);
+      
+      // Show success message
+      toast({
+        title: "Login Successful",
+        description: "Welcome back! Redirecting to admin dashboard...",
+      });
+      
+      // Small delay to show the success message
+      setTimeout(() => {
+        onLoginSuccess();
+      }, 1000);
+      
       onLoginSuccess();
     } catch (error) {
       console.error('Login failed:', error);
-      setError(error instanceof Error ? error.message : 'Login failed');
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      setError(errorMessage);
+      
+      // Show error toast
+      toast({
+        title: "Login Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

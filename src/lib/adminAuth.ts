@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { handleAuthError } from './supabase';
 
 export interface AdminUser {
   id: string;
@@ -35,6 +36,10 @@ class AdminAuthService {
       
       if (error) {
         console.error('❌ Error loading session:', error);
+        // Handle auth errors
+        if (handleAuthError(error)) {
+          return;
+        }
         return;
       }
 
@@ -79,6 +84,8 @@ class AdminAuthService {
       }
     } catch (error) {
       console.error('💥 Error loading admin session:', error);
+      // Handle auth errors
+      handleAuthError(error);
     }
   }
 
@@ -101,6 +108,10 @@ class AdminAuthService {
 
       if (error) {
         console.error('❌ Supabase auth error:', error);
+        // Handle auth errors
+        if (handleAuthError(error)) {
+          throw new Error('Session expired. Please try logging in again.');
+        }
         throw new Error(error.message);
       }
 
@@ -161,6 +172,10 @@ class AdminAuthService {
       return session;
     } catch (error) {
       console.error('💥 Login error:', error);
+      // Handle auth errors
+      if (error instanceof Error && !error.message.includes('Access denied') && !error.message.includes('Session expired')) {
+        handleAuthError(error);
+      }
       throw error;
     }
   }
@@ -172,6 +187,8 @@ class AdminAuthService {
       console.log('✅ Logout successful');
     } catch (error) {
       console.error('❌ Error during logout:', error);
+      // Handle auth errors during logout
+      handleAuthError(error);
     } finally {
       this.currentSession = null;
       console.log('🧹 Session cleared');
@@ -185,6 +202,10 @@ class AdminAuthService {
       
       if (error) {
         console.error('❌ Session validation error:', error);
+        // Handle auth errors
+        if (handleAuthError(error)) {
+          return false;
+        }
         await this.logout();
         return false;
       }
@@ -252,6 +273,8 @@ class AdminAuthService {
       return true;
     } catch (error) {
       console.error('💥 Session validation error:', error);
+      // Handle auth errors
+      handleAuthError(error);
       await this.logout();
       return false;
     }

@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { handleAuthError } from './supabase';
 import { adminAuth } from './adminAuth';
 import type { Database } from './supabase';
 
@@ -17,6 +18,27 @@ export type GalleryItem = Database['public']['Tables']['gallery_items']['Row'];
 export type GalleryItemInsert = Database['public']['Tables']['gallery_items']['Insert'];
 export type GalleryItemUpdate = Database['public']['Tables']['gallery_items']['Update'];
 
+// Enhanced error handling wrapper
+const handleSupabaseError = (error: any, operation: string) => {
+  console.error(`Error in ${operation}:`, error);
+  
+  // Handle auth errors first
+  if (handleAuthError(error)) {
+    throw new Error('Session expired. Please refresh the page and try again.');
+  }
+  
+  // Handle other common errors
+  if (error?.code === 'PGRST116') {
+    throw new Error('No data found or access denied.');
+  }
+  
+  if (error?.code === 'PGRST301') {
+    throw new Error('Database connection error. Please try again.');
+  }
+  
+  // Default error handling
+  throw new Error(error?.message || `Failed to ${operation}`);
+};
 // Helper function to validate UUID format
 const isValidUUID = (uuid: string): boolean => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -35,48 +57,64 @@ const checkAdminAuth = () => {
 // Appointments API
 export const appointmentsApi = {
   async create(appointment: AppointmentInsert) {
-    const { data, error } = await supabase
-      .from('appointments')
-      .insert(appointment)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await supabase
+        .from('appointments')
+        .insert(appointment)
+        .select()
+        .single();
+      
+      if (error) handleSupabaseError(error, 'create appointment');
+      return data;
+    } catch (error) {
+      handleSupabaseError(error, 'create appointment');
+    }
   },
 
   async getAll() {
-    const { data, error } = await supabase
-      .from('appointments')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) handleSupabaseError(error, 'fetch appointments');
+      return data;
+    } catch (error) {
+      handleSupabaseError(error, 'fetch appointments');
+    }
   },
 
   async updateStatus(id: string, status: string) {
-    checkAdminAuth(); // Require admin auth for status updates
-    
-    const { data, error } = await supabase
-      .from('appointments')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select();
-    
-    if (error) throw error;
-    return data;
+    try {
+      checkAdminAuth(); // Require admin auth for status updates
+      
+      const { data, error } = await supabase
+        .from('appointments')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select();
+      
+      if (error) handleSupabaseError(error, 'update appointment status');
+      return data;
+    } catch (error) {
+      handleSupabaseError(error, 'update appointment status');
+    }
   },
 
   async delete(id: string) {
-    checkAdminAuth(); // Require admin auth for deletions
-    
-    const { error } = await supabase
-      .from('appointments')
-      .delete()
-      .eq('id', id);
-    
-    if (error) throw error;
+    try {
+      checkAdminAuth(); // Require admin auth for deletions
+      
+      const { error } = await supabase
+        .from('appointments')
+        .delete()
+        .eq('id', id);
+      
+      if (error) handleSupabaseError(error, 'delete appointment');
+    } catch (error) {
+      handleSupabaseError(error, 'delete appointment');
+    }
   }
 };
 
