@@ -27,6 +27,15 @@ const Home = () => {
   // Get current language suffix for multilingual content
   const langSuffix = i18n.language === 'tr' ? '_tr' : i18n.language === 'az' ? '_az' : '_en';
 
+  // Enhanced video data structure to support multiple platforms
+  const enhancedVideos = galleryItems
+    .filter(item => item.type === 'video')
+    .map(video => ({
+      ...video,
+      platform: detectVideoPlatform(video.url),
+      embedUrl: getVideoEmbedUrl(video.url)
+    }));
+
   const surgicalStats = [
     { 
       key: 'kneeReplacements', 
@@ -68,6 +77,46 @@ const Home = () => {
     'Sports Injuries & Rehabilitation',
     'Joint & Nerve Surgery'
   ];
+
+  // Function to detect video platform
+  const detectVideoPlatform = (url: string): 'youtube' | 'google-drive' | 'unknown' => {
+    if (!url) return 'unknown';
+    
+    // YouTube detection
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      return 'youtube';
+    }
+    
+    // Google Drive detection
+    if (url.includes('drive.google.com')) {
+      return 'google-drive';
+    }
+    
+    return 'unknown';
+  };
+
+  // Function to get proper embed URL for different platforms
+  const getVideoEmbedUrl = (url: string): string | null => {
+    const platform = detectVideoPlatform(url);
+    
+    if (platform === 'youtube') {
+      return getYouTubeEmbedUrl(url);
+    } else if (platform === 'google-drive') {
+      return getGoogleDriveEmbedUrl(url);
+    }
+    
+    return null;
+  };
+
+  // Function to convert Google Drive URL to embed URL
+  const getGoogleDriveEmbedUrl = (url: string): string | null => {
+    // Extract file ID from various Google Drive URL formats
+    const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    if (fileIdMatch && fileIdMatch[1]) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+    return url; // Return original URL if it's already in embed format
+  };
 
   // Helper functions
   const getYouTubeVideoId = (url: string): string | null => {
@@ -146,8 +195,8 @@ const Home = () => {
   const previewBlogPosts = blogPosts.slice(0, 3);
 
   // Filter gallery items by type
-  const videos = galleryItems.filter(item => item.type === 'video');
   const photos = galleryItems.filter(item => item.type === 'photo');
+  const videos = enhancedVideos;
 
   // Set first video as default if none selected
   const currentVideo = selectedVideoId 
@@ -157,6 +206,10 @@ const Home = () => {
   const currentVideoIndex = selectedVideoId 
     ? videos.findIndex(v => v.id === selectedVideoId)
     : 0;
+
+  // Get the embed URL for the current video
+  const currentVideoEmbedUrl = currentVideo ? currentVideo.embedUrl : null;
+  const currentVideoPlatform = currentVideo ? currentVideo.platform : 'unknown';
 
   return (
     <div className="min-h-screen w-full">
@@ -466,15 +519,26 @@ const Home = () => {
                       {/* Left: Large Video Player */}
                       <div className="lg:col-span-2">
                         <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                          {currentVideo && getYouTubeEmbedUrl(currentVideo.url) ? (
+                          {currentVideo && currentVideoEmbedUrl ? (
                             <iframe
-                              src={getYouTubeEmbedUrl(currentVideo.url) || ''}
+                              src={currentVideoEmbedUrl}
                               title={currentVideo[`title${langSuffix}`] || currentVideo.title_en}
                               className="w-full h-full"
                               frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
+                              allow={
+                                currentVideoPlatform === 'youtube' 
+                                  ? "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  : "autoplay"
+                              }
+                              allowFullScreen={currentVideoPlatform === 'youtube'}
                             />
+                          ) : currentVideo && currentVideoPlatform === 'unknown' ? (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                              <div className="text-center">
+                                <Video className="h-16 w-16 text-gray-400 mx-auto mb-2" />
+                                <p className="text-gray-500">Unsupported video format</p>
+                              </div>
+                            </div>
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gray-200">
                               <Video className="h-16 w-16 text-gray-400" />
@@ -495,8 +559,8 @@ const Home = () => {
                           {videos.map((video, index) => {
                             const title = video[`title${langSuffix}`] || video.title_en;
                             const description = video[`description${langSuffix}`] || video.description_en;
-                            const isActive = selectedVideoId === video.id || (!selectedVideoId && video === videos[0]);
-                            const thumbnailUrl = video.thumbnail_url || getYouTubeThumbnail(video.url);
+                            const isActive = selectedVideoId === video.id || (!selectedVideoId && index === 0);
+                            const thumbnailUrl = video.platform === 'youtube' ? (video.thumbnail_url || getYouTubeThumbnail(video.url)) : video.thumbnail_url;
 
                             return (
                               <div
@@ -513,6 +577,10 @@ const Home = () => {
                                       src={thumbnailUrl}
                                       alt={title}
                                       className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        // Fallback to generic video icon if thumbnail fails to load
+                                        e.currentTarget.style.display = 'none';
+                                      }}
                                     />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center">
@@ -521,6 +589,13 @@ const Home = () => {
                                   )}
                                   <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                                     <Play className="h-3 w-3 text-white" />
+                                  </div>
+                                </div>
+                                
+                                {/* Platform indicator */}
+                                <div className="absolute top-1 right-1">
+                                  <div className={`text-xs px-1 rounded ${video.platform === 'youtube' ? 'bg-red-600 text-white' : video.platform === 'google-drive' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'}`}>
+                                    {video.platform === 'youtube' ? 'YT' : video.platform === 'google-drive' ? 'GD' : '?'}
                                   </div>
                                 </div>
 
