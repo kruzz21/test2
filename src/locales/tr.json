@@ -1,1 +1,333 @@
-{}
+{
+  "nav": {
+    "home": "",
+    "about": "",
+    "services": "",
+    "symptoms": "",
+    "gallery": "",
+    "blog": "",
+    "reviews": "",
+    "contact": "",
+    "faq": "",
+    "appointment": ""
+  },
+  "home": {
+    "title": "",
+    "subtitle": "",
+    "description": "",
+    "bookAppointment": "",
+    "learnMore": "",
+    "services": "",
+    "whyChooseUs": "",
+    "experience": "",
+    "patients": "",
+    "surgeries": "",
+    "viewAllServices": "",
+    "ctaTitle": "",
+    "ctaDescription": "",
+    "callNow": "",
+    "contactUs": {
+      "title": "",
+      "description": "",
+      "call": "",
+      "whatsapp": ""
+    },
+    "appointment": {
+      "title": "",
+      "description": "",
+      "button": ""
+    },
+    "about": {
+      "whoIsTitle": "",
+      "subtitle": "",
+      "paragraph1": "",
+      "paragraph2": "",
+      "paragraph3": "",
+      "button": ""
+    },
+    "surgicalExperience": {
+      "title": "",
+      "button": ""
+    },
+    "galleryAndMedia": {
+      "title": "",
+      "subtitle": ""
+    },
+    "featuredVideos": {
+      "title": ""
+    },
+    "medicalPhotos": {
+      "title": "",
+      "counterPlural": ""
+    },
+    "symptoms": {
+      "title": "",
+      "button": ""
+    },
+    "blog": {
+      "title": "",
+      "button": ""
+    },
+    "common": {
+      "counterFormat": ""
+    }
+  },
+  "hero": {
+    "title": "",
+    "subtitle": "",
+    "description": "",
+    "cta": ""
+  },
+  "stats": {
+    "kneeReplacements": "",
+    "arthroscopies": "",
+    "fracturesSurgeries": "",
+    "pediatricHip": ""
+  },
+  "about": {
+    "title": "",
+    "subtitle": "",
+    "experience": "",
+    "surgeries": "",
+    "locations": "",
+    "learnMore": "",
+    "biography": "",
+    "mission": "",
+    "missionText": "",
+    "careerTimeline": "",
+    "areasOfExpertise": "",
+    "regionsServed": ""
+  },
+  "services": {
+    "title": "",
+    "subtitle": "",
+    "arthroscopy": {
+      "title": "",
+      "description": ""
+    },
+    "replacement": {
+      "title": "",
+      "description": ""
+    },
+    "trauma": {
+      "title": "",
+      "description": ""
+    },
+    "pediatric": {
+      "title": "",
+      "description": ""
+    },
+    "sports": {
+      "title": "",
+      "description": ""
+    },
+    "nerve": {
+      "title": "",
+      "description": ""
+    },
+    "needConsultation": "",
+    "consultationDescription": "",
+    "scheduleAppointment": "",
+    "callNow": ""
+  },
+  "symptoms": {
+    "title": "",
+    "subtitle": "",
+    "readMore": "",
+    "dontSeeCondition": "",
+    "conditionDescription": "",
+    "scheduleConsultation": ""
+  },
+  "gallery": {
+    "title": "",
+    "subtitle": "",
+    "photos": "",
+    "videos": "",
+    "welcomeMessage": "",
+    "welcomeText": "",
+    "watchIntroVideo": "",
+    "loading": "",
+    "loadError": "",
+    "tryAgain": "",
+    "noItems": "",
+    "noItemsDescription": "",
+    "noPhotos": "",
+    "noVideos": "",
+    "management": "",
+    "addNewItem": "",
+    "createNewItem": "",
+    "editItem": "",
+    "deleteItem": "",
+    "deleteConfirmation": "",
+    "preview": "",
+    "edit": "",
+    "delete": "",
+    "cancel": "",
+    "save": "",
+    "createItem": "",
+    "updateItem": "",
+    "basic": "",
+    "content": "",
+    "seo": "",
+    "settings": "",
+    "type": "",
+    "photo": "",
+    "video": "",
+    "url": "",
+    "thumbnailUrl": "",
+    "displayOrder": "",
+    "order": "",
+    "titleTurkish": "",
+    "titleAzerbaijani": "",
+    "titleEnglish": "",
+    "titleTurkishPlaceholder": "",
+    "titleAzerbaijaniPlaceholder": "",
+    "titleEnglishPlaceholder": "",
+    "descriptionTurkish": "",
+    "descriptionAzerbaijani": "",
+    "descriptionEnglish": "",
+    "descriptionTurkishPlaceholder": "",
+    "descriptionAzerbaijaniPlaceholder": "",
+    "descriptionEnglishPlaceholder": "",
+    "altTextTurkish": "",
+    "altTextAzerbaijani": "",
+    "altTextEnglish": "",
+    "altTextTurkishPlaceholder": "",
+    "altTextAzerbaijaniPlaceholder": "",
+    "altTextEnglishPlaceholder": "",
+    "categoriesTurkish": "",
+    "categoriesAzerbaijani": "",
+    "categoriesEnglish": "",
+    "categoriesPlaceholder": "",
+    "categories": "",
+    "published": "",
+    "draft": "",
+    "publishImmediately": "",
+    "status": "",
+    "created": "",
+    "videoPreviewNotAvailable": "",
+    "fillRequiredFields": "",
+    "error": "",
+    "itemCreatedSuccessfully": "",
+    "itemUpdatedSuccessfully": "",
+    "itemDeletedSuccessfully": ""
+  },
+  "blog": {
+    "title": "",
+    "subtitle": "",
+    "article": "",
+    "readMore": "",
+    "backToBlog": "",
+    "comments": "",
+    "leaveComment": "",
+    "yourName": "",
+    "yourComment": "",
+    "submitComment": "",
+    "submitting": "",
+    "commentModeration": "",
+    "noComments": ""
+  },
+  "reviews": {
+    "title": "",
+    "subtitle": "",
+    "writeReview": "",
+    "rating": "",
+    "reviewName": "",
+    "reviewMessage": "",
+    "submitReview": "",
+    "reviewsReviewed": "",
+    "doctorReply": "",
+    "haveQuestions": "",
+    "checkFaq": "",
+    "viewFaq": ""
+  },
+  "contact": {
+    "title": "",
+    "contactInfo": "",
+    "address": "",
+    "officeHours": "",
+    "followUs": "",
+    "location": ""
+  },
+  "faq": {
+    "title": "",
+    "subtitle": "",
+    "frequentlyAsked": "",
+    "askQuestion": "",
+    "askQuestionDescription": "",
+    "yourName": "",
+    "yourEmail": "",
+    "questionText": "",
+    "submitQuestion": "",
+    "responseTime": "",
+    "needImmediateHelp": "",
+    "urgentContact": "",
+    "call": "",
+    "whatsappMessage": ""
+  },
+  "admin": {
+    "title": "",
+    "subtitle": "",
+    "pendingAppointments": "",
+    "totalPatients": "",
+    "pendingReviews": "",
+    "unansweredQuestions": "",
+    "publishedBlogs": "",
+    "websiteViews": "",
+    "systemSettings": "",
+    "welcomeBack": "",
+    "logout": "",
+    "pending": "",
+    "history": "",
+    "calendar": "",
+    "reviews": "",
+    "blog": "",
+    "faq": "",
+    "gallery": "",
+    "settings": "",
+    "contactInformation": "",
+    "updatePhone": "",
+    "updateEmail": "",
+    "updateAddress": "",
+    "updateSocialMedia": "",
+    "systemConfiguration": "",
+    "backupData": "",
+    "exportAppointments": "",
+    "siteAnalytics": "",
+    "securitySettings": ""
+  },
+  "footer": {
+    "quickLinks": "",
+    "social": "",
+    "privacy": "",
+    "kvkk": ""
+  },
+  "common": {
+    "loading": "",
+    "error": "",
+    "success": "",
+    "back": "",
+    "next": "",
+    "previous": "",
+    "save": "",
+    "cancel": "",
+    "delete": "",
+    "edit": "",
+    "create": "",
+    "update": "",
+    "submit": "",
+    "close": "",
+    "open": "",
+    "yes": "",
+    "no": "",
+    "confirm": "",
+    "search": "",
+    "filter": "",
+    "sort": "",
+    "view": "",
+    "download": "",
+    "upload": "",
+    "required": "",
+    "optional": ""
+  }
+}
