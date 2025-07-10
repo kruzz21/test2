@@ -10,48 +10,48 @@ const AreasOfExpertise = () => {
   const expertiseAreas = [
     {
       id: 'arthroscopic-surgery',
-      title: t('expertise.arthroscopic.title'),
-      description: t('expertise.arthroscopic.description'),
+      title: t('expertise.arthroscopic.title') || 'Arthroscopic Surgery',
+      description: t('expertise.arthroscopic.description') || 'Minimally invasive joint surgery using advanced arthroscopic techniques for faster recovery and better outcomes.',
       icon: Stethoscope,
       image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       color: 'bg-blue-50 text-blue-600'
     },
     {
       id: 'joint-replacement',
-      title: t('expertise.jointReplacement.title'),
-      description: t('expertise.jointReplacement.description'),
+      title: t('expertise.jointReplacement.title') || 'Joint Replacement Surgery',
+      description: t('expertise.jointReplacement.description') || 'Complete joint replacement procedures for hip, knee, and shoulder using the latest prosthetic technologies.',
       icon: Bone,
       image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       color: 'bg-green-50 text-green-600'
     },
     {
       id: 'trauma-fracture',
-      title: t('expertise.trauma.title'),
-      description: t('expertise.trauma.description'),
+      title: t('expertise.trauma.title') || 'Trauma & Fracture Surgery',
+      description: t('expertise.trauma.description') || 'Emergency orthopedic care and complex fracture repair with state-of-the-art surgical techniques.',
       icon: Heart,
       image: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       color: 'bg-red-50 text-red-600'
     },
     {
       id: 'pediatric-orthopedics',
-      title: t('expertise.pediatric.title'),
-      description: t('expertise.pediatric.description'),
+      title: t('expertise.pediatric.title') || 'Pediatric Orthopedics',
+      description: t('expertise.pediatric.description') || 'Specialized care for children\'s orthopedic conditions including hip dysplasia and developmental disorders.',
       icon: Baby,
       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       color: 'bg-purple-50 text-purple-600'
     },
     {
       id: 'sports-injuries',
-      title: t('expertise.sports.title'),
-      description: t('expertise.sports.description'),
+      title: t('expertise.sports.title') || 'Sports Injuries & Rehabilitation',
+      description: t('expertise.sports.description') || 'Comprehensive treatment for athletic injuries with focus on safe return to sport activities.',
       icon: Activity,
       image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       color: 'bg-orange-50 text-orange-600'
     },
     {
       id: 'joint-nerve',
-      title: t('expertise.jointNerve.title'),
-      description: t('expertise.jointNerve.description'),
+      title: t('expertise.jointNerve.title') || 'Joint & Nerve Conditions',
+      description: t('expertise.jointNerve.description') || 'Advanced procedures for joint problems and nerve compression syndromes.',
       icon: Brain,
       image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       color: 'bg-indigo-50 text-indigo-600'
@@ -103,7 +103,7 @@ const AreasOfExpertise = () => {
                   
                   <Button asChild className="w-full group-hover:bg-blue-700 transition-colors mt-6">
                     <Link to={`/expertise/${area.id}`}>
-                      {t('expertise.viewDetails')}
+                      {t('expertise.viewDetails') || 'View Details'}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
@@ -118,14 +118,14 @@ const AreasOfExpertise = () => {
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 max-w-4xl mx-auto">
             <CardContent className="pt-8 pb-8">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">
-                {t('expertise.notSureTitle')}
+                {t('expertise.notSureTitle') || 'Not sure where to start?'}
               </h2>
               <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-                {t('expertise.notSureDescription')}
+                {t('expertise.notSureDescription') || 'Book a consultation now and let Dr. Eryanılmaz guide you to the best treatment option for your condition.'}
               </p>
               <Button asChild size="lg" className="text-lg px-8 py-3">
                 <Link to="/contact">
-                  {t('expertise.bookConsultation')}
+                  {t('expertise.bookConsultation') || 'Book a Consultation Now'}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>

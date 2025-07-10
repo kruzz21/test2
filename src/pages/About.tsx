@@ -9,50 +9,53 @@ const About = () => {
   const timeline = [
     {
       year: '1969',
-      title: t('about.timeline.born'),
+      title: t('about.timeline.born') || 'Born in İzmir, Turkey',
       icon: MapPin,
     },
     {
       year: '1987-1993',
-      title: t('about.timeline.egeUniversity'),
+      title: t('about.timeline.egeUniversity') || 'Ege University Faculty of Medicine',
       icon: GraduationCap,
     },
     {
       year: '1996-2000',
-      title: t('about.timeline.residency'),
-      description: t('about.timeline.izmirHospital'),
+      title: t('about.timeline.residency') || 'Orthopedics & Traumatology Residency',
+      description: t('about.timeline.izmirHospital') || 'İzmir Tepecik Training & Research Hospital',
       icon: Hospital,
     },
     {
       year: '2000-2022',
-      title: t('about.timeline.seniorSpecialist'),
-      description: t('about.timeline.afyonHospital'),
+      title: t('about.timeline.seniorSpecialist') || 'Senior Orthopedic & Traumatology Specialist',
+      description: t('about.timeline.afyonHospital') || 'Afyon Kocatepe State Hospital',
       icon: Hospital,
     },
     {
       year: '2022-2025',
-      title: t('about.timeline.seniorSpecialist'),
-      description: t('about.timeline.mederaHospital'),
+      title: t('about.timeline.seniorSpecialist') || 'Senior Orthopedic & Traumatology Specialist',
+      description: t('about.timeline.mederaHospital') || 'Medera Hospital, Baku',
       icon: Hospital,
     },
     {
       year: '2025-Present',
-      title: t('about.timeline.seniorSpecialist'),
-      description: t('about.timeline.afyonHospital'),
+      title: t('about.timeline.seniorSpecialist') || 'Senior Orthopedic & Traumatology Specialist',
+      description: t('about.timeline.afyonHospital') || 'Afyon Kocatepe State Hospital',
       icon: Hospital,
     },
   ];
 
   const specialties = [
-    'Arthroscopic Surgery',
-    'Joint Replacement Surgery',
-    'Trauma & Fractures',
-    'Pediatric Orthopedics',
-    'Sports Injuries',
-    'Joint & Nerve Surgery'
+    t('expertise.arthroscopic.title') || 'Arthroscopic Surgery',
+    t('expertise.jointReplacement.title') || 'Joint Replacement Surgery',
+    t('expertise.trauma.title') || 'Trauma & Fractures',
+    t('expertise.pediatric.title') || 'Pediatric Orthopedics',
+    t('expertise.sports.title') || 'Sports Injuries',
+    t('expertise.jointNerve.title') || 'Joint & Nerve Surgery'
   ];
 
-  const regions = [t('about.locations.turkey'), t('about.locations.azerbaijan')];
+  const regions = [
+    t('about.locations.turkey') || 'Turkey (Afyon)',
+    t('about.locations.azerbaijan') || 'Azerbaijan (Baku, Balaken, Lenkaran)'
+  ];
 
   // Get content based on current language
   const getBiographyContent = () => {
@@ -117,11 +120,11 @@ Dr. Eryanılmaz is currently seeing patients at Afyon Kocatepe State Hospital, s
                   />
                   <div className="text-center flex-1 flex flex-col justify-end">
                     <h3 className="text-xl font-bold mb-2">Op. Dr. Gürkan Eryanılmaz</h3>
-                    <p className="text-gray-600 mb-4">{t('about.specialistTitle')}</p>
+                    <p className="text-gray-600 mb-4">{t('about.specialistTitle') || 'Orthopedics & Traumatology Specialist'}</p>
                     <div className="space-y-2">
-                      <Badge variant="secondary">{t('about.experienceYears')}</Badge>
+                      <Badge variant="secondary">{t('about.experienceYears') || '25+ Years Experience'}</Badge>
                       <br />
-                      <Badge variant="secondary">{t('about.successfulSurgeries')}</Badge>
+                      <Badge variant="secondary">{t('about.successfulSurgeries') || '20,000+ Successful Surgeries'}</Badge>
                     </div>
                   </div>
                 </div>
