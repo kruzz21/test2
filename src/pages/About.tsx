@@ -9,36 +9,36 @@ const About = () => {
   const timeline = [
     {
       year: '1969',
-      title: 'Born in İzmir, Turkey',
+      title: t('about.timeline.born'),
       icon: MapPin,
     },
     {
       year: '1987-1993',
-      title: 'Ege University Faculty of Medicine',
+      title: t('about.timeline.egeUniversity'),
       icon: GraduationCap,
     },
     {
       year: '1996-2000',
-      title: 'Orthopedics & Traumatology Residency',
-      description: 'İzmir Tepecik Training & Research Hospital',
+      title: t('about.timeline.residency'),
+      description: t('about.timeline.izmirHospital'),
       icon: Hospital,
     },
     {
       year: '2000-2022',
-      title: 'Senior Orthopedic & Traumatology Specialist',
-      description: 'Afyon Kocatepe State Hospital',
+      title: t('about.timeline.seniorSpecialist'),
+      description: t('about.timeline.afyonHospital'),
       icon: Hospital,
     },
     {
       year: '2022-2025',
-      title: 'Senior Orthopedic & Traumatology Specialist',
-      description: 'Medera Hospital, Baku',
+      title: t('about.timeline.seniorSpecialist'),
+      description: t('about.timeline.mederaHospital'),
       icon: Hospital,
     },
     {
       year: '2025-Present',
-      title: 'Senior Orthopedic & Traumatology Specialist',
-      description: 'Afyon Kocatepe State Hospital',
+      title: t('about.timeline.seniorSpecialist'),
+      description: t('about.timeline.afyonHospital'),
       icon: Hospital,
     },
   ];
@@ -52,7 +52,7 @@ const About = () => {
     'Joint & Nerve Surgery'
   ];
 
-  const regions = ['Turkey (Afyon)', 'Azerbaijan (Baku, Balaken, Lankaran)'];
+  const regions = [t('about.locations.turkey'), t('about.locations.azerbaijan')];
 
   // Get content based on current language
   const getBiographyContent = () => {
@@ -117,11 +117,11 @@ Dr. Eryanılmaz is currently seeing patients at Afyon Kocatepe State Hospital, s
                   />
                   <div className="text-center flex-1 flex flex-col justify-end">
                     <h3 className="text-xl font-bold mb-2">Op. Dr. Gürkan Eryanılmaz</h3>
-                    <p className="text-gray-600 mb-4">Orthopedics & Traumatology Specialist</p>
+                    <p className="text-gray-600 mb-4">{t('about.specialistTitle')}</p>
                     <div className="space-y-2">
-                      <Badge variant="secondary">25+ Years Experience</Badge>
+                      <Badge variant="secondary">{t('about.experienceYears')}</Badge>
                       <br />
-                      <Badge variant="secondary">20,000+ Successful Surgeries</Badge>
+                      <Badge variant="secondary">{t('about.successfulSurgeries')}</Badge>
                     </div>
                   </div>
                 </div>

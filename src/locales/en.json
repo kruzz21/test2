@@ -88,6 +88,31 @@
       "copyright": "© 2025 Op. Dr. Gürkan Eryanılmaz. All rights reserved."
     }
   },
+  "about": {
+    "title": "About Dr. Gürkan Eryanılmaz",
+    "subtitle": "Dedicated to Excellence in Orthopedic Care",
+    "specialistTitle": "Orthopedics & Traumatology Specialist",
+    "experienceYears": "25+ Years Experience",
+    "successfulSurgeries": "20,000+ Successful Surgeries",
+    "biography": "Biography",
+    "mission": "Mission & Vision",
+    "careerTimeline": "Career Timeline",
+    "areasOfExpertise": "Areas of Expertise",
+    "regionsServed": "Regions Served",
+    "timeline": {
+      "born": "Born in İzmir, Turkey",
+      "egeUniversity": "Ege University Faculty of Medicine",
+      "residency": "Orthopedics & Traumatology Residency",
+      "izmirHospital": "İzmir Tepecik Training & Research Hospital",
+      "seniorSpecialist": "Senior Orthopedic & Traumatology Specialist",
+      "afyonHospital": "Afyon Kocatepe State Hospital",
+      "mederaHospital": "Medera Hospital, Baku"
+    },
+    "locations": {
+      "turkey": "Turkey (Afyon)",
+      "azerbaijan": "Azerbaijan (Baku, Balaken, Lenkaran)"
+    }
+  },
   "hero": {
     "title": "Dr. Gürkan Eryanılmaz",
     "subtitle": "Orthopedics and Traumatology Specialist",

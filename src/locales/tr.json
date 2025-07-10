@@ -89,6 +89,31 @@
       "copyright": "© 2025 Op. Dr. Gürkan Eryanılmaz. Tüm hakları saklıdır."
     }
   },
+  "about": {
+    "title": "",
+    "subtitle": "",
+    "specialistTitle": "",
+    "experienceYears": "",
+    "successfulSurgeries": "",
+    "biography": "",
+    "mission": "",
+    "careerTimeline": "",
+    "areasOfExpertise": "",
+    "regionsServed": "",
+    "timeline": {
+      "born": "",
+      "egeUniversity": "",
+      "residency": "",
+      "izmirHospital": "",
+      "seniorSpecialist": "",
+      "afyonHospital": "",
+      "mederaHospital": ""
+    },
+    "locations": {
+      "turkey": "",
+      "azerbaijan": ""
+    }
+  },
   "hero": {
     "title": "",
     "subtitle": "",
