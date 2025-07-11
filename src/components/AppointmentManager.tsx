@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ interface Appointment {
 }
 
 const AppointmentManager = () => {
+  const { t } = useTranslation();
   const [pendingAppointments, setPendingAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
@@ -54,8 +56,8 @@ const AppointmentManager = () => {
     } catch (error) {
       console.error('Error fetching pending appointments:', error);
       toast({
-        title: "Error",
-        description: "Failed to load pending appointments.",
+        title: t('common.error'),
+        description: t('appointmentManager.loadError'),
         variant: "destructive",
       });
     } finally {
@@ -90,8 +92,8 @@ const AppointmentManager = () => {
       await fetchPendingAppointments();
       
       toast({
-        title: "Success",
-        description: `Appointment ${status} successfully.`,
+        title: t('common.success'),
+        description: status === 'confirmed' ? t('appointmentManager.appointmentConfirmed') : t('appointmentManager.appointmentRejected'),
       });
 
       // Close edit dialog if open
@@ -101,8 +103,8 @@ const AppointmentManager = () => {
     } catch (error) {
       console.error('Error updating appointment:', error);
       toast({
-        title: "Error",
-        description: "Failed to update appointment status.",
+        title: t('common.error'),
+        description: t('appointmentManager.updateError'),
         variant: "destructive",
       });
     } finally {
@@ -143,18 +145,18 @@ const AppointmentManager = () => {
       <CardHeader>
         <CardTitle className="flex items-center">
           <CalendarIcon className="h-5 w-5 mr-2" />
-          Pending Appointments ({pendingAppointments.length})
+          {t('appointmentManager.title')} ({pendingAppointments.length})
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {loading ? (
             <div className="text-center py-8">
-              <p>Loading appointments...</p>
+              <p>{t('appointmentManager.loading')}</p>
             </div>
           ) : pendingAppointments.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-600">No pending appointments</p>
+              <p className="text-gray-600">{t('appointmentManager.noAppointments')}</p>
             </div>
           ) : (
             pendingAppointments.map((appointment) => (
@@ -178,7 +180,7 @@ const AppointmentManager = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           <CreditCard className="h-3 w-3" />
-                          <span className="text-xs">ID: {appointment.national_id}</span>
+                          <span className="text-xs">{t('appointmentManager.nationalId')}: {appointment.national_id}</span>
                         </div>
                       </div>
                     </div>
@@ -212,44 +214,44 @@ const AppointmentManager = () => {
                               onClick={() => openEditDialog(appointment)}
                             >
                               <Edit className="h-3 w-3 mr-1" />
-                              Edit & Confirm
+                              {t('appointmentManager.editAndConfirm')}
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Edit Appointment</DialogTitle>
+                              <DialogTitle>{t('appointmentCalendar.editAppointment')}</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
                               {/* Patient Details Display */}
                               <div className="bg-gray-50 p-3 rounded-lg">
-                                <h4 className="font-medium mb-2">Patient Information</h4>
+                                <h4 className="font-medium mb-2">{t('appointmentManager.patientInfo')}</h4>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                   <div>
-                                    <span className="text-gray-600">Name:</span>
+                                    <span className="text-gray-600">{t('appointmentHistory.patientName')}:</span>
                                     <span className="ml-2 font-medium">{editingAppointment?.name}</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-600">Phone:</span>
+                                    <span className="text-gray-600">{t('appointmentHistory.phone')}:</span>
                                     <span className="ml-2">{editingAppointment?.phone}</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-600">Email:</span>
+                                    <span className="text-gray-600">{t('appointmentHistory.email')}:</span>
                                     <span className="ml-2">{editingAppointment?.email}</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-600">National ID:</span>
+                                    <span className="text-gray-600">{t('appointmentHistory.nationalId')}:</span>
                                     <span className="ml-2 font-mono">{editingAppointment?.national_id}</span>
                                   </div>
                                 </div>
                               </div>
                               
                               <div>
-                                <label className="block text-sm font-medium mb-2">Date</label>
+                                <label className="block text-sm font-medium mb-2">{t('appointmentHistory.date')}</label>
                                 <Popover>
                                   <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left">
                                       <CalendarIcon className="mr-2 h-4 w-4" />
-                                      {editDate ? format(editDate, 'PPP') : 'Pick a date'}
+                                      {editDate ? format(editDate, 'PPP') : t('appointmentManager.pickDate')}
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent className="w-auto p-0">
@@ -264,10 +266,10 @@ const AppointmentManager = () => {
                                 </Popover>
                               </div>
                               <div>
-                                <label className="block text-sm font-medium mb-2">Time</label>
+                                <label className="block text-sm font-medium mb-2">{t('appointmentHistory.time')}</label>
                                 <Select value={editTime} onValueChange={setEditTime}>
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select time" />
+                                    <SelectValue placeholder={t('appointmentManager.selectTime')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {timeSlots.map((time) => (
@@ -281,13 +283,13 @@ const AppointmentManager = () => {
                               <div className="flex space-x-2">
                                 <Button onClick={handleEditSave} className="flex-1">
                                   <Check className="h-4 w-4 mr-2" />
-                                  Confirm Appointment
+                                  {t('appointmentManager.confirmAppointment')}
                                 </Button>
                                 <Button 
                                   variant="outline" 
                                   onClick={() => setEditingAppointment(null)}
                                 >
-                                  Cancel
+                                  {t('common.cancel')}
                                 </Button>
                               </div>
                             </div>
@@ -300,7 +302,7 @@ const AppointmentManager = () => {
                           disabled={loading}
                         >
                           <Check className="h-3 w-3 mr-1" />
-                          Confirm
+                          {t('appointmentManager.quickConfirm')}
                         </Button>
 
                         <AlertDialog>
@@ -311,24 +313,23 @@ const AppointmentManager = () => {
                               className="text-red-600 hover:text-red-700"
                             >
                               <X className="h-3 w-3 mr-1" />
-                              Reject
+                              {t('appointmentManager.reject')}
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Reject Appointment</AlertDialogTitle>
+                              <AlertDialogTitle>{t('appointmentManager.rejectAppointment')}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to reject this appointment for {appointment.name}? 
-                                This action will move the appointment to history.
+                                {t('appointmentManager.rejectConfirmation', { name: appointment.name })}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleAppointmentAction(appointment.id, 'rejected')}
                                 className="bg-red-600 hover:bg-red-700"
                               >
-                                Reject
+                                {t('appointmentManager.reject')}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -341,7 +342,7 @@ const AppointmentManager = () => {
                 {/* Message */}
                 {appointment.message && (
                   <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
-                    <strong>Message:</strong> {appointment.message}
+                    <strong>{t('appointmentManager.message')}:</strong> {appointment.message}
                   </div>
                 )}
               </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ interface Appointment {
 }
 
 const AppointmentHistory = () => {
+  const { t } = useTranslation();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,8 +50,8 @@ const AppointmentHistory = () => {
     } catch (error) {
       console.error('Error fetching appointment history:', error);
       toast({
-        title: "Error",
-        description: "Failed to load appointment history.",
+        title: t('common.error'),
+        description: t('appointmentHistory.loadError'),
         variant: "destructive",
       });
     } finally {
@@ -95,14 +97,14 @@ const AppointmentHistory = () => {
 
       await fetchAppointments();
       toast({
-        title: "Success",
-        description: "Appointment deleted successfully.",
+        title: t('common.success'),
+        description: t('appointmentHistory.appointmentDeleted'),
       });
     } catch (error) {
       console.error('Error deleting appointment:', error);
       toast({
-        title: "Error",
-        description: "Failed to delete appointment.",
+        title: t('common.error'),
+        description: t('appointmentHistory.deleteError'),
         variant: "destructive",
       });
     } finally {
@@ -145,7 +147,7 @@ const AppointmentHistory = () => {
       <CardHeader>
         <CardTitle className="flex items-center">
           <History className="h-5 w-5 mr-2" />
-          Appointment History ({filteredAppointments.length})
+          {t('appointmentHistory.title')} ({filteredAppointments.length})
         </CardTitle>
         
         {/* Search and Filter Controls */}
@@ -153,7 +155,7 @@ const AppointmentHistory = () => {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search by name, phone, email, ID, or service..."
+              placeholder={t('appointmentHistory.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -163,14 +165,14 @@ const AppointmentHistory = () => {
             <Filter className="h-4 w-4 text-gray-400" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={t('appointmentHistory.filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="confirmed">Confirmed</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-                <SelectItem value="deleted">Deleted</SelectItem>
+                <SelectItem value="all">{t('appointmentHistory.allStatus')}</SelectItem>
+                <SelectItem value="confirmed">{t('appointmentHistory.confirmed')}</SelectItem>
+                <SelectItem value="completed">{t('appointmentHistory.completed')}</SelectItem>
+                <SelectItem value="rejected">{t('appointmentHistory.rejected')}</SelectItem>
+                <SelectItem value="deleted">{t('appointmentHistory.deleted')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -181,14 +183,14 @@ const AppointmentHistory = () => {
         <div className="space-y-4">
           {loading ? (
             <div className="text-center py-8">
-              <p>Loading appointment history...</p>
+              <p>{t('appointmentHistory.loading')}</p>
             </div>
           ) : filteredAppointments.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-600">
                 {searchTerm || statusFilter !== 'all' 
-                  ? 'No appointments match your search criteria' 
-                  : 'No appointment history available'
+                  ? t('appointmentHistory.noMatchingAppointments')
+                  : t('appointmentHistory.noAppointments')
                 }
               </p>
             </div>
@@ -266,55 +268,55 @@ const AppointmentHistory = () => {
                             size="sm"
                             onClick={() => setSelectedAppointment(appointment)}
                           >
-                            View Details
+                            {t('appointmentHistory.viewDetails')}
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl">
                           <DialogHeader>
-                            <DialogTitle>Appointment Details</DialogTitle>
+                            <DialogTitle>{t('appointmentHistory.appointmentDetails')}</DialogTitle>
                           </DialogHeader>
                           {selectedAppointment && (
                             <div className="space-y-4">
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                  <h4 className="font-medium mb-2">Patient Information</h4>
+                                  <h4 className="font-medium mb-2">{t('appointmentHistory.patientInformation')}</h4>
                                   <div className="space-y-2 text-sm">
                                     <div>
-                                      <span className="text-gray-600">Name:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.patientName')}:</span>
                                       <span className="ml-2 font-medium">{selectedAppointment.name}</span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-600">Phone:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.phone')}:</span>
                                       <span className="ml-2">{selectedAppointment.phone}</span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-600">Email:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.email')}:</span>
                                       <span className="ml-2">{selectedAppointment.email}</span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-600">National ID:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.nationalId')}:</span>
                                       <span className="ml-2 font-mono">{selectedAppointment.national_id}</span>
                                     </div>
                                   </div>
                                 </div>
                                 
                                 <div>
-                                  <h4 className="font-medium mb-2">Appointment Details</h4>
+                                  <h4 className="font-medium mb-2">{t('appointmentHistory.appointmentDetails')}</h4>
                                   <div className="space-y-2 text-sm">
                                     <div>
-                                      <span className="text-gray-600">Service:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.service')}:</span>
                                       <span className="ml-2">{selectedAppointment.service}</span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-600">Date:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.date')}:</span>
                                       <span className="ml-2">{selectedAppointment.preferred_date}</span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-600">Time:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.time')}:</span>
                                       <span className="ml-2">{selectedAppointment.preferred_time}</span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-600">Status:</span>
+                                      <span className="text-gray-600">{t('appointmentHistory.status')}:</span>
                                       <Badge className={`ml-2 ${getStatusColor(selectedAppointment.status)}`}>
                                         {selectedAppointment.status.toUpperCase()}
                                       </Badge>
@@ -325,7 +327,7 @@ const AppointmentHistory = () => {
                               
                               {selectedAppointment.message && (
                                 <div>
-                                  <h4 className="font-medium mb-2">Patient Message</h4>
+                                  <h4 className="font-medium mb-2">{t('appointmentHistory.patientMessage')}</h4>
                                   <div className="bg-gray-50 p-3 rounded text-sm">
                                     {selectedAppointment.message}
                                   </div>
@@ -333,20 +335,20 @@ const AppointmentHistory = () => {
                               )}
                               
                               <div className="bg-blue-50 p-3 rounded">
-                                <h4 className="font-medium mb-2">Timeline</h4>
+                                <h4 className="font-medium mb-2">{t('appointmentHistory.timeline')}</h4>
                                 <div className="text-sm space-y-1">
                                   <div>
-                                    <span className="text-blue-800 font-medium">Created:</span>
+                                    <span className="text-blue-800 font-medium">{t('appointmentHistory.created')}:</span>
                                     <span className="ml-2">
-                                      {new Date(selectedAppointment.created_at).toLocaleDateString()} at{' '}
+                                      {new Date(selectedAppointment.created_at).toLocaleDateString()} {t('common.at')}{' '}
                                       {new Date(selectedAppointment.created_at).toLocaleTimeString()}
                                     </span>
                                   </div>
                                   {selectedAppointment.updated_at !== selectedAppointment.created_at && (
                                     <div>
-                                      <span className="text-blue-800 font-medium">Last Updated:</span>
+                                      <span className="text-blue-800 font-medium">{t('appointmentHistory.lastUpdated')}:</span>
                                       <span className="ml-2">
-                                        {new Date(selectedAppointment.updated_at).toLocaleDateString()} at{' '}
+                                        {new Date(selectedAppointment.updated_at).toLocaleDateString()} {t('common.at')}{' '}
                                         {new Date(selectedAppointment.updated_at).toLocaleTimeString()}
                                       </span>
                                     </div>
@@ -367,24 +369,23 @@ const AppointmentHistory = () => {
                               className="text-red-600 hover:text-red-700"
                             >
                               <Trash2 className="h-3 w-3 mr-1" />
-                              Delete
+                              {t('appointmentHistory.delete')}
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Appointment</AlertDialogTitle>
+                              <AlertDialogTitle>{t('appointmentHistory.deleteAppointment')}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete this appointment for {appointment.name}? 
-                                This action will mark the appointment as deleted.
+                                {t('appointmentHistory.deleteConfirmation', { name: appointment.name })}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleDeleteAppointment(appointment.id)}
                                 className="bg-red-600 hover:bg-red-700"
                               >
-                                Delete
+                                {t('appointmentHistory.delete')}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
