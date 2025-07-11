@@ -110,6 +110,128 @@
     "download": "Yüklə",
     "upload": "Yüklə",
     "required": "Tələb olunur",
-    "optional": "İstəyə bağlı"
+    "optional": "",
+    "submitting": "",
+    "checking": "",
+    "clear": "",
+    "at": ""
+  },
+  "contact": {
+    "title": "",
+    "subtitle": "",
+    "contactInfo": "",
+    "address": "",
+    "phone": "",
+    "email": "",
+    "officeHours": "",
+    "followUs": "",
+    "location": "",
+    "checkAppointment": {
+      "title": "",
+      "description": ""
+    },
+    "hours": {
+      "mondayFriday": "",
+      "saturday": "",
+      "sunday": ""
+    },
+    "mapPlaceholder": {
+      "line1": "",
+      "line2": ""
+    }
+  },
+  "appointmentForm": {
+    "title": "",
+    "subtitle": "",
+    "personalInfo": {
+      "title": "",
+      "fullNamePlaceholder": "",
+      "phonePlaceholder": "",
+      "emailPlaceholder": "",
+      "nationalIdPlaceholder": ""
+    },
+    "serviceSelection": {
+      "title": "",
+      "placeholder": ""
+    },
+    "services": {
+      "generalConsultation": ""
+    },
+    "dateTimeSelection": {
+      "title": "",
+      "selectDate": "",
+      "selectTime": "",
+      "chooseDatePlaceholder": "",
+      "loadingTimes": "",
+      "booked": "",
+      "bookedTimesMessage": ""
+    },
+    "additionalInfo": {
+      "title": "",
+      "placeholder": ""
+    },
+    "submitButton": "",
+    "validation": {
+      "allFieldsRequired": "",
+      "timeTaken": ""
+    },
+    "note": {
+      "title": "",
+      "description": ""
+    }
+  },
+  "appointmentStatusCheck": {
+    "button": "",
+    "dialogTitle": "",
+    "enterInfoTitle": "",
+    "form": {
+      "fullNamePlaceholder": "",
+      "phonePlaceholder": "",
+      "nationalIdPlaceholder": "",
+      "checkStatusButton": ""
+    },
+    "validation": {
+      "allFieldsRequired": ""
+    },
+    "toast": {
+      "foundTitle": "",
+      "foundDescription": "",
+      "notFoundTitle": "",
+      "notFoundDescription": "",
+      "checkError": ""
+    },
+    "details": {
+      "title": "",
+      "patientName": "",
+      "phone": "",
+      "email": "",
+      "service": "",
+      "preferredDate": "",
+      "preferredTime": "",
+      "message": "",
+      "submitted": "",
+      "lastUpdated": "",
+      "checkAnother": ""
+    }
+  },
+  "adminLogin": {
+    "title": "",
+    "subtitle": "",
+    "signInTitle": "",
+    "emailLabel": "",
+    "emailPlaceholder": "",
+    "passwordLabel": "",
+    "passwordPlaceholder": "",
+    "signInButton": "",
+    "signingIn": "",
+    "setupInstructions": {
+      "title": "",
+      "step1": "",
+      "step2": "",
+      "step3": ""
+    },
+    "loginSuccessful": "",
+    "welcomeBack": "",
+    "loginFailed": ""
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,6 @@ import { format, addDays, isAfter, startOfDay } from 'date-fns';
 import { useAppointments } from '@/hooks/useAppointments';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
 
 const EnhancedAppointmentForm = () => {
   const { t } = useTranslation();
@@ -32,12 +32,12 @@ const EnhancedAppointmentForm = () => {
   const [loadingSlots, setLoadingSlots] = useState(false);
 
   const services = [
-    t('services.arthroscopy.title'),
-    t('services.replacement.title'),
-    t('services.trauma.title'),
-    t('services.pediatric.title'),
-    t('services.sports.title'),
-    t('services.nerve.title'),
+    t('expertise.arthroscopic.title') || 'Arthroscopic Surgery',
+    t('expertise.jointReplacement.title') || 'Joint Replacement Surgery',
+    t('expertise.trauma.title') || 'Trauma & Fracture Surgery',
+    t('expertise.pediatric.title') || 'Pediatric Orthopedics',
+    t('expertise.sports.title') || 'Sports Injuries & Rehabilitation',
+    t('expertise.jointNerve.title') || 'Joint & Nerve Conditions',
     t('appointmentForm.services.generalConsultation')
   ];
 

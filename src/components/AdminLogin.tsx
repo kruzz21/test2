@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +14,7 @@ interface AdminLoginProps {
 }
 
 const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -29,7 +31,7 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
     e.preventDefault();
     
     if (!formData.email || !formData.password) {
-      setError('Please enter both email and password');
+      setError(t('adminLogin.validation.bothRequired'));
       return;
     }
 
@@ -41,8 +43,8 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
       
       // Show success message
       toast({
-        title: "Login Successful",
-        description: "Welcome back! Redirecting to admin dashboard...",
+        title: t('adminLogin.loginSuccessful'),
+        description: t('adminLogin.welcomeBack'),
       });
       
       // Small delay to show the success message
@@ -58,7 +60,7 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
       
       // Show error toast
       toast({
-        title: "Login Failed",
+        title: t('adminLogin.loginFailed'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -73,16 +75,16 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
         <div className="text-center">
           <Lock className="mx-auto h-12 w-12 text-blue-600" />
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Admin Login
+            {t('adminLogin.title')}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Access the administrative panel
+            {t('adminLogin.subtitle')}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-center">Sign in to your account</CardTitle>
+            <CardTitle className="text-center">{t('adminLogin.signInTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -94,14 +96,14 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
               )}
 
               <div>
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email">{t('adminLogin.emailLabel')}</Label>
                 <div className="mt-1 relative">
                   <Input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder="Enter your admin email"
+                    placeholder={t('adminLogin.emailPlaceholder')}
                     className="pl-10"
                     required
                   />
@@ -110,14 +112,14 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
               </div>
 
               <div>
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('adminLogin.passwordLabel')}</Label>
                 <div className="mt-1 relative">
                   <Input
                     id="password"
                     type="password"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder={t('adminLogin.passwordPlaceholder')}
                     className="pl-10"
                     required
                   />
@@ -131,16 +133,16 @@ const AdminLogin = ({ onLoginSuccess }: AdminLoginProps) => {
                 size="lg"
                 disabled={loading}
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {loading ? t('adminLogin.signingIn') : t('adminLogin.signInButton')}
               </Button>
             </form>
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-800">
-                <strong>Setup Instructions:</strong><br />
-                1. Create an admin user in Supabase Authentication<br />
-                2. Update the user's app_metadata with: &#123;"is_admin": true&#125;<br />
-                3. Use those credentials to log in
+                <strong>{t('adminLogin.setupInstructions.title')}</strong><br />
+                {t('adminLogin.setupInstructions.step1')}<br />
+                {t('adminLogin.setupInstructions.step2')}<br />
+                {t('adminLogin.setupInstructions.step3')}
               </p>
             </div>
           </CardContent>

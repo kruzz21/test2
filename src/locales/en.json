@@ -490,6 +490,128 @@
     "download": "Download",
     "upload": "Upload",
     "required": "Required",
-    "optional": "Optional"
+    "optional": "Optional",
+    "submitting": "Submitting...",
+    "checking": "Checking...",
+    "clear": "Clear",
+    "at": "at"
+  },
+  "contact": {
+    "title": "Contact & Appointments",
+    "subtitle": "Get in touch with Dr. Eryanılmaz for consultations and appointments",
+    "contactInfo": "Contact Information",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "officeHours": "Office Hours",
+    "followUs": "Follow Us",
+    "location": "Location",
+    "checkAppointment": {
+      "title": "Check Your Appointment Status",
+      "description": "Enter your details to check the status of your appointment request."
+    },
+    "hours": {
+      "mondayFriday": "Monday - Friday: 9:00 AM - 5:00 PM",
+      "saturday": "Saturday: 9:00 AM - 1:00 PM",
+      "sunday": "Sunday: Closed"
+    },
+    "mapPlaceholder": {
+      "line1": "Interactive map will be displayed here",
+      "line2": "showing the exact location of the clinic"
+    }
+  },
+  "appointmentForm": {
+    "title": "Book Your Appointment",
+    "subtitle": "Fill out the form below to request an appointment with Dr. Eryanılmaz",
+    "personalInfo": {
+      "title": "Personal Information",
+      "fullNamePlaceholder": "Full Name *",
+      "phonePlaceholder": "Phone Number *",
+      "emailPlaceholder": "Email Address *",
+      "nationalIdPlaceholder": "National ID / Passport Number *"
+    },
+    "serviceSelection": {
+      "title": "Service Selection",
+      "placeholder": "Select the service you need"
+    },
+    "services": {
+      "generalConsultation": "General Consultation"
+    },
+    "dateTimeSelection": {
+      "title": "Date & Time Selection",
+      "selectDate": "Select Date",
+      "selectTime": "Select Time",
+      "chooseDatePlaceholder": "Choose a date",
+      "loadingTimes": "Loading available times...",
+      "booked": "Booked",
+      "bookedTimesMessage": "Gray times are already booked and unavailable."
+    },
+    "additionalInfo": {
+      "title": "Additional Information",
+      "placeholder": "Please describe your symptoms, concerns, or any additional information that might help Dr. Eryanılmaz prepare for your appointment..."
+    },
+    "submitButton": "Submit Appointment Request",
+    "validation": {
+      "allFieldsRequired": "Please fill in all required fields",
+      "timeTaken": "This time slot is already taken. Please select another time."
+    },
+    "note": {
+      "title": "Note",
+      "description": "We will contact you within 24 hours to confirm your appointment. Please ensure your contact information is correct."
+    }
+  },
+  "appointmentStatusCheck": {
+    "button": "Check Appointment Status",
+    "dialogTitle": "Check Your Appointment Status",
+    "enterInfoTitle": "Enter Your Information",
+    "form": {
+      "fullNamePlaceholder": "Full Name (as submitted)",
+      "phonePlaceholder": "Phone Number (as submitted)",
+      "nationalIdPlaceholder": "National ID / Passport (as submitted)",
+      "checkStatusButton": "Check Status"
+    },
+    "validation": {
+      "allFieldsRequired": "Please fill in all required fields to check your appointment status."
+    },
+    "toast": {
+      "foundTitle": "Appointment Found",
+      "foundDescription": "Your appointment details are displayed below.",
+      "notFoundTitle": "Appointment Not Found",
+      "notFoundDescription": "No appointment found with the provided information. Please check your details and try again.",
+      "checkError": "Failed to check appointment status. Please try again."
+    },
+    "details": {
+      "title": "Your Appointment Details",
+      "patientName": "Patient Name",
+      "phone": "Phone",
+      "email": "Email",
+      "service": "Service",
+      "preferredDate": "Preferred Date",
+      "preferredTime": "Preferred Time",
+      "message": "Your Message",
+      "submitted": "Submitted",
+      "lastUpdated": "Last Updated",
+      "checkAnother": "Check Another Appointment"
+    }
+  },
+  "adminLogin": {
+    "title": "Admin Login",
+    "subtitle": "Access the administrative panel",
+    "signInTitle": "Sign in to your account",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter your admin email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signInButton": "Sign in",
+    "signingIn": "Signing in...",
+    "setupInstructions": {
+      "title": "Setup Instructions:",
+      "step1": "1. Create an admin user in Supabase Authentication",
+      "step2": "2. Update the user's app_metadata with: {\"is_admin\": true}",
+      "step3": "3. Use those credentials to log in"
+    },
+    "loginSuccessful": "Login Successful",
+    "welcomeBack": "Welcome back! Redirecting to admin dashboard...",
+    "loginFailed": "Login Failed"
   }
 }
