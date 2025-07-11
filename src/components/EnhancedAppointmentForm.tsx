@@ -11,8 +11,10 @@ import { format, addDays, isAfter, startOfDay } from 'date-fns';
 import { useAppointments } from '@/hooks/useAppointments';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 const EnhancedAppointmentForm = () => {
+  const { t } = useTranslation();
   const { createAppointment, loading } = useAppointments();
   
   const [formData, setFormData] = useState({
@@ -30,13 +32,13 @@ const EnhancedAppointmentForm = () => {
   const [loadingSlots, setLoadingSlots] = useState(false);
 
   const services = [
-    'Arthroscopic Surgery',
-    'Joint Replacement Surgery',
-    'Trauma & Fractures',
-    'Pediatric Orthopedics',
-    'Sports Injuries',
-    'Joint & Nerve Surgery',
-    'General Consultation'
+    t('services.arthroscopy.title'),
+    t('services.replacement.title'),
+    t('services.trauma.title'),
+    t('services.pediatric.title'),
+    t('services.sports.title'),
+    t('services.nerve.title'),
+    t('appointmentForm.services.generalConsultation')
   ];
 
   const timeSlots = [
@@ -97,8 +99,8 @@ const EnhancedAppointmentForm = () => {
     if (!formData.name || !formData.phone || !formData.email || !formData.national_id || 
         !formData.service || !selectedDate || !selectedTime) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields and select a date and time.",
+        title: t('common.error'),
+        description: t('appointmentForm.validation.allFieldsRequired'),
         variant: "destructive",
       });
       return;
@@ -107,8 +109,8 @@ const EnhancedAppointmentForm = () => {
     // Check if selected time is available
     if (bookedSlots.includes(selectedTime)) {
       toast({
-        title: "Error",
-        description: "The selected time slot is no longer available. Please choose another time.",
+        title: t('common.error'),
+        description: t('appointmentForm.validation.timeTaken'),
         variant: "destructive",
       });
       return;
@@ -152,23 +154,23 @@ const EnhancedAppointmentForm = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Book Your Appointment</CardTitle>
-        <p className="text-gray-600">Schedule a consultation with Dr. Gürkan Eryanılmaz</p>
+        <CardTitle className="text-2xl">{t('appointmentForm.title')}</CardTitle>
+        <p className="text-gray-600">{t('appointmentForm.subtitle')}</p>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Personal Information</h3>
+            <h3 className="text-lg font-semibold">{t('appointmentForm.personalInfo.title')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input 
-                placeholder="Full Name *"
+                placeholder={t('appointmentForm.personalInfo.fullNamePlaceholder')}
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 required
               />
               <Input 
-                placeholder="Phone Number *"
+                placeholder={t('appointmentForm.personalInfo.phonePlaceholder')}
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
@@ -177,7 +179,7 @@ const EnhancedAppointmentForm = () => {
             </div>
             
             <Input 
-              placeholder="Email Address *"
+              placeholder={t('appointmentForm.personalInfo.emailPlaceholder')}
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
@@ -185,7 +187,7 @@ const EnhancedAppointmentForm = () => {
             />
             
             <Input 
-              placeholder="National ID / Passport Number *"
+              placeholder={t('appointmentForm.personalInfo.nationalIdPlaceholder')}
               value={formData.national_id}
               onChange={(e) => handleInputChange('national_id', e.target.value)}
               required
@@ -194,10 +196,10 @@ const EnhancedAppointmentForm = () => {
 
           {/* Service Selection */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Service</h3>
+            <h3 className="text-lg font-semibold">{t('appointmentForm.serviceSelection.title')}</h3>
             <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Select the service you need *" />
+                <SelectValue placeholder={t('appointmentForm.serviceSelection.placeholder')} />
               </SelectTrigger>
               <SelectContent>
                 {services.map((service) => (
@@ -211,11 +213,11 @@ const EnhancedAppointmentForm = () => {
 
           {/* Date and Time Selection */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Preferred Date & Time</h3>
+            <h3 className="text-lg font-semibold">{t('appointmentForm.dateTimeSelection.title')}</h3>
             
             {/* Date Selection */}
             <div>
-              <label className="block text-sm font-medium mb-2">Select Date *</label>
+              <label className="block text-sm font-medium mb-2">{t('appointmentForm.dateTimeSelection.selectDate')}</label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
@@ -223,7 +225,7 @@ const EnhancedAppointmentForm = () => {
                     className="w-full justify-start text-left h-12"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? format(selectedDate, 'EEEE, MMMM do, yyyy') : 'Choose your preferred date'}
+                    {selectedDate ? format(selectedDate, 'EEEE, MMMM do, yyyy') : t('appointmentForm.dateTimeSelection.chooseDatePlaceholder')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -243,8 +245,8 @@ const EnhancedAppointmentForm = () => {
             {selectedDate && (
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Select Time * 
-                  {loadingSlots && <span className="text-sm text-gray-500 ml-2">(Loading available times...)</span>}
+                  {t('appointmentForm.dateTimeSelection.selectTime')}
+                  {loadingSlots && <span className="text-sm text-gray-500 ml-2">({t('appointmentForm.dateTimeSelection.loadingTimes')})</span>}
                 </label>
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
                   {timeSlots.map((time) => {
@@ -268,14 +270,14 @@ const EnhancedAppointmentForm = () => {
                       >
                         <Clock className="mr-2 h-4 w-4" />
                         {time}
-                        {isBooked && <span className="ml-1 text-xs">(Booked)</span>}
+                        {isBooked && <span className="ml-1 text-xs">({t('appointmentForm.dateTimeSelection.booked')})</span>}
                       </Button>
                     );
                   })}
                 </div>
                 {selectedDate && bookedSlots.length > 0 && (
                   <p className="text-sm text-gray-500 mt-2">
-                    Grayed out times are already booked. Please select an available time slot.
+                    {t('appointmentForm.dateTimeSelection.bookedTimesMessage')}
                   </p>
                 )}
               </div>
@@ -284,9 +286,9 @@ const EnhancedAppointmentForm = () => {
 
           {/* Additional Message */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Additional Information</h3>
+            <h3 className="text-lg font-semibold">{t('appointmentForm.additionalInfo.title')}</h3>
             <Textarea 
-              placeholder="Please describe your symptoms or any specific concerns (optional)"
+              placeholder={t('appointmentForm.additionalInfo.placeholder')}
               rows={4}
               value={formData.message}
               onChange={(e) => handleInputChange('message', e.target.value)}
@@ -298,14 +300,12 @@ const EnhancedAppointmentForm = () => {
             className="w-full h-12 text-lg" 
             disabled={loading || !selectedDate || !selectedTime}
           >
-            {loading ? 'Submitting...' : 'Book Appointment'}
+            {loading ? t('common.submitting') : t('appointmentForm.submitButton')}
           </Button>
           
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              <strong>Please note:</strong> This is a preliminary appointment request. 
-              Dr. Eryanılmaz's team will contact you within 24 hours to confirm your appointment 
-              and provide any additional instructions.
+              <strong>{t('appointmentForm.note.title')}:</strong> {t('appointmentForm.note.description')}
             </p>
           </div>
         </form>

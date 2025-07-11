@@ -17,7 +17,7 @@ const Contact = () => {
             {t('contact.title')}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Schedule your consultation with Dr. Gürkan Eryanılmaz
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -49,7 +49,7 @@ const Contact = () => {
                 <div className="flex items-start space-x-4">
                   <Phone className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-1">Phone</h3>
+                    <h3 className="font-semibold mb-1">{t('contact.phone')}</h3>
                     <a 
                       href="tel:+994553977874" 
                       className="text-blue-600 hover:underline"
@@ -63,7 +63,7 @@ const Contact = () => {
                 <div className="flex items-start space-x-4">
                   <Mail className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-1">Email</h3>
+                    <h3 className="font-semibold mb-1">{t('contact.email')}</h3>
                     <a 
                       href="mailto:info@drgeryanilmaz.com" 
                       className="text-blue-600 hover:underline"
@@ -79,9 +79,9 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold mb-1">{t('contact.officeHours')}</h3>
                     <div className="text-gray-600">
-                      <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
-                      <p>Saturday: 9:00 AM - 1:00 PM</p>
-                      <p>Sunday: Emergency Only</p>
+                      <p>{t('contact.hours.mondayFriday')}</p>
+                      <p>{t('contact.hours.saturday')}</p>
+                      <p>{t('contact.hours.sunday')}</p>
                     </div>
                   </div>
                 </div>
@@ -116,11 +116,11 @@ const Contact = () => {
             {/* Appointment Status Check */}
             <Card>
               <CardHeader>
-                <CardTitle>Check Your Appointment</CardTitle>
+                <CardTitle>{t('contact.checkAppointment.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
-                  Already submitted an appointment request? Check its status here.
+                  {t('contact.checkAppointment.description')}
                 </p>
                 <AppointmentStatusCheck />
               </CardContent>
@@ -134,8 +134,8 @@ const Contact = () => {
               <CardContent>
                 <div className="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
                   <p className="text-gray-600">
-                    Google Maps Integration<br />
-                    Afyon Kocatepe Devlet Hastanesi
+                    {t('contact.mapPlaceholder.line1')}<br />
+                    {t('contact.mapPlaceholder.line2')}
                   </p>
                 </div>
               </CardContent>

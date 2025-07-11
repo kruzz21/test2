@@ -7,8 +7,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Search, Calendar, User, Phone, Mail, FileText, Clock } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentStatusCheck = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -57,8 +59,8 @@ const AppointmentStatusCheck = () => {
     
     if (!formData.name || !formData.phone || !formData.national_id) {
       toast({
-        title: "Error",
-        description: "Please fill in all fields to check your appointment status.",
+        title: t('common.error'),
+        description: t('appointmentStatusCheck.validation.allFieldsRequired'),
         variant: "destructive",
       });
       return;
@@ -81,24 +83,24 @@ const AppointmentStatusCheck = () => {
       }
 
       if (data && data.length > 0) {
-        setAppointment(data[0]);
+        setAppointment(data);
         toast({
-          title: "Appointment Found",
-          description: "Your appointment details have been retrieved successfully.",
+          title: t('appointmentStatusCheck.toast.foundTitle'),
+          description: t('appointmentStatusCheck.toast.foundDescription'),
         });
       } else {
         setAppointment(null);
         toast({
-          title: "No Appointment Found",
-          description: "No appointment found with the provided information. Please check your details and try again.",
+          title: t('appointmentStatusCheck.toast.notFoundTitle'),
+          description: t('appointmentStatusCheck.toast.notFoundDescription'),
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error('Error checking appointment:', error);
       toast({
-        title: "Error",
-        description: "Failed to check appointment status. Please try again.",
+        title: t('common.error'),
+        description: t('appointmentStatusCheck.toast.checkError'),
         variant: "destructive",
       });
     } finally {
@@ -116,14 +118,14 @@ const AppointmentStatusCheck = () => {
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full mt-4" onClick={resetForm}>
           <Search className="mr-2 h-4 w-4" />
-          Check Appointment Status
+          {t('appointmentStatusCheck.button')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Search className="mr-2 h-5 w-5" />
-            Check Your Appointment Status
+            {t('appointmentStatusCheck.dialogTitle')}
           </DialogTitle>
         </DialogHeader>
         
@@ -131,24 +133,24 @@ const AppointmentStatusCheck = () => {
           {!appointment ? (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Enter Your Information</CardTitle>
+                <CardTitle className="text-lg">{t('appointmentStatusCheck.enterInfoTitle')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <Input 
-                    placeholder="Full Name (as submitted)"
+                    placeholder={t('appointmentStatusCheck.form.fullNamePlaceholder')}
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     required
                   />
                   <Input 
-                    placeholder="Phone Number"
+                    placeholder={t('appointmentStatusCheck.form.phonePlaceholder')}
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     required
                   />
                   <Input 
-                    placeholder="National ID / Passport Number"
+                    placeholder={t('appointmentStatusCheck.form.nationalIdPlaceholder')}
                     value={formData.national_id}
                     onChange={(e) => handleInputChange('national_id', e.target.value)}
                     required
@@ -160,14 +162,14 @@ const AppointmentStatusCheck = () => {
                       className="flex-1"
                       disabled={loading}
                     >
-                      {loading ? 'Checking...' : 'Check Status'}
+                      {loading ? t('common.checking') : t('appointmentStatusCheck.form.checkStatusButton')}
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline"
                       onClick={resetForm}
                     >
-                      Clear
+                      {t('common.clear')}
                     </Button>
                   </div>
                 </form>
@@ -181,14 +183,14 @@ const AppointmentStatusCheck = () => {
                     {getStatusIcon(appointment.status)} {appointment.status.toUpperCase()}
                   </Badge>
                 </div>
-                <CardTitle className="text-xl">Appointment Details</CardTitle>
+                <CardTitle className="text-xl">{t('appointmentStatusCheck.details.title')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center space-x-3">
                     <User className="h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Patient Name</p>
+                      <p className="text-sm text-gray-600">{t('appointmentStatusCheck.details.patientName')}</p>
                       <p className="font-medium">{appointment.name}</p>
                     </div>
                   </div>
@@ -196,7 +198,7 @@ const AppointmentStatusCheck = () => {
                   <div className="flex items-center space-x-3">
                     <Phone className="h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Phone</p>
+                      <p className="text-sm text-gray-600">{t('appointmentStatusCheck.details.phone')}</p>
                       <p className="font-medium">{appointment.phone}</p>
                     </div>
                   </div>
@@ -204,7 +206,7 @@ const AppointmentStatusCheck = () => {
                   <div className="flex items-center space-x-3">
                     <Mail className="h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Email</p>
+                      <p className="text-sm text-gray-600">{t('appointmentStatusCheck.details.email')}</p>
                       <p className="font-medium">{appointment.email}</p>
                     </div>
                   </div>
@@ -212,7 +214,7 @@ const AppointmentStatusCheck = () => {
                   <div className="flex items-center space-x-3">
                     <FileText className="h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Service</p>
+                      <p className="text-sm text-gray-600">{t('appointmentStatusCheck.details.service')}</p>
                       <p className="font-medium">{appointment.service}</p>
                     </div>
                   </div>
@@ -220,7 +222,7 @@ const AppointmentStatusCheck = () => {
                   <div className="flex items-center space-x-3">
                     <Calendar className="h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Preferred Date</p>
+                      <p className="text-sm text-gray-600">{t('appointmentStatusCheck.details.preferredDate')}</p>
                       <p className="font-medium">{appointment.preferred_date}</p>
                     </div>
                   </div>
@@ -228,7 +230,7 @@ const AppointmentStatusCheck = () => {
                   <div className="flex items-center space-x-3">
                     <Clock className="h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Preferred Time</p>
+                      <p className="text-sm text-gray-600">{t('appointmentStatusCheck.details.preferredTime')}</p>
                       <p className="font-medium">{appointment.preferred_time}</p>
                     </div>
                   </div>
@@ -236,18 +238,18 @@ const AppointmentStatusCheck = () => {
                 
                 {appointment.message && (
                   <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Message</p>
+                    <p className="text-sm text-gray-600 mb-1">{t('appointmentStatusCheck.details.message')}</p>
                     <p className="text-gray-800">{appointment.message}</p>
                   </div>
                 )}
                 
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    <strong>Submitted:</strong> {new Date(appointment.created_at).toLocaleDateString()} at {new Date(appointment.created_at).toLocaleTimeString()}
+                    <strong>{t('appointmentStatusCheck.details.submitted')}:</strong> {new Date(appointment.created_at).toLocaleDateString()} {t('common.at')} {new Date(appointment.created_at).toLocaleTimeString()}
                   </p>
                   {appointment.updated_at !== appointment.created_at && (
                     <p className="text-sm text-blue-800 mt-1">
-                      <strong>Last Updated:</strong> {new Date(appointment.updated_at).toLocaleDateString()} at {new Date(appointment.updated_at).toLocaleTimeString()}
+                      <strong>{t('appointmentStatusCheck.details.lastUpdated')}:</strong> {new Date(appointment.updated_at).toLocaleDateString()} {t('common.at')} {new Date(appointment.updated_at).toLocaleTimeString()}
                     </p>
                   )}
                 </div>
@@ -258,13 +260,13 @@ const AppointmentStatusCheck = () => {
                     variant="outline"
                     className="flex-1"
                   >
-                    Check Another Appointment
+                    {t('appointmentStatusCheck.details.checkAnother')}
                   </Button>
                   <Button 
                     onClick={() => setIsOpen(false)}
                     className="flex-1"
                   >
-                    Close
+                    {t('common.close')}
                   </Button>
                 </div>
               </CardContent>
