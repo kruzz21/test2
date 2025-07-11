@@ -934,10 +934,10 @@ const BlogManager = () => {
               
               <div className="flex justify-end space-x-2 pt-4 border-t">
                 <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-                  Cancel
+                  {t('ui.cancel')}
                 </Button>
                 <Button onClick={handleUpdatePost}>
-                  Update Post
+                  {t('blogManager.updatePost')}
                 </Button>
               </div>
             </div>

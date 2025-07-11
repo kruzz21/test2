@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +31,7 @@ interface Appointment {
 }
 
 const EnhancedAppointmentCalendar = () => {
+  const { t } = useTranslation();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -274,11 +276,11 @@ const EnhancedAppointmentCalendar = () => {
             <div className="flex items-center space-x-4 text-sm">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-green-500 rounded"></div>
-                <span>Confirmed</span>
+                <span>{t('calendar.confirmed')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-blue-500 rounded"></div>
-                <span>Completed</span>
+                <span>{t('calendar.completed')}</span>
               </div>
             </div>
           </CardHeader>
@@ -332,7 +334,7 @@ const EnhancedAppointmentCalendar = () => {
               {/* Appointments for Selected Date */}
               <div>
                 <h3 className="font-semibold mb-4">
-                  Appointments for {format(selectedDate, 'MMMM dd, yyyy')}
+                  {t('calendar.appointmentsFor')} {format(selectedDate, 'MMMM dd, yyyy')}
                 </h3>
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {loading ? (
@@ -341,7 +343,7 @@ const EnhancedAppointmentCalendar = () => {
                     </div>
                   ) : getAppointmentsForDate(selectedDate).length === 0 ? (
                     <div className="text-center py-8">
-                      <p className="text-gray-600">No appointments for this date</p>
+                      <p className="text-gray-600">{t('calendar.noAppointmentsDate')}</p>
                     </div>
                   ) : (
                     getAppointmentsForDate(selectedDate).map((appointment) => (
@@ -385,7 +387,7 @@ const EnhancedAppointmentCalendar = () => {
           <CardHeader>
             <CardTitle className="flex items-center text-lg">
               <Bell className="h-5 w-5 mr-2 text-orange-500" />
-              Upcoming Appointments
+              {t('calendar.upcomingAppointments')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -393,7 +395,7 @@ const EnhancedAppointmentCalendar = () => {
               {getUpcomingAppointments().length === 0 ? (
                 <div className="text-center py-4">
                   <AlertCircle className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">No upcoming appointments</p>
+                  <p className="text-sm text-gray-600">{t('calendar.noUpcomingAppointments')}</p>
                 </div>
               ) : (
                 getUpcomingAppointments().map((appointment) => (

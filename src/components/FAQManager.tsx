@@ -728,70 +728,70 @@ const FAQManager = () => {
             <div className="space-y-6">
               <Tabs defaultValue="questions" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="questions">Add Questions</TabsTrigger>
-                  <TabsTrigger value="answers">Add Answers</TabsTrigger>
+                  <TabsTrigger value="questions">{t('ui.addQuestions')}</TabsTrigger>
+                  <TabsTrigger value="answers">{t('ui.addAnswers')}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="questions" className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Question (Turkish)</label>
+                    <label className="block text-sm font-medium mb-1">{t('ui.questionTurkish')}</label>
                     <Textarea
                       value={questions.question_tr}
                       onChange={(e) => setQuestions(prev => ({ ...prev, question_tr: e.target.value }))}
                       rows={3}
-                      placeholder="Turkish question..."
+                      placeholder={t('ui.turkishQuestion')}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-1">Question (Azerbaijani)</label>
+                                    <label className="block text-sm font-medium mb-1">{t('ui.questionAzerbaijani')}</label>
                     <Textarea
                       value={questions.question_az}
                       onChange={(e) => setQuestions(prev => ({ ...prev, question_az: e.target.value }))}
                       rows={3}
-                      placeholder="Azerbaijani question..."
+                                      placeholder={t('ui.azerbaijaniQuestion')}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-1">Question (English)</label>
+                    <label className="block text-sm font-medium mb-1">{t('ui.questionEnglish')}</label>
                     <Textarea
                       value={questions.question_en}
                       onChange={(e) => setQuestions(prev => ({ ...prev, question_en: e.target.value }))}
                       rows={3}
-                      placeholder="English question..."
+                      placeholder={t('ui.englishQuestion')}
                     />
                   </div>
                 </TabsContent>
 
                 <TabsContent value="answers" className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Answer (Turkish)</label>
+                    <label className="block text-sm font-medium mb-1">{t('ui.answerTurkish')}</label>
                     <Textarea
                       value={answers.answer_tr}
                       onChange={(e) => setAnswers(prev => ({ ...prev, answer_tr: e.target.value }))}
                       rows={4}
-                      placeholder="Turkish answer..."
+                      placeholder={t('ui.turkishAnswer')}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-1">Answer (Azerbaijani)</label>
+                    <label className="block text-sm font-medium mb-1">{t('ui.answerAzerbaijani')}</label>
                     <Textarea
                       value={answers.answer_az}
                       onChange={(e) => setAnswers(prev => ({ ...prev, answer_az: e.target.value }))}
                       rows={4}
-                      placeholder="Azerbaijani answer..."
+                      placeholder={t('ui.azerbaijaniAnswer')}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-1">Answer (English)</label>
+                    <label className="block text-sm font-medium mb-1">{t('ui.answerEnglish')}</label>
                     <Textarea
                       value={answers.answer_en}
                       onChange={(e) => setAnswers(prev => ({ ...prev, answer_en: e.target.value }))}
                       rows={4}
-                      placeholder="English answer..."
+                      placeholder={t('ui.englishAnswer')}
                     />
                   </div>
                 </TabsContent>
@@ -799,10 +799,10 @@ const FAQManager = () => {
               
               <div className="flex justify-end space-x-2 pt-4 border-t">
                 <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                  Cancel
+                  {t('ui.cancel')}
                 </Button>
                 <Button onClick={handleCreateFAQ}>
-                  Create FAQ
+                  {t('ui.createFaq')}
                 </Button>
               </div>
             </div>

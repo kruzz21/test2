@@ -471,7 +471,7 @@ const ReviewManager = () => {
                   className="text-red-600 hover:text-red-700"
                 >
                   {isApproved ? <Trash2 className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
-                  {isApproved ? 'Delete' : 'Reject'}
+                  {isApproved ? t('ui.delete') : t('reviewManager.reject')}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -511,10 +511,10 @@ const ReviewManager = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="pending">
-              Pending ({pendingReviews.length})
+              {t('ui.pending')} ({pendingReviews.length})
             </TabsTrigger>
             <TabsTrigger value="approved">
-              Approved ({approvedReviews.length})
+              {t('ui.approved')} ({approvedReviews.length})
             </TabsTrigger>
           </TabsList>
 
@@ -525,7 +525,7 @@ const ReviewManager = () => {
               </div>
             ) : pendingReviews.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-600">No pending reviews</p>
+                <p className="text-gray-600">{t('ui.noPendingReviews')}</p>
               </div>
             ) : (
               <div className="space-y-4">
