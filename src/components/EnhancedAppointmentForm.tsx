@@ -31,14 +31,14 @@ const EnhancedAppointmentForm = () => {
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
-  const services = [
-    t('expertise.arthroscopic.title') || 'Arthroscopic Surgery',
-    t('expertise.jointReplacement.title') || 'Joint Replacement Surgery',
-    t('expertise.trauma.title') || 'Trauma & Fracture Surgery',
-    t('expertise.pediatric.title') || 'Pediatric Orthopedics',
-    t('expertise.sports.title') || 'Sports Injuries & Rehabilitation',
-    t('expertise.jointNerve.title') || 'Joint & Nerve Conditions',
-    t('appointmentForm.services.generalConsultation')
+  const serviceOptions = [
+    { id: 'arthroscopic-surgery', labelKey: 'expertise.arthroscopic.title' },
+    { id: 'joint-replacement', labelKey: 'expertise.jointReplacement.title' },
+    { id: 'trauma-fracture', labelKey: 'expertise.trauma.title' },
+    { id: 'pediatric-orthopedics', labelKey: 'expertise.pediatric.title' },
+    { id: 'sports-injuries', labelKey: 'expertise.sports.title' },
+    { id: 'joint-nerve', labelKey: 'expertise.jointNerve.title' },
+    { id: 'general-consultation', labelKey: 'appointmentForm.services.generalConsultation' }
   ];
 
   const timeSlots = [
@@ -119,6 +119,9 @@ const EnhancedAppointmentForm = () => {
     try {
       const appointmentData = {
         ...formData,
+        service: serviceOptions.find(opt => opt.id === formData.service)?.labelKey 
+          ? t(serviceOptions.find(opt => opt.id === formData.service)!.labelKey)
+          : formData.service,
         preferred_date: format(selectedDate, 'yyyy-MM-dd'),
         preferred_time: selectedTime
       };
@@ -202,9 +205,9 @@ const EnhancedAppointmentForm = () => {
                 <SelectValue placeholder={t('appointmentForm.serviceSelection.placeholder')} />
               </SelectTrigger>
               <SelectContent>
-                {services.map((service) => (
-                  <SelectItem key={service} value={service}>
-                    {service}
+                {serviceOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {t(option.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
